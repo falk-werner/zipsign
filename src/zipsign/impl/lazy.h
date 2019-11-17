@@ -1,22 +1,28 @@
 #ifndef ZIPSIGN_IMPL_LAZY_H
 #define ZIPSIGN_IMPL_LAZY_H
 
-#include "zipsign/status.h"
+#ifndef __cpluscplus
+#include <stdbool.h>
+#endif
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-extern zipsign_status 
+struct zipsign_error;
+
+extern void 
 zipsign_impl_sign(
     char const * filename,
-    char const * certificate_path);
+    char const * certificate_path,
+    struct zipsign_error * * error);
 
-extern zipsign_status
+extern bool
 zipsign_impl_isvalid(
     char const * filename,
-    char const * pki_path);
+    char const * pki_path,
+    struct zipsign_error * * error);
 
 #ifdef __cplusplus
 }
