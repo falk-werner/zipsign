@@ -10,31 +10,51 @@ pkg_check_modules(OPENSSL REQUIRED openssl)
 set(CMAKE_C_STANDARD 99)
 set(C_WARNINGS -Wall -Wextra)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_library(zipsign STATIC
-        src/zipsign/lazy.c
-        src/zipsign/impl/lazy.c
-        src/zipsign/error_code.c
-        src/zipsign/impl/error_code.c
-        src/zipsign/error.c
-        src/zipsign/impl/error.c
-        src/zipsign/openssl.c
-        src/zipsign/impl/openssl.c
-        src/zipsign/impl/zip/zip.c
-        src/zipsign/impl/cms/cms.c
-        src/zipsign/impl/base64/base64.c
+add_library(base64 STATIC
+    lib/base64/base64.c
 )
-target_include_directories(zipsign PRIVATE include src)
-target_compile_options(zipsign PUBLIC ${OPENSSL_CFLAGS_OTHER})
-target_link_libraries(zipsign PUBLIC ${OPENSSL_LIBRARIES})
+target_include_directories(base64 PRIVATE lib include)
 
-add_executable(cli
-    src/cli/main.c)
-set_target_properties(cli PROPERTIES OUTPUT_NAME "zipsign")
-target_include_directories(cli PRIVATE include src/cli)
-target_link_libraries(cli PRIVATE zipsign)
+
+add_library(cli STATIC
+    lib/cli/app.cc
+    lib/cli/argument.cc
+    lib/cli/arguments.cc
+    lib/cli/options.cc
+)
+target_include_directories(cli PRIVATE lib include)
+
+add_library(openssl++ STATIC
+    lib/openssl++/exception.cc
+    lib/openssl++/init.cc
+    lib/openssl++/basic_io.cc
+    lib/openssl++/private_key.cc
+    lib/openssl++/certificate.cc
+    lib/openssl++/certificate_store.cc
+    lib/openssl++/certificate_stack.cc
+    lib/openssl++/cms.cc
+)
+target_include_directories(openssl++ PRIVATE lib include)
+target_compile_options(openssl++ PUBLIC ${OPENSSL_CFLAGS_OTHER})
+target_link_libraries(openssl++ PUBLIC ${OPENSSL_LIBRARIES})
+
+add_library(zipsign STATIC
+        lib/zipsign/impl/zip/zip.c
+        lib/zipsign/signer.cc
+        lib/zipsign/verfier.cc
+)
+target_include_directories(zipsign PRIVATE lib include)
+target_compile_options(zipsign PUBLIC ${OPENSSL_CFLAGS_OTHER})
+target_link_libraries(zipsign PUBLIC openssl++ base64)
+
+add_executable(app
+    src/zipsign/main.cc)
+set_target_properties(app PROPERTIES OUTPUT_NAME "zipsign")
+target_include_directories(app PRIVATE include src/cli)
+target_link_libraries(app PRIVATE zipsign cli)
 
 # Unit tests
 
@@ -52,12 +72,12 @@ include(GoogleTest)
 pkg_check_modules(GMOCK gmock)
 
 add_executable(alltests
-    test/error.cc
+    test/dummy.cc
 )
 
 target_include_directories(alltests PRIVATE
     include
-    src
+    lib
     ${GMOCK_INCLUDE_DIRS}
     ${GTEST_INCLUDE_DIRS}
 )
