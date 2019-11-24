@@ -1,12 +1,21 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <stdexcept>
 
 #include "zipsign/zipsign.hpp"
 #include "openssl++/openssl++.hpp"
 #include "cli/cli.hpp"
 
 using openssl::OpenSSL;
+using openssl::CMS;
+using openssl::BasicIO;
+using openssl::Certificate;
+using openssl::PrivateKey;
+
+using zipsign::Signer;
+using zipsign::Verifier;
+
 using cli::App;
 using cli::Argument;
 using cli::Arguments;
@@ -16,14 +25,55 @@ namespace
 {
     int sign(Arguments args)
     {
-        std::cout << "not implemented" << std::endl;
-        return EXIT_FAILURE;
+        auto const & filename = args.get('f');
+        auto const & key_file = args.get('p');
+        auto const & cert_file = args.get('c');
+
+        int result = EXIT_FAILURE;
+
+        try
+        {
+            Signer signer(key_file, cert_file);
+            signer.sign(filename);
+            result = EXIT_SUCCESS;
+        }
+        catch (std::exception const & ex)
+        {
+            std::cerr << "error: " << ex.what() << std::endl;
+        }
+
+        return result;
     }
 
     int verify(Arguments args)
     {
-        std::cout << "not implemented" << std::endl;
-        return EXIT_FAILURE;
+        auto const & filename = args.get('f');
+        auto const & cert_file = args.get('c');
+        auto is_verbose = args.contains('v');
+
+        int result = EXIT_FAILURE;
+
+        try
+        {
+            Verifier verifier(cert_file);
+            bool isValid = verifier.verify(filename, is_verbose);
+
+            if (isValid)
+            {
+                std::cout << "OK" << std::endl;
+                result = EXIT_SUCCESS;
+            }
+            else
+            {
+                std::cout << "INVALID" << std::endl;
+            }
+        }
+        catch (std::exception const & ex)
+        {
+            std::cerr << "error: " << ex.what() << std::endl;
+        }
+        
+        return result;
     }
 }
 
