@@ -5,8 +5,10 @@
 #ifndef CLI_HPP
 #define CLI_HPP
 
+#include <cli/command.hpp>
 #include <cli/app.hpp>
 #include <cli/argument.hpp>
 #include <cli/arguments.hpp>
+#include <cli/verb.hpp>
 
 #endif

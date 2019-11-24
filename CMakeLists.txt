@@ -24,6 +24,7 @@ add_library(cli STATIC
     lib/cli/argument.cc
     lib/cli/arguments.cc
     lib/cli/options.cc
+    lib/cli/verb.cc
 )
 target_include_directories(cli PRIVATE lib include)
 
@@ -42,9 +43,9 @@ target_compile_options(openssl++ PUBLIC ${OPENSSL_CFLAGS_OTHER})
 target_link_libraries(openssl++ PUBLIC ${OPENSSL_LIBRARIES})
 
 add_library(zipsign STATIC
-        lib/zipsign/impl/zip/zip.c
+        lib/zipsign/zip.cc
         lib/zipsign/signer.cc
-        lib/zipsign/verfier.cc
+        lib/zipsign/verifier.cc
 )
 target_include_directories(zipsign PRIVATE lib include)
 target_compile_options(zipsign PUBLIC ${OPENSSL_CFLAGS_OTHER})

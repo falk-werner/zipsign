@@ -3,7 +3,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "cli/app.hpp"
-#include "cli/options.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -12,9 +11,8 @@
 namespace cli
 {
 
-App::App(std::string const & name_, Command defaultCommand_)
+App::App(std::string const & name_)
 : name(name_)
-, defaultCommand(defaultCommand_)
 {
 
 }
@@ -23,79 +21,59 @@ App::~App()
 
 }   
 
+std::string const & App::getName() const
+{
+    return name;
+}
+
+std::string const & App::getDescription() const
+{
+    return description;
+}
+
+std::string const & App::getCopyright() const
+{
+    return copyright;
+}
+
 int App::run(int argc, char* argv[]) const
 {
-    Arguments arguments;
+    int exitCode = EXIT_FAILURE;
 
-    for(auto & arg: args)
+    if (argc > 1)
     {
-        if (arg.hasDefaultValue())
+        std::string verbName = argv[1];
+        Verb const * verb = getVerb(verbName);
+
+        if (nullptr != verb)
         {
-            arguments.set(arg.getId(), arg.getDefaultValue());
+            exitCode == verb->run(argc - 1, &argv[1]);
         }
-    }
-
-
-    Options opts(args);
-    int result = EXIT_SUCCESS;
-    bool is_finished = false;
-    bool print_usage = false;
-
-    while (!is_finished)
-    {
-        opterr = 0;
-        int option_index = 0;
-        int const c = getopt_long(argc, argv, opts.shortOpts(), opts.longOpts(), &option_index);
-
-        switch (c)
+        else if ((verbName == "-h") || (verbName == "--help"))
         {
-            case -1:
-                is_finished = true;
-                break;
-            case 'h':
-                is_finished = true;
-                print_usage = true;
-                break;
-            case '?':
-                std::cout << "error: unrecognized argument" << std::endl;
-                is_finished = true;
-                print_usage = true;
-                result = EXIT_FAILURE;
-                break;
-            default:
-                arguments.set(c, (nullptr != optarg) ? optarg : "");
-                break;
+            printUsage();
+            exitCode = EXIT_SUCCESS;
         }
-    }
-
-    if ((EXIT_SUCCESS == result) && (!print_usage))
-    {
-        for (auto & arg: args)
+        else
         {
-            if ((!arg.isOptional()) && (!arguments.contains(arg.getId())))
-            {
-                std::cerr << "error: missing required argument: -" << arg.getId() << std::endl;
-                print_usage = true;
-                result = EXIT_FAILURE;                
-            }
+            std::cerr << "error: unknwon verb: " << verbName << std::endl;
+            printUsage();
         }
-    }
-
-    if (!print_usage)
-    {
-        result = defaultCommand(arguments);
     }
     else
     {
+        std::cerr << "error: missing verb" << std::endl;        
         printUsage();
     }
 
-    return result;
+    return exitCode;
 }
 
-App & App::add(Argument const & arg)
+App & App::add(Verb const & verb)
 {
-    args.push_back(arg);
+    verbs.push_back(verb);
+    verbs[verbs.size() - 1].setApp(*this);
+
     return *this;
 }
 
@@ -117,68 +95,54 @@ App & App::setAdditionalInfo(std::string const & value)
     return *this;
 }
 
-void App::printUsage() const
+Verb const * App::getVerb(std::string const & name) const
+{
+    for(auto & verb: verbs)
+    {
+        if (name == verb.getName())
+        {
+            return &verb;
+        }
+    }
+
+    return nullptr;
+}
+
+
+void App::printUsage(void) const
 {
     std::cout
-        << name << ", " << copyright << std::endl
+        << name << ", Copyright (c) " << copyright << std::endl
         << description << std::endl
         << std::endl
         << "Usage:" << std::endl
-        << '\t' << name
+        << '\t' << name << ' '
     ;
 
-    for (auto const & arg: args)
+    for (auto const & verb: verbs)
     {
-        std::cout << ' ';
-        if (arg.isOptional())
-        {
-            std::cout << '[';
-        }
-
-        std::cout << '-' << arg.getId();
-        if (!arg.isFlag())
-        {
-            std::cout << " <value>";
-        }
-
-        if (arg.isOptional())
-        {
-            std::cout << ']';
-        }
+        std::cout << verb.getName() << " <args...> | ";
     }
 
     std::cout 
-        << " | -h" << std::endl
+        << "-h" << std::endl
         << std::endl
-        << "Arguments:" << std::endl;
+        << "Verbs:" << std::endl;
 
-    for (auto const & arg: args)
+    for (auto const & verb: verbs)
     {
         std::cout 
-            << "\t-" << arg.getId() 
-            << ", --" << std::left << std::setw(20) << arg.getName()
-            << "\t";
-            
-        if (!arg.isOptional())
-        {
-            std::cout << "Required. ";
-        }
-
-        std::cout << arg.getHelpText();
-
-        if (arg.hasDefaultValue())
-        {
-            std::cout << " (default: " << arg.getDefaultValue() << ')';
-        }
-
-        std::cout << std::endl;
+            << "\t" << std::left << std::setw(20) << verb.getName()
+            << "\t" << verb.getHelpText()
+            << std::endl;
     }
 
     std::cout
-        << "\t-h, --" << std::left << std::setw(20) << "help" << "\tPrint usage." << std::endl
+        << "\t" << std::left << std::setw(20) << "-h, --help" << "\tPrint usage." << std::endl
         << std::endl;
     
     std::cout << additionalInfo;
+
 }
 
 }

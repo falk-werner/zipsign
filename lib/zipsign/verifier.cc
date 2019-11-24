@@ -17,7 +17,7 @@ Verifier::~Verifier()
 
 }
 
-bool Verifier::verify(std::string const & filename, bool is_verbose = false)
+bool Verifier::verify(std::string const & filename, bool is_verbose)
 {
     if (is_verbose)
     {

@@ -10,6 +10,7 @@ using openssl::OpenSSL;
 using cli::App;
 using cli::Argument;
 using cli::Arguments;
+using cli::Verb;
 
 namespace
 {
@@ -19,7 +20,7 @@ namespace
         return EXIT_FAILURE;
     }
 
-    int verfiy(Arguments args)
+    int verify(Arguments args)
     {
         std::cout << "not implemented" << std::endl;
         return EXIT_FAILURE;
@@ -30,9 +31,9 @@ int main(int argc, char * argv[])
 {
     OpenSSL::init();
 
-    App app("zipsign", sign);
+    App app("zipsign");
     app
-        .setCopyright("Copyright (c) 2019 Falk Werner")
+        .setCopyright("2019 Falk Werner")
         .setDescription("Signs and verifies ZIP archives")
         .setAdditionalInfo(
             "Examples:\n"
@@ -41,10 +42,19 @@ int main(int argc, char * argv[])
             "\tVerify:\n"
             "\t\tzipsign verify -f archive.zip -c cert.pem\n"
         )
-        .add(Argument('f', "file").setHelpText("Archive to sign / verify."))
-        .add(Argument('p', "private-key").setHelpText("Private key to sign."))
-        .add(Argument('c', "certificate").setHelpText("Certificate of signer."))
-        .add(Argument('v', "verbose").setHelpText("Enable additionl output").setFlag().setOptional());
+        .add(Verb("sign", sign)
+            .setHelpText("Signs a zip archive.")
+            .add(Argument('f', "file").setHelpText("Archive to sign."))
+            .add(Argument('p', "private-key").setHelpText("Private key to sign."))
+            .add(Argument('c', "certificate").setHelpText("Certificate of signer."))
+            .add(Argument('v', "verbose").setHelpText("Enable additionl output").setFlag().setOptional())      
+        )
+        .add(Verb("verify", verify)
+            .setHelpText("Verifies the signature of a zip archive.")
+            .add(Argument('f', "file").setHelpText("Archive to verify."))
+            .add(Argument('c', "certificate").setHelpText("Certificate of signer."))
+            .add(Argument('v', "verbose").setHelpText("Enable additionl output").setFlag().setOptional())      
+        )
     ;
 
     return app.run(argc, argv);
