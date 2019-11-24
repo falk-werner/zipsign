@@ -24,6 +24,7 @@ add_library(zipsign STATIC
         src/zipsign/impl/openssl.c
         src/zipsign/impl/zip/zip.c
         src/zipsign/impl/cms/cms.c
+        src/zipsign/impl/base64/base64.c
 )
 target_include_directories(zipsign PRIVATE include src)
 target_compile_options(zipsign PUBLIC ${OPENSSL_CFLAGS_OTHER})
