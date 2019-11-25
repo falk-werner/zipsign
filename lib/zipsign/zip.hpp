@@ -13,7 +13,7 @@ public:
     ~Zip();
     void setComment(std::string const & comment);
     std::string getComment();
-    std::size_t getEocdPos();
+    std::size_t getCommentStart();
 private:
     std::string filename;
 };

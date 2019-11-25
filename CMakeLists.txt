@@ -43,6 +43,7 @@ target_compile_options(openssl++ PUBLIC ${OPENSSL_CFLAGS_OTHER})
 target_link_libraries(openssl++ PUBLIC ${OPENSSL_LIBRARIES})
 
 add_library(zipsign STATIC
+        lib/zipsign/partial_input_file.cc
         lib/zipsign/zip.cc
         lib/zipsign/signer.cc
         lib/zipsign/verifier.cc
@@ -86,6 +87,10 @@ target_include_directories(alltests PRIVATE
 target_link_libraries(alltests PRIVATE zipsign)
 target_compile_options(alltests PRIVATE ${GMOCK_CFLAGS} ${GTEST_CFLAGS} "-pthread")
 target_link_libraries(alltests PRIVATE zipsign ${GMOCK_LIBRARIES} ${GTEST_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+
+# copy test data
+file(COPY test/resources/test.zip DESTINATION .)
+file(COPY test/resources/message.txt DESTINATION .)
 
 enable_testing()
 gtest_discover_tests(alltests TEST_PREFIX alltests:)
