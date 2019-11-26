@@ -5,7 +5,7 @@ compiler:
   - clang
 
 before_install:
-  - sudo apt -y install openssl-dev
+  - sudo apt -y install libssl-dev
 
 before_script:
   - mkdir .build
@@ -14,3 +14,4 @@ before_script:
 
 script:
   - make
+  - ./alltests
