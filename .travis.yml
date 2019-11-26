@@ -1,3 +1,5 @@
+dist: bionic
+
 language: cpp
 
 compiler:
@@ -6,7 +8,7 @@ compiler:
 
 before_install:
   - sudo apt update
-  - sudo apt -y install libssl-dev=1.1\*
+  - sudo apt -y install libssl-dev
 
 before_script:
   - mkdir .build
