@@ -20,6 +20,7 @@ public:
     static BasicIO openOutputFile(std::string const & filename);
     static BasicIO getStdout(void);
     static BasicIO fromMemory();
+    static BasicIO fromMemory(void const * data, size_t size);
     explicit BasicIO(BIO * bio_);
     BasicIO & operator=(BasicIO && other);
     BasicIO(BasicIO && other);

@@ -16,6 +16,7 @@ class CMS
     CMS & operator=(CMS const &) = delete;
     CMS(CMS const &) = delete;
 public:
+    static CMS fromBase64(std::string const & data);
     static CMS fromFile(std::string const & filename);
     static CMS sign(X509 * cert, EVP_PKEY * key, STACK_OF(X509) * certs, BIO * data, unsigned int flags);
     explicit CMS(CMS_ContentInfo * cms_);
@@ -27,6 +28,7 @@ public:
     void saveToBIO(BIO * bio) const;
     void dump() const;
     bool verify(STACK_OF(X509) * certs, X509_STORE * store, BIO * indata, BIO * outdata, unsigned int flags, bool is_verbose = false);
+    std::string toBase64() const;
 private:
     CMS_ContentInfo * cms;
 };

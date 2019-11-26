@@ -14,8 +14,9 @@ class Signer
 public:
     Signer(std::string const & key_file, std::string const & cert_file);
     ~Signer();
-    void sign(std::string filename);
+    void sign(std::string const & filename);
 private:
+    std::string createSignature(std::string const & filename);
     openssl::PrivateKey key;
     openssl::Certificate cert;
 };

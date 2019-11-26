@@ -6,10 +6,31 @@
 #include "openssl++/exception.hpp"
 #include "openssl++/basic_io.hpp"
 
+#include "base64/base64.h"
+
 #include <iostream>
+#include <vector>
 
 namespace openssl
 {
+
+CMS CMS::fromBase64(std::string const & data)
+{
+    size_t decoded_size = base64_decoded_size(data.c_str(), data.size());
+    std::vector<uint8_t> decoded(decoded_size);
+    base64_decode(data.c_str(), data.size(), decoded.data(), decoded.size());
+
+    auto bio = BasicIO::fromMemory(decoded.data(), decoded.size());
+    CMS_ContentInfo * cms = d2i_CMS_bio(bio, nullptr);
+    if (NULL == cms)
+    {
+        throw OpenSSLException("failed to read file");
+    }
+
+    return std::move(CMS(cms));
+
+}
+
 
 CMS CMS::fromFile(std::string const & filename)
 {
@@ -17,7 +38,7 @@ CMS CMS::fromFile(std::string const & filename)
     CMS_ContentInfo * cms = d2i_CMS_bio(file,NULL);
     if (NULL == cms)
     {
-        throw new OpenSSLException("failed to read file");
+        throw OpenSSLException("failed to read file");
     }
 
     return std::move(CMS(cms));
@@ -102,5 +123,21 @@ bool CMS::verify(STACK_OF(X509) * certs, X509_STORE * store, BIO * indata, BIO *
 
     return result;
 }
+
+std::string CMS::toBase64() const
+{
+    auto bio = BasicIO::fromMemory();
+    saveToBIO(bio);
+
+    BUF_MEM * buffer;
+    BIO_get_mem_ptr(bio, &buffer);
+
+    size_t encoded_size = base64_encoded_size(buffer->length);
+    std::vector<char> encoded(encoded_size);
+    base64_encode(reinterpret_cast<uint8_t *>(buffer->data), buffer->length, encoded.data(), encoded.size());
+
+    return std::string(encoded.data(), encoded.size());
+}
+
 
 }

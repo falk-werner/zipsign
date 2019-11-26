@@ -47,7 +47,7 @@ int App::run(int argc, char* argv[]) const
 
         if (nullptr != verb)
         {
-            exitCode == verb->run(argc - 1, &argv[1]);
+            exitCode = verb->run(argc - 1, &argv[1]);
         }
         else if ((verbName == "-h") || (verbName == "--help"))
         {

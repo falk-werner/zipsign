@@ -46,6 +46,12 @@ BasicIO BasicIO::fromMemory()
     return std::move(BasicIO(bio));
 }
 
+BasicIO BasicIO::fromMemory(void const * data, size_t size)
+{
+    BIO * bio = BIO_new_mem_buf(data, size);
+    return std::move(BasicIO(bio));
+}
+
 BasicIO::BasicIO(BIO * bio_)
 : bio(bio_)
 {

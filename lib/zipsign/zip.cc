@@ -5,6 +5,8 @@
 #include <vector>
 #include <algorithm>
 
+#include <unistd.h>
+
 #define MAX_COMMENT_SIZE (64 * 1024)
 #define MIN_EOCD_SIZE (22)
 #define EOCD_COMMENT_POS (20)
@@ -33,7 +35,27 @@ Zip::~Zip()
 
 void Zip::setComment(std::string const & comment)
 {
+    if (comment.size() > MAX_COMMENT_SIZE)
+    {
+        throw std::runtime_error("zip comment too long");
+    }
 
+    size_t commentStart = getCommentStart();    
+    FILE * file = fopen(filename.c_str(), "rb+");
+    if (nullptr == file)
+    {
+        throw std::runtime_error("failed to open file");        
+    }
+
+    fseek(file, commentStart, SEEK_SET);
+    uint8_t buffer[2];
+    buffer[0] = (uint8_t) (comment.size() & 0xff);
+    buffer[1] = (uint8_t) ((comment.size() >> 8) & 0xff);
+    fwrite(buffer, 1, 2, file);
+    fwrite(comment.data(), 1, comment.size(), file);
+
+    ftruncate(fileno(file), ftell(file));
+    fclose(file);
 }
 
 std::string Zip::getComment()
@@ -42,7 +64,7 @@ std::string Zip::getComment()
     FILE * file = fopen(filename.c_str(), "rb");
     if (nullptr == file)
     {
-        throw new std::runtime_error("failed to open file");
+        throw std::runtime_error("failed to open file");
     }
 
     fseek(file, commentPos, SEEK_SET);

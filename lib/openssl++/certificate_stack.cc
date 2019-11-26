@@ -13,7 +13,7 @@ CertificateStack::CertificateStack()
 {
     if (nullptr == stack)
     {
-        throw new OpenSSLException("failed to create CertificateStack");
+        throw OpenSSLException("failed to create CertificateStack");
     }
 }
 
@@ -32,7 +32,7 @@ void CertificateStack::push(X509 * certificate)
     int rc = sk_X509_push(stack, certificate);
     if (0 == rc)
     {
-        throw new OpenSSLException("failed to push certificate to stack");
+        throw OpenSSLException("failed to push certificate to stack");
     }
 }
 

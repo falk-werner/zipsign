@@ -1,8 +1,13 @@
 #include "zipsign/signer.hpp"
+#include "zipsign/zip.hpp"
+#include "zipsign/partial_input_file.hpp"
+#include "zipsign/signature.hpp"
+
 #include <stdexcept>
 
 using openssl::PrivateKey;
 using openssl::Certificate;
+using openssl::CMS;
 
 namespace zipsign
 {
@@ -19,10 +24,26 @@ Signer::~Signer()
 
 }
 
-void Signer::sign(std::string filename)
+void Signer::sign(std::string const & filename)
 {
-    throw std::runtime_error("not implemented");
+    auto signature = createSignature(filename);
+    auto comment = ZIPSIGN_SIGNATURE_PREFIX + signature;
+
+    Zip zip(filename);
+    zip.setComment(comment);
 }
 
+std::string Signer::createSignature(std::string const & filename) 
+{
+    PartialInputFile partialFile;
+    Zip zip(filename);
+
+    auto commentStart = zip.getCommentStart();
+    auto file = partialFile.open(filename, commentStart);
+    auto cms = CMS::sign(cert, key, nullptr, file, CMS_DETACHED | CMS_NOCERTS | CMS_BINARY);
+    auto signature = cms.toBase64();
+
+    return signature;
+}
 
 }

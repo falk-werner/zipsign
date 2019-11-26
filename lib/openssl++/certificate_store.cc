@@ -44,7 +44,7 @@ void CertificateStore::add(X509 * cert)
     int rc = X509_STORE_add_cert(store, cert);
     if (1 != rc)
     {
-        throw new OpenSSLException("failed to add certificate to store");
+        throw OpenSSLException("failed to add certificate to store");
     }
 }
 
