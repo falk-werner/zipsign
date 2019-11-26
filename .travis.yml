@@ -5,7 +5,8 @@ compiler:
   - clang
 
 before_install:
-  - sudo apt -y install libssl-dev
+  - sudo apt update
+  - sudo apt -y install libssl-dev=1.1\*
 
 before_script:
   - mkdir .build
