@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/falk-werner/zipsign.svg?branch=master)](https://travis-ci.org/falk-werner/zipsign)
+[![codecov](https://codecov.io/gh/falk-werner/zipsign/branch/master/graph/badge.svg)](https://codecov.io/gh/falk-werner/zipsign)
 
 # zipsign
 Sign and verify ZIP archives.
