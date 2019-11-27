@@ -13,6 +13,26 @@ set(C_WARNINGS -Wall -Wextra)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+
+add_definitions(
+	-pg
+	--coverage
+	-fprofile-arcs
+	-ftest-coverage
+)
+
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+	link_libraries(gcov)
+else()
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+endif()
+
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg -fprofile-arcs")
+
+endif()
+
+
 add_library(base64 STATIC
     lib/base64/base64.c
 )
@@ -98,5 +118,19 @@ gtest_discover_tests(alltests TEST_PREFIX alltests:)
 add_custom_target(check
     ./alltests)
 add_dependencies(check alltests)
+
+add_custom_target(coverage
+	./alltests
+	COMMAND mkdir -p coverage
+	COMMAND lcov --capture --directory . --output-file coverage/lcov.info
+	COMMAND lcov --remove coverage/lcov.info '/usr/*' --output-file coverage/lcov.info
+	COMMAND lcov --remove coverage/lcov.info '*/test/*' --output-file coverage/lcov.info
+)
+add_dependencies(coverage alltests)
+
+add_custom_target(coverage-report
+	COMMAND genhtml coverage/lcov.info --output-directory coverage/report
+)
+add_dependencies(coverage-report coverage)
 
 endif(NOT WITHOUT_TESTS)
