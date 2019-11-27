@@ -19,6 +19,7 @@ before_install:
   - cmake ..
   - make
   - sudo make install
+  - cd
 
 before_script:
   - mkdir .build
