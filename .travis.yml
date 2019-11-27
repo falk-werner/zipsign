@@ -8,12 +8,22 @@ compiler:
 
 before_install:
   - sudo apt update
-  - sudo apt -y install libssl-dev
+  - sudo apt -y install libssl-dev wget
+  - mkdir /tmp/build
+  - cd /tmp/build
+  - wget https://github.com/google/googletest/archive/release-1.10.0.tar.gz
+  - tar -xf release-1.10.0.tar.gz
+  - cd googletest-release-1.10.0
+  - mkdir .build
+  - cd .build
+  - cmake ..
+  - make
+  - sudo make install
 
 before_script:
   - mkdir .build
   - cd .build
-  - cmake -DCMAKE_BUILD_TYPE=Debug -DWITHOUT_TESTS=ON ..
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
 
 script:
   - make
