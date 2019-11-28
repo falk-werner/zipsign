@@ -7,9 +7,24 @@
 #include "openssl++/exception.hpp"
 
 #include <openssl/pem.h>
+#include <openssl/rsa.h>
 
 namespace openssl
 {
+
+PrivateKey PrivateKey::generateRSA(int bits)
+{
+    BIGNUM * exponent = BN_new();
+    int rc = BN_set_word(exponent, RSA_F4);
+
+    RSA * rsa = RSA_new();
+    rc = RSA_generate_key_ex(rsa, bits, exponent, nullptr);
+
+    EVP_PKEY * key = EVP_PKEY_new();
+    EVP_PKEY_assign_RSA(key, rsa);
+
+    return std::move(PrivateKey(key));
+}
 
 PrivateKey PrivateKey::fromPEM(std::string const & filename)
 {

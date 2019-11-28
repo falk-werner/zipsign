@@ -16,6 +16,7 @@ class PrivateKey
     PrivateKey& operator=(PrivateKey const &) = delete;
     PrivateKey(PrivateKey const &) = delete;
 public:
+    static PrivateKey generateRSA(int bits = 4096);
     static PrivateKey fromPEM(std::string const & filename);
     explicit PrivateKey(EVP_PKEY * key_);
     PrivateKey & operator=(PrivateKey && other);

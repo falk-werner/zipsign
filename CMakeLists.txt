@@ -94,6 +94,8 @@ include(GoogleTest)
 pkg_check_modules(GMOCK gmock)
 
 add_executable(alltests
+    test/openssl_environment.cc
+    test/private_key.cc
     test/dummy.cc
 )
 
