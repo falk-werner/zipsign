@@ -13,25 +13,8 @@ set(C_WARNINGS -Wall -Wextra)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-
-add_definitions(
-	-pg
-	--coverage
-	-fprofile-arcs
-	-ftest-coverage
-)
-
-if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-	link_libraries(gcov)
-else()
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
-endif()
-
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg -fprofile-arcs")
-
-endif()
-
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(coverage)
 
 add_library(base64 STATIC
     lib/base64/base64.c
@@ -122,8 +105,9 @@ add_custom_target(check
 add_dependencies(check alltests)
 
 add_custom_target(coverage
-	./alltests
-	COMMAND mkdir -p coverage
+    mkdir -p coverage
+	COMMAND lcov --initial --capture --directory . --output-file coverage/lcov.info
+	COMMAND ./alltests
 	COMMAND lcov --capture --directory . --output-file coverage/lcov.info
 	COMMAND lcov --remove coverage/lcov.info '/usr/*' --output-file coverage/lcov.info
 	COMMAND lcov --remove coverage/lcov.info '*/test/*' --output-file coverage/lcov.info
@@ -131,7 +115,7 @@ add_custom_target(coverage
 add_dependencies(coverage alltests)
 
 add_custom_target(coverage-report
-	COMMAND genhtml coverage/lcov.info --output-directory coverage/report
+	COMMAND genhtml -branch-coverage --highlight --legend coverage/lcov.info --output-directory coverage/report
 )
 add_dependencies(coverage-report coverage)
 
