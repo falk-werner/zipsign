@@ -79,6 +79,7 @@ pkg_check_modules(GMOCK gmock)
 
 add_executable(alltests
     test/openssl_environment.cc
+    test/test_base64.cc
     test/private_key.cc
     test/test_file.cc
     test/dummy.cc
