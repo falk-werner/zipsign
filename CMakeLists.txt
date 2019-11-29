@@ -46,6 +46,7 @@ target_compile_options(openssl++ PUBLIC ${OPENSSL_CFLAGS_OTHER})
 target_link_libraries(openssl++ PUBLIC ${OPENSSL_LIBRARIES})
 
 add_library(zipsign STATIC
+        lib/zipsign/file.cc
         lib/zipsign/partial_input_file.cc
         lib/zipsign/zip.cc
         lib/zipsign/signer.cc
@@ -79,6 +80,7 @@ pkg_check_modules(GMOCK gmock)
 add_executable(alltests
     test/openssl_environment.cc
     test/private_key.cc
+    test/test_file.cc
     test/dummy.cc
 )
 

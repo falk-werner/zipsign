@@ -1,4 +1,5 @@
 #include "zipsign/zip.hpp"
+#include "zipsign/file.hpp"
 
 #include <cstdio>
 #include <stdexcept>
@@ -11,13 +12,6 @@
 #define MIN_EOCD_SIZE (22)
 #define EOCD_COMMENT_POS (20)
 #define MAX_EOCD_SIZE (MIN_EOCD_SIZE + MAX_COMMENT_SIZE)
-
-namespace
-{
-
-
-
-}
 
 namespace zipsign
 {
@@ -40,64 +34,48 @@ void Zip::setComment(std::string const & comment)
         throw std::runtime_error("zip comment too long");
     }
 
-    size_t commentStart = getCommentStart();    
-    FILE * file = fopen(filename.c_str(), "rb+");
-    if (nullptr == file)
-    {
-        throw std::runtime_error("failed to open file");        
-    }
+    size_t commentStart = getCommentStart(); 
+    File file(filename, "rb+");
 
-    fseek(file, commentStart, SEEK_SET);
+    file.seek(commentStart);
     uint8_t buffer[2];
     buffer[0] = (uint8_t) (comment.size() & 0xff);
     buffer[1] = (uint8_t) ((comment.size() >> 8) & 0xff);
-    fwrite(buffer, 1, 2, file);
-    fwrite(comment.data(), 1, comment.size(), file);
+    file.write(buffer, 2);
+    file.write(comment.data(), comment.size());
 
-    ftruncate(fileno(file), ftell(file));
-    fclose(file);
+    file.truncate(file.tell());
 }
 
 std::string Zip::getComment()
 {
     size_t commentPos = getCommentStart();
-    FILE * file = fopen(filename.c_str(), "rb");
-    if (nullptr == file)
-    {
-        throw std::runtime_error("failed to open file");
-    }
+    File file(filename, "rb");
 
-    fseek(file, commentPos, SEEK_SET);
+    file.seek(commentPos);
     uint8_t buffer[2];
-    fread(buffer, 1, 2, file);
+    file.read(buffer, 2);
     size_t commentLength = (buffer[1] << 8) | buffer[0];
 
     std::string comment;
     if (commentLength > 0)
     {
         std::vector<char> commentBuffer(commentLength);
-        fread(commentBuffer.data(), 1, commentBuffer.size(), file);
+        file.read(commentBuffer.data(), commentBuffer.size());
         comment = std::string(commentBuffer.data(), commentBuffer.size());        
     }
     
-    fclose(file);
-
     return comment;    
 }
 
 std::size_t Zip::getCommentStart()
 {
-    FILE * file = fopen(filename.c_str(), "rb");
-    if (nullptr == file)
-    {
-        throw std::runtime_error("failed to open file");
-    }
+    File file(filename, "rb");
 
-    fseek(file, 0, SEEK_END);
-    size_t length = ftell(file);
+    file.seek(0, SEEK_END);
+    size_t length = file.tell();
     if (length < MIN_EOCD_SIZE)
     {
-        fclose(file);
         throw std::runtime_error("invalid zip archive (too small)");        
     }
 
@@ -105,8 +83,8 @@ std::size_t Zip::getCommentStart()
     std::vector<uint8_t> buffer(buffer_size);
 
     size_t offset = length - buffer_size;
-    fseek(file, offset, SEEK_SET);
-    fread(buffer.data(), 1, buffer.size(), file);
+    file.seek(offset);
+    file.read(buffer.data(),buffer.size());
 
     bool found = false;
     size_t pos = buffer_size - MIN_EOCD_SIZE;
@@ -124,8 +102,6 @@ std::size_t Zip::getCommentStart()
             pos--;
         }
     }
-
-    fclose(file);
 
     if (!found)
     {
