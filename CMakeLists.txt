@@ -34,6 +34,7 @@ target_include_directories(cli PRIVATE lib include)
 add_library(openssl++ STATIC
     lib/openssl++/exception.cc
     lib/openssl++/init.cc
+    lib/openssl++/big_number.cc
     lib/openssl++/basic_io.cc
     lib/openssl++/private_key.cc
     lib/openssl++/certificate.cc
