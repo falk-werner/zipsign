@@ -6,6 +6,22 @@ compiler:
   - gcc
   - clang
 
+addons:
+  apt:
+    update: true
+    packages:
+      - libssl-dev
+      - wget
+      - lcov
+      - valgrind
+
+env:
+  matrix:
+    - BUILD_TYPE=Coverage   CHECK_TARGET=check
+    - BUILD_TYPE=Debug      CHECK_TARGET=check
+    - BUILD_TPYE=Release    CHECK_TARGET=check
+    - BUILD_TYPE=MinSizeRel CHECK_TARGET=check
+
 before_install:
   - sudo apt update
   - sudo apt -y install libssl-dev wget lcov
@@ -24,11 +40,10 @@ before_install:
 before_script:
   - mkdir .build
   - cd .build
-  - cmake -DCMAKE_BUILD_TYPE=Coverage ..
+  - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
 
 script:
-  - make
-  - ./alltests
+  - make $CHECK_TARGET
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)  
