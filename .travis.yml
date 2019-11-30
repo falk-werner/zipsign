@@ -18,7 +18,7 @@ addons:
 env:
   matrix:
     - BUILD_TYPE=Coverage   CHECK_TARGET=check
-    - BUILD_TYPE=Debug      CHECK_TARGET=check
+    - BUILD_TYPE=Debug      CHECK_TARGET=memcheck
     - BUILD_TPYE=Release    CHECK_TARGET=check
     - BUILD_TYPE=MinSizeRel CHECK_TARGET=check
 

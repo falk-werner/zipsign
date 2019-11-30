@@ -81,6 +81,7 @@ pkg_check_modules(GMOCK gmock)
 add_executable(alltests
     test/openssl_environment.cc
     test/test_base64.cc
+    test/test_bignumber.cc
     test/private_key.cc
     test/test_file.cc
     test/dummy.cc
@@ -107,6 +108,10 @@ gtest_discover_tests(alltests TEST_PREFIX alltests:)
 add_custom_target(check
     ./alltests)
 add_dependencies(check alltests)
+
+add_custom_target(memcheck
+    valgrind ./alltests)
+add_dependencies(memcheck alltests)
 
 add_custom_target(coverage
     mkdir -p coverage

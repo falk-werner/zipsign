@@ -75,7 +75,7 @@ PartialInputFile::~PartialInputFile()
 BasicIO PartialInputFile::open(std::string const & filename, std::size_t upperLimit)
 {
     FILE * file = fopen(filename.c_str(), "rb");
-    if (nullptr)
+    if (nullptr == file)
     {
         throw std::runtime_error("failed to open file");
     }
