@@ -42,6 +42,10 @@ To print the signature from a previously signed ZIP archive, one can use the fol
     Archive:   archive.zip
     ZipSign=data:application/cms;base64,MIIDow...
 
+## Verify using keyring
+
+    zipsign verify -f archive.zip -c cert.pem -k keyring.pem
+
 ## Known Limitations
 
 -   ZIP comments are limited to a maximum of 64 KBytes.  
@@ -52,7 +56,6 @@ To print the signature from a previously signed ZIP archive, one can use the fol
     - *sign:* including signer certificate is not supported yet
     - *sign:* including intermediate certificates is not supported yet
     - *sign:* multiple signatures are not supported yet
-    - *verify:* providing PKI for verification is not supported yet
 
 ## External references
 

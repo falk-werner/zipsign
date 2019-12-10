@@ -50,13 +50,18 @@ namespace
         auto const & filename = args.get('f');
         auto const & cert_file = args.get('c');
         auto is_verbose = args.contains('v');
+        std::string keyring_path;
+        if (args.contains('k')) 
+        {
+            keyring_path = args.get('k');
+        }
 
         int result = EXIT_FAILURE;
 
         try
         {
             Verifier verifier(cert_file);
-            bool isValid = verifier.verify(filename, is_verbose);
+            bool isValid = verifier.verify(filename, keyring_path, is_verbose);
 
             if (isValid)
             {
@@ -103,6 +108,7 @@ int main(int argc, char * argv[])
             .setHelpText("Verifies the signature of a zip archive.")
             .add(Argument('f', "file").setHelpText("Archive to verify."))
             .add(Argument('c', "certificate").setHelpText("Certificate of signer."))
+            .add(Argument('k', "keyring").setHelpText("Path of keyring file.").setOptional())
             .add(Argument('v', "verbose").setHelpText("Enable additionl output").setFlag().setOptional())      
         )
     ;
