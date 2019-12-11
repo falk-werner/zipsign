@@ -77,7 +77,7 @@ To build the project, cmake is used.
     cd build
     cmake ..
     make
-    make install
+    sudo make install
 
 ## Dependencies
 
