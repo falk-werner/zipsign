@@ -34,7 +34,6 @@ target_include_directories(cli PRIVATE lib include)
 add_library(openssl++ STATIC
     lib/openssl++/exception.cc
     lib/openssl++/init.cc
-    lib/openssl++/big_number.cc
     lib/openssl++/basic_io.cc
     lib/openssl++/private_key.cc
     lib/openssl++/certificate.cc
@@ -63,6 +62,8 @@ set_target_properties(app PROPERTIES OUTPUT_NAME "zipsign")
 target_include_directories(app PRIVATE include src/cli)
 target_link_libraries(app PRIVATE zipsign cli)
 
+install(TARGETS app DESTINATION bin)
+
 # Unit tests
 
 if(NOT WITHOUT_TESTS)
@@ -80,9 +81,8 @@ pkg_check_modules(GMOCK gmock)
 
 add_executable(alltests
     test/openssl_environment.cc
+    test/sign_and_verify.cc
     test/test_base64.cc
-    test/test_bignumber.cc
-    test/private_key.cc
     test/test_file.cc
     test/dummy.cc
 )
@@ -98,9 +98,17 @@ target_link_libraries(alltests PRIVATE zipsign)
 target_compile_options(alltests PRIVATE ${GMOCK_CFLAGS} ${GTEST_CFLAGS} "-pthread")
 target_link_libraries(alltests PRIVATE zipsign ${GMOCK_LIBRARIES} ${GTEST_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
+add_custom_command(TARGET alltests PRE_BUILD
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/create-pki.sh ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl
+    DEPENDS
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/create-pki.sh
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/root-ca.conf
+)
+
+
 # copy test data
-file(COPY test/resources/test.zip DESTINATION .)
-file(COPY test/resources/message.txt DESTINATION .)
+configure_file(test/resources/test.zip test.zip COPYONLY)
+configure_file(test/resources/message.txt message.txt COPYONLY)
 
 enable_testing()
 gtest_discover_tests(alltests TEST_PREFIX alltests:)

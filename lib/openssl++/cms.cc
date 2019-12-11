@@ -87,27 +87,12 @@ CMS::operator CMS_ContentInfo*()
     return cms;
 }
 
-void CMS::saveToFile(std::string const & filename) const
-{
-    auto file = BasicIO::openOutputFile(filename);
-    saveToBIO(file);
-}
-
 void CMS::saveToBIO(BIO * bio) const
 {
     if (!i2d_CMS_bio(bio, cms))
     {
         throw OpenSSLException("failed to convert CMS to DER format");
     }
-}
-
-
-void CMS::dump() const
-{
-    BIO * out = BIO_new_fd(fileno(stderr), BIO_NOCLOSE);
-    CMS_ContentInfo_print_ctx(out,cms, 0, NULL);
-
-    BIO_free_all(out);
 }
 
 bool CMS::verify(STACK_OF(X509) * certs, X509_STORE * store, BIO * indata, BIO * outdata, unsigned int flags, bool is_verbose)

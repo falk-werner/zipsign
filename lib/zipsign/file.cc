@@ -5,7 +5,11 @@
 #include "zipsign/file.hpp"
 #include "openssl++/exception.hpp"
 #include <stdexcept>
+
 #include <unistd.h>
+#include <sys/sendfile.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 namespace zipsign
 {
@@ -72,5 +76,29 @@ void File::truncate(long offset)
     }
 }
 
+void File::copyTo(File & other)
+{
+    struct stat buffer;
+    int rc = fstat(fileno(file), &buffer);
+    if (0 != rc)
+    {
+        throw std::runtime_error("stat failed");
+    }
+
+    size_t remaining = buffer.st_size;
+
+    while (remaining > 0)
+    {
+        ssize_t count = sendfile(fileno(other.file), fileno(file), nullptr, remaining);
+        if (0 <= count)
+        {
+            remaining -= count;
+        }
+        else
+        {
+            throw std::runtime_error("copy failed");
+        }
+    }
+}
 
 }

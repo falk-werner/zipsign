@@ -28,7 +28,10 @@ Verifier::~Verifier()
 
 }
 
-bool Verifier::verify(std::string const & filename, bool is_verbose)
+bool Verifier::verify(
+    std::string const & filename,
+    std::string const & keyring_path,
+    bool is_verbose)
 {
     bool result = false;
 
@@ -48,6 +51,10 @@ bool Verifier::verify(std::string const & filename, bool is_verbose)
         auto signature = comment.substr(std::string(ZIPSIGN_SIGNATURE_PREFIX).size());
 
         CertificateStore store;
+        if (!keyring_path.empty())
+        {
+            store.loadFromFile(keyring_path);
+        }
         store.add(cert);
 
         CertificateStack certs;

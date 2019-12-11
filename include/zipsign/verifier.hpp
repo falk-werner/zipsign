@@ -3,6 +3,7 @@
 
 #include <openssl++/openssl++.hpp>
 #include <string>
+#include <utility>
 
 namespace zipsign
 {
@@ -14,7 +15,10 @@ class Verifier
 public:
     Verifier(std::string const & cert_file);
     ~Verifier();
-    bool verify(std::string const & filename, bool is_verbose = false);
+    bool verify(
+        std::string const & filename,
+        std::string const & keyring_path,
+        bool is_verbose = false);
 private:
     openssl::Certificate cert;
 };

@@ -17,8 +17,6 @@ class BasicIO
     BasicIO(BasicIO const &) = delete;
 public:
     static BasicIO openInputFile(std::string const & filename);
-    static BasicIO openOutputFile(std::string const & filename);
-    static BasicIO getStdout(void);
     static BasicIO fromMemory();
     static BasicIO fromMemory(void const * data, size_t size);
     explicit BasicIO(BIO * bio_);

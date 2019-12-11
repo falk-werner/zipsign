@@ -48,4 +48,14 @@ void CertificateStore::add(X509 * cert)
     }
 }
 
+void CertificateStore::loadFromFile(std::string const & filename)
+{
+    int rc = X509_STORE_load_locations(store, filename.c_str(), nullptr);
+    if (1 != rc)
+    {
+        throw OpenSSLException("failed to load store from file");
+    }
+}
+
+
 }

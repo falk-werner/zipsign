@@ -22,6 +22,7 @@ public:
     CertificateStore(CertificateStore && other);
     operator X509_STORE *();
     void add(X509 * cert);
+    void loadFromFile(std::string const & filename);
 private:
     X509_STORE * store;
 };

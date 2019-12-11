@@ -10,13 +10,6 @@
 namespace openssl
 {
 
-BasicIO BasicIO::getStdout(void)
-{
-    BIO * out = BIO_new_fp(stdout, BIO_NOCLOSE);
-
-    return std::move(BasicIO(out));
-}
-
 BasicIO BasicIO::openInputFile(std::string const & filename)
 {
     BIO * file = BIO_new_file(filename.c_str(), "rb");
@@ -27,18 +20,6 @@ BasicIO BasicIO::openInputFile(std::string const & filename)
 
     return std::move(BasicIO(file));
 }
-
-BasicIO BasicIO::openOutputFile(std::string const & filename)
-{
-    BIO * file = BIO_new_file(filename.c_str(), "wb");
-    if (NULL == file)
-    {
-        throw FileNotFoundException(filename);
-    }
-
-    return std::move(BasicIO(file));
-}
-
 
 BasicIO BasicIO::fromMemory()
 {
