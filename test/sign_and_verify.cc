@@ -38,3 +38,18 @@ TEST_F(SignAndVerifyTest, SelfSigned)
 
     ASSERT_TRUE(verifier.verify(TEST_ARCHIVE, ""));
 }
+
+TEST_F(SignAndVerifyTest, PkiSigned)
+{
+    std::string key_file = "certs/alice.key";
+    std::string cert_file = "certs/alice.crt";
+    std::string keyring = "keyring.pem";
+
+    Verifier verifier(cert_file);
+    ASSERT_FALSE(verifier.verify(TEST_ARCHIVE, keyring));
+
+    Signer signer(key_file, cert_file);
+    signer.sign(TEST_ARCHIVE);
+
+    ASSERT_TRUE(verifier.verify(TEST_ARCHIVE, keyring));
+}
