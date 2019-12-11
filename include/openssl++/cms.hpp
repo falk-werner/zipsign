@@ -24,9 +24,7 @@ public:
     CMS & operator=(CMS && other);
     ~CMS();
     operator CMS_ContentInfo*();
-    void saveToFile(std::string const & filename) const;
     void saveToBIO(BIO * bio) const;
-    void dump() const;
     bool verify(STACK_OF(X509) * certs, X509_STORE * store, BIO * indata, BIO * outdata, unsigned int flags, bool is_verbose = false);
     std::string toBase64() const;
 private:
