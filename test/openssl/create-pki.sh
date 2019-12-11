@@ -14,10 +14,20 @@ echo "error: openssl needed"
 exit 1
 fi
 
+rm -rf self-signed
 rm -rf ca
 rm -rf crl
 rm -rf certs
 rm -f keyring.pem
+
+mkdir self-signed
+openssl req -x509 \
+    -newkey rsa:4096 \
+    -keyout self-signed/key.pem \
+    -out self-signed/cert.pem \
+    -days 365 \
+    -nodes \
+    -batch
 
 mkdir -p ca/root-ca/private
 mkdir -p ca/root-ca/db

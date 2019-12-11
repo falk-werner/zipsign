@@ -79,6 +79,7 @@ pkg_check_modules(GMOCK gmock)
 
 add_executable(alltests
     test/openssl_environment.cc
+    test/sign_and_verify.cc
     test/test_base64.cc
     test/test_file.cc
     test/dummy.cc
@@ -104,8 +105,8 @@ add_custom_command(TARGET alltests PRE_BUILD
 
 
 # copy test data
-file(COPY test/resources/test.zip DESTINATION .)
-file(COPY test/resources/message.txt DESTINATION .)
+configure_file(test/resources/test.zip test.zip COPYONLY)
+configure_file(test/resources/message.txt message.txt COPYONLY)
 
 enable_testing()
 gtest_discover_tests(alltests TEST_PREFIX alltests:)
