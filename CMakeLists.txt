@@ -62,6 +62,8 @@ set_target_properties(app PROPERTIES OUTPUT_NAME "zipsign")
 target_include_directories(app PRIVATE include src/cli)
 target_link_libraries(app PRIVATE zipsign cli)
 
+install(TARGETS app DESTINATION bin)
+
 # Unit tests
 
 if(NOT WITHOUT_TESTS)

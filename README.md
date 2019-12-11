@@ -42,9 +42,21 @@ To print the signature from a previously signed ZIP archive, one can use the fol
     Archive:   archive.zip
     ZipSign=data:application/cms;base64,MIIDow...
 
-## Verify using keyring
+## Sign and verify using keyring (PKI)
 
-    zipsign verify -f archive.zip -c cert.pem -k keyring.pem
+Verification using a PKI is supported via `--keyring` option during validation.  
+Setup a CA suitable for signing is a complex topic. A good starting point might
+be the PKI tutorial at
+[https://pki-tutorial.readthedocs.io/en/latest/](https://pki-tutorial.readthedocs.io/en/latest/).
+
+The test directory contains a bash script [create-pki.sh](test/openssl/create-pki.sh), which
+creates a small PKI used within unit tests.
+
+    # sign archive alice key and certificate
+    zipsign sign -f archive.zip -p certs/alice.key -c certs/alice.crt
+
+    # verify archive using keyring
+    zipsign verify -f archive.zip -c certs/alice.crt -k keyring.pem
 
 ## Known Limitations
 
@@ -57,8 +69,23 @@ To print the signature from a previously signed ZIP archive, one can use the fol
     - *sign:* including intermediate certificates is not supported yet
     - *sign:* multiple signatures are not supported yet
 
+# Build
+
+To build the project, cmake is used.
+
+    mkdir build
+    cd build
+    cmake ..
+    make
+    make install
+
+## Dependencies
+
+-   [OpenSSL](https://www.openssl.org/) (libssl-dev)
+-   [Google Test](https://github.com/google/googletest) *(Test only)*
+
 ## External references
 
 -   [ZIP file format](https://en.wikipedia.org/wiki/Zip_(file_format))
 -   [CMS](https://en.wikipedia.org/wiki/Cryptographic_Message_Syntax)
-
+-   [PKI tutorial](https://pki-tutorial.readthedocs.io/en/latest/)
