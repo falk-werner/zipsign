@@ -85,18 +85,24 @@ add_executable(alltests
     test/test_base64.cc
     test/test_file.cc
     test/dummy.cc
+    test/cli/test_app.cc
+    test/cli/test_argument.cc
+    test/cli/test_arguments.cc
+    test/cli/test_options.cc
+    test/cli/test_verb.cc
 )
 
 target_include_directories(alltests PRIVATE
     include
     lib
+    test
     ${GMOCK_INCLUDE_DIRS}
     ${GTEST_INCLUDE_DIRS}
 )
 
 target_link_libraries(alltests PRIVATE zipsign)
 target_compile_options(alltests PRIVATE ${GMOCK_CFLAGS} ${GTEST_CFLAGS} "-pthread")
-target_link_libraries(alltests PRIVATE zipsign ${GMOCK_LIBRARIES} ${GTEST_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(alltests PRIVATE zipsign cli ${GMOCK_LIBRARIES} ${GTEST_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 add_custom_command(TARGET alltests PRE_BUILD
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/create-pki.sh ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl

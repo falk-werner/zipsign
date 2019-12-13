@@ -50,8 +50,8 @@ Options::Options(std::vector<Argument> const & args)
         {
             short_opts += ':';
         }
-        short_opts += 'h';
     }
+    short_opts += 'h';
 
     setOption(long_opts[length], 'h', "help", no_argument);
     setOption(long_opts[length + 1], '\0', nullptr, 0);
