@@ -1,21 +1,21 @@
 #include <gtest/gtest.h>
 #include <stdexcept>
-#include <cli/arguments.hpp>
+#include <cli/default_arguments.hpp>
 
-using cli::Arguments;
+using cli::DefaultArguments;
 
-TEST(Arguments, Contains)
+TEST(DefaultArguments, Contains)
 {
-    Arguments args;
+    DefaultArguments args;
     args.set('c', "");
 
     ASSERT_TRUE(args.contains('c'));
     ASSERT_FALSE(args.contains('n'));
 }
 
-TEST(Arguments, GetAndSet)
+TEST(DefaultArguments, GetAndSet)
 {
-    Arguments args;
+    DefaultArguments args;
     
     ASSERT_THROW({
         args.get('c');

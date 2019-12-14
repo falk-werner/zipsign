@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include "cli/options.hpp"
+#include "cli/default_arguments.hpp"
 
 namespace cli
 {
@@ -50,7 +51,7 @@ Verb & Verb::add(Argument arg)
 
 int Verb::run(int argc, char* argv[]) const
 {
-    Arguments arguments;
+    DefaultArguments arguments;
 
     for(auto & arg: args)
     {

@@ -23,7 +23,7 @@ using cli::Verb;
 
 namespace
 {
-    int sign(Arguments args)
+    int sign(Arguments const & args)
     {
         auto const & filename = args.get('f');
         auto const & key_file = args.get('p');
@@ -45,7 +45,7 @@ namespace
         return result;
     }
 
-    int verify(Arguments args)
+    int verify(Arguments const & args)
     {
         auto const & filename = args.get('f');
         auto const & cert_file = args.get('c');

@@ -25,7 +25,7 @@ target_include_directories(base64 PRIVATE lib include)
 add_library(cli STATIC
     lib/cli/app.cc
     lib/cli/argument.cc
-    lib/cli/arguments.cc
+    lib/cli/default_arguments.cc
     lib/cli/options.cc
     lib/cli/verb.cc
 )
@@ -87,7 +87,7 @@ add_executable(alltests
     test/base64/test_base64.cc
     test/cli/test_app.cc
     test/cli/test_argument.cc
-    test/cli/test_arguments.cc
+    test/cli/test_default_arguments.cc
     test/cli/test_options.cc
     test/cli/test_verb.cc
     test/openssl/openssl_environment.cc

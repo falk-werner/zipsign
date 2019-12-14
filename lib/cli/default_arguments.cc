@@ -2,28 +2,28 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-#include "cli/arguments.hpp"
+#include "cli/default_arguments.hpp"
 #include <stdexcept>
 
 namespace cli
 {
 
-Arguments::Arguments()
+DefaultArguments::DefaultArguments()
 {
 
 }
 
-Arguments::~Arguments()
+DefaultArguments::~DefaultArguments()
 {
 
 }
 
-bool Arguments::contains(char id) const
+bool DefaultArguments::contains(char id) const
 {
     return values.end() != values.find(id);
 }
 
-std::string const & Arguments::get(char id) const
+std::string const & DefaultArguments::get(char id) const
 {
     auto it = values.find(id);
     if (values.end() == it)
@@ -34,7 +34,7 @@ std::string const & Arguments::get(char id) const
     return it->second;
 }
 
-void Arguments::set(char id, std::string const & value)
+void DefaultArguments::set(char id, std::string const & value)
 {
     values[id] = value;
 }
