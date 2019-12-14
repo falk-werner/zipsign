@@ -104,12 +104,12 @@ target_link_libraries(alltests PRIVATE zipsign)
 target_compile_options(alltests PRIVATE ${GMOCK_CFLAGS} ${GTEST_CFLAGS} "-pthread")
 target_link_libraries(alltests PRIVATE zipsign cli ${GMOCK_LIBRARIES} ${GTEST_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
-#add_custom_command(TARGET alltests PRE_BUILD
-#    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/create-pki.sh ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl
-#    DEPENDS
-#        ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/create-pki.sh
-#        ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/root-ca.conf
-#)
+add_custom_command(TARGET alltests PRE_BUILD
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/create-pki.sh ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl
+    DEPENDS
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/create-pki.sh
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/root-ca.conf
+)
 
 
 # copy test data
