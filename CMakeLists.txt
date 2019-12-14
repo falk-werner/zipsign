@@ -94,6 +94,9 @@ add_executable(alltests
     test/openssl/test_openssl_exception.cc
     test/openssl/test_openssl_base_exception.cc
     test/openssl/test_file_not_found_exception.cc
+    test/openssl/test_certificate.cc
+    test/openssl/test_certificate_store.cc
+    test/openssl/test_private_key.cc
 )
 
 target_include_directories(alltests PRIVATE
