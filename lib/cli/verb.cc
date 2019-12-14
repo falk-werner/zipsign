@@ -65,6 +65,7 @@ int Verb::run(int argc, char* argv[]) const
     int result = EXIT_SUCCESS;
     bool is_finished = false;
     bool print_usage = false;
+    optind = 0;
 
     while (!is_finished)
     {
