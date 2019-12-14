@@ -90,6 +90,10 @@ add_executable(alltests
     test/cli/test_arguments.cc
     test/cli/test_options.cc
     test/cli/test_verb.cc
+    test/openssl/test_basic_io.cc
+    test/openssl/test_openssl_exception.cc
+    test/openssl/test_openssl_base_exception.cc
+    test/openssl/test_file_not_found_exception.cc
 )
 
 target_include_directories(alltests PRIVATE
