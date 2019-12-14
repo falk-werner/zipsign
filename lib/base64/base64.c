@@ -70,7 +70,7 @@ size_t base64_encode(
             break;
     }
 
-    if (buffer_size >= out_pos)
+    if (buffer_size > out_pos)
     {
         buffer[out_pos] = '\0';
     }
