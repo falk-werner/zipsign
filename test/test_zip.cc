@@ -3,27 +3,10 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <gtest/gtest.h>
-#include <iostream>
 
-#include "zipsign/partial_input_file.hpp"
 #include "zipsign/zip.hpp"
 
-using zipsign::PartialInputFile;
 using zipsign::Zip;
-
-TEST(zipsign, dummy)
-{
-    PartialInputFile partialFile;
-    auto file = partialFile.open("message.txt", 2);
-
-    BIO * in = file;
-
-    char buffer[100];
-    int i = BIO_read(in, buffer, 100);
-    ASSERT_EQ(2, i);
-    ASSERT_EQ('4', buffer[0]);
-    ASSERT_EQ('2', buffer[1]);
-}
 
 TEST(zipsign, getzipcommentpos)
 {
