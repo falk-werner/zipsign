@@ -4,6 +4,9 @@
 
 #include "cli/app.hpp"
 
+#include "cli/app_info.hpp"
+#include "cli/default_verb.hpp"
+
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
@@ -11,39 +14,101 @@
 namespace cli
 {
 
+class App::Private: public AppInfo
+{
+public:
+    Private(std::string const & name_);    
+    ~Private() override;    
+    std::string const & getName() const override;
+    std::string const & getDescription() const override;
+    std::string const & getCopyright() const override;
+    int run(int argc, char* argv[]) const;
+    Verb & add(std::string const & name, Command command);
+    void setCopyright(std::string const & value);
+    void setDescription(std::string const & value);
+    void setAdditionalInfo(std::string const & value);
+private:
+    void printUsage() const;
+    DefaultVerb const * getVerb(std::string const & name) const;
+    std::string name;
+    std::string copyright;
+    std::string description;
+    std::string additionalInfo;
+    std::vector<DefaultVerb> verbs;
+
+};
+
 App::App(std::string const & name_)
-: name(name_)
+: d(new App::Private(name_))
 {
 
 }
 App::~App()
 {
+    delete d;
+}   
+
+int App::run(int argc, char* argv[]) const
+{
+    return d->run(argc, argv);
+}
+
+Verb & App::add(std::string const & name, Command command)
+{
+    return d->add(name, command);
+}
+
+App & App::setCopyright(std::string const & value)
+{
+    d->setCopyright(value);
+    return *this;
+}
+App & App::setDescription(std::string const & value)
+{
+    d->setDescription(value);
+    return *this;
+}
+
+App & App::setAdditionalInfo(std::string const & value)
+{
+    d->setAdditionalInfo(value);
+    return *this;
+}
+
+
+App::Private::Private(std::string const & name_)
+: name(name_)
+{
+
+}
+App::Private::~Private()
+{
 
 }   
 
-std::string const & App::getName() const
+std::string const & App::Private::getName() const
 {
     return name;
 }
 
-std::string const & App::getDescription() const
+std::string const & App::Private::getDescription() const
 {
     return description;
 }
 
-std::string const & App::getCopyright() const
+std::string const & App::Private::getCopyright() const
 {
     return copyright;
 }
 
-int App::run(int argc, char* argv[]) const
+int App::Private::run(int argc, char* argv[]) const
 {
     int exitCode = EXIT_FAILURE;
 
     if (argc > 1)
     {
         std::string verbName = argv[1];
-        Verb const * verb = getVerb(verbName);
+        DefaultVerb const * verb = getVerb(verbName);
 
         if (nullptr != verb)
         {
@@ -69,33 +134,29 @@ int App::run(int argc, char* argv[]) const
     return exitCode;
 }
 
-App & App::add(Verb const & verb)
-{
-    verbs.push_back(verb);
-    verbs[verbs.size() - 1].setApp(*this);
+Verb & App::Private::add(std::string const & verb, Command command)
+{    
+    verbs.push_back(DefaultVerb(*this, verb, command));
 
-    return *this;
+    return verbs[verbs.size() - 1];
 }
 
-App & App::setCopyright(std::string const & value)
+void App::Private::setCopyright(std::string const & value)
 {
     copyright = value;
-    return *this;
 }
 
-App & App::setDescription(std::string const & value)
+void App::Private::setDescription(std::string const & value)
 {
     description = value;
-    return *this;
 }
 
-App & App::setAdditionalInfo(std::string const & value)
+void App::Private::setAdditionalInfo(std::string const & value)
 {
     additionalInfo = value;
-    return *this;
 }
 
-Verb const * App::getVerb(std::string const & name) const
+DefaultVerb const * App::Private::getVerb(std::string const & name) const
 {
     for(auto & verb: verbs)
     {
@@ -109,7 +170,7 @@ Verb const * App::getVerb(std::string const & name) const
 }
 
 
-void App::printUsage(void) const
+void App::Private::printUsage(void) const
 {
     std::cout
         << name << ", Copyright (c) " << copyright << std::endl

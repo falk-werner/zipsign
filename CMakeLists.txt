@@ -27,7 +27,7 @@ add_library(cli STATIC
     lib/cli/argument.cc
     lib/cli/default_arguments.cc
     lib/cli/options.cc
-    lib/cli/verb.cc
+    lib/cli/default_verb.cc
 )
 target_include_directories(cli PRIVATE lib include)
 

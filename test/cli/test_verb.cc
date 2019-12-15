@@ -1,9 +1,11 @@
 #include <gtest/gtest.h>
-#include <cli/cli.hpp>
 #include <cstdlib>
-#include <cli/mock_app_info.hpp>
 
-using cli::Verb;
+#include "cli/cli.hpp"
+#include "cli/default_verb.hpp"
+#include "cli/mock_app_info.hpp"
+
+using cli::DefaultVerb;
 using cli::Argument;
 using cli::Arguments;
 
@@ -20,29 +22,27 @@ int RunFailure(Arguments const & args)
     return EXIT_FAILURE;
 }
 
-TEST(Verb, RunSuccess)
+TEST(DefaultVerb, RunSuccess)
 {
     AppInfoMock appInfo;
     EXPECT_CALL(appInfo, getName()).Times(0);
     EXPECT_CALL(appInfo, getCopyright()).Times(0);
     EXPECT_CALL(appInfo, getDescription()).Times(0);
 
-    Verb verb("run", RunSuccess);
-    verb.setApp(appInfo);
+    DefaultVerb verb(appInfo, "run", RunSuccess);
 
     int exitCode = verb.run(0, nullptr);
     ASSERT_EQ(EXIT_SUCCESS, exitCode);    
 }
 
-TEST(Verb, RunSuccessWithArgs)
+TEST(DefaultVerb, RunSuccessWithArgs)
 {
     AppInfoMock appInfo;
     EXPECT_CALL(appInfo, getName()).Times(0);
     EXPECT_CALL(appInfo, getCopyright()).Times(0);
     EXPECT_CALL(appInfo, getDescription()).Times(0);
 
-    Verb verb("run", RunSuccess);
-    verb.setApp(appInfo);
+    DefaultVerb verb(appInfo, "run", RunSuccess);
     verb.add(Argument('f', "file").setHelpText("a file"));
     verb.add(Argument('v', "verbose").setHelpText("enable chatty mode").setFlag());
     verb.add(Argument('l', "log-level").setHelpText("set log level").setDefaultValue("error").setOptional());
@@ -56,29 +56,27 @@ TEST(Verb, RunSuccessWithArgs)
     ASSERT_EQ(EXIT_SUCCESS, exitCode);    
 }
 
-TEST(Verb, RunFailure)
+TEST(DefaultVerb, RunFailure)
 {
     AppInfoMock appInfo;
     EXPECT_CALL(appInfo, getName()).Times(0);
     EXPECT_CALL(appInfo, getCopyright()).Times(0);
     EXPECT_CALL(appInfo, getDescription()).Times(0);
 
-    Verb verb("run", RunFailure);
-    verb.setApp(appInfo);
+    DefaultVerb verb(appInfo, "run", RunFailure);
 
     int exitCode = verb.run(0, nullptr);
     ASSERT_EQ(EXIT_FAILURE, exitCode);    
 }
 
-TEST(Verb, Fail_MissingRequiredArg)
+TEST(DefaultVerb, Fail_MissingRequiredArg)
 {
     AppInfoMock appInfo;
     EXPECT_CALL(appInfo, getName()).Times(AtLeast(1)).WillRepeatedly(ReturnRefOfCopy(std::string("app")));
     EXPECT_CALL(appInfo, getCopyright()).Times(1).WillOnce(ReturnRefOfCopy(std::string("2019 Falk Werner")));
     EXPECT_CALL(appInfo, getDescription()).Times(1).WillOnce(ReturnRefOfCopy(std::string("Simple App")));
 
-    Verb verb("run", RunSuccess);
-    verb.setApp(appInfo);
+    DefaultVerb verb(appInfo, "run", RunSuccess);
     verb.add(Argument('f', "file").setHelpText("a file"));
     verb.add(Argument('v', "verbose").setHelpText("enable chatty mode").setFlag());
     verb.add(Argument('l', "log-level").setHelpText("set log level").setDefaultValue("error").setOptional());
@@ -91,15 +89,14 @@ TEST(Verb, Fail_MissingRequiredArg)
     ASSERT_EQ(EXIT_FAILURE, exitCode);    
 }
 
-TEST(Verb, Fail_UnrecognizedArg)
+TEST(DefaultVerb, Fail_UnrecognizedArg)
 {
     AppInfoMock appInfo;
     EXPECT_CALL(appInfo, getName()).Times(AtLeast(1)).WillRepeatedly(ReturnRefOfCopy(std::string("app")));
     EXPECT_CALL(appInfo, getCopyright()).Times(1).WillOnce(ReturnRefOfCopy(std::string("2019 Falk Werner")));
     EXPECT_CALL(appInfo, getDescription()).Times(1).WillOnce(ReturnRefOfCopy(std::string("Simple App")));
 
-    Verb verb("run", RunSuccess);
-    verb.setApp(appInfo);
+    DefaultVerb verb(appInfo, "run", RunSuccess);
     verb.add(Argument('f', "file").setHelpText("a file"));
     verb.add(Argument('v', "verbose").setHelpText("enable chatty mode").setFlag());
     verb.add(Argument('l', "log-level").setHelpText("set log level").setDefaultValue("error").setOptional());
@@ -114,15 +111,14 @@ TEST(Verb, Fail_UnrecognizedArg)
     ASSERT_EQ(EXIT_FAILURE, exitCode);    
 }
 
-TEST(Verb, PrintHelp)
+TEST(DefaultVerb, PrintHelp)
 {
     AppInfoMock appInfo;
     EXPECT_CALL(appInfo, getName()).Times(AtLeast(1)).WillRepeatedly(ReturnRefOfCopy(std::string("app")));
     EXPECT_CALL(appInfo, getCopyright()).Times(1).WillOnce(ReturnRefOfCopy(std::string("2019 Falk Werner")));
     EXPECT_CALL(appInfo, getDescription()).Times(1).WillOnce(ReturnRefOfCopy(std::string("Simple App")));
 
-    Verb verb("run", RunSuccess);
-    verb.setApp(appInfo);
+    DefaultVerb verb(appInfo, "run", RunSuccess);
     verb.setHelpText("run simple app");
     verb.add(Argument('f', "file").setHelpText("a file"));
     verb.add(Argument('v', "verbose").setHelpText("enable chatty mode").setFlag());

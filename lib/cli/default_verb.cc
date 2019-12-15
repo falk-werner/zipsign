@@ -1,4 +1,4 @@
-#include "cli/verb.hpp"
+#include "cli/default_verb.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -9,47 +9,42 @@
 namespace cli
 {
 
-Verb::Verb(std::string const & name_, Command command_)
-: name(name_)
+DefaultVerb::DefaultVerb(AppInfo & appInfo_, std::string const & name_, Command command_)
+: appInfo(appInfo_)
+, name(name_)
 , command(command_)
-, appInfo(nullptr)
 {
 
 }
 
-Verb::~Verb()
+DefaultVerb::~DefaultVerb()
 {
 
 }
 
-std::string const & Verb::getName() const
+std::string const & DefaultVerb::getName() const
 {
     return name;
 }
 
-std::string const & Verb::getHelpText() const
+std::string const & DefaultVerb::getHelpText() const
 {
     return helpText;
 }
 
-void Verb::setApp(AppInfo & appInfo_)
-{
-    appInfo = &appInfo_;
-}
-
-Verb & Verb::setHelpText(std::string const & helpText_)
+Verb & DefaultVerb::setHelpText(std::string const & helpText_)
 {
     helpText = helpText_;
     return *this;
 }
 
-Verb & Verb::add(Argument arg)
+Verb & DefaultVerb::add(Argument arg)
 {
     args.push_back(arg);
     return *this;
 }
 
-int Verb::run(int argc, char* argv[]) const
+int DefaultVerb::run(int argc, char* argv[]) const
 {
     DefaultArguments arguments;
 
@@ -121,22 +116,19 @@ int Verb::run(int argc, char* argv[]) const
 }
 
 
-void Verb::printUsage() const
+void DefaultVerb::printUsage() const
 {
-    if (nullptr != appInfo)
-    {
-        std::cout
-            << appInfo->getName() << ", Copyright (c) " << appInfo->getCopyright() << std::endl
-            << appInfo->getDescription() << std::endl
-            << std::endl
-            ;
-    }
+    std::cout
+        << appInfo.getName() << ", Copyright (c) " << appInfo.getCopyright() << std::endl
+        << appInfo.getDescription() << std::endl
+        << std::endl
+        ;
     
     std::cout << name << ": " << helpText << std::endl << std::endl;
 
     std::cout
         << "Usage:" << std::endl
-        << '\t' << ((nullptr != appInfo) ? appInfo->getName() : "<app>") << ' ' << name
+        << '\t' << appInfo.getName() << ' ' << name
     ;
 
     for (auto const & arg: args)

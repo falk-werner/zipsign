@@ -6,6 +6,7 @@
 #define CLI_ARGUMENTS_HPP
 
 #include <string>
+#include <vector>
 
 namespace cli
 {
@@ -16,6 +17,7 @@ public:
     virtual ~Arguments() { }
     virtual bool contains(char id) const = 0;
     virtual std::string const & get(char id) const = 0;
+    virtual std::vector<std::string> const & getList(char id) const = 0;
 };
 
 }

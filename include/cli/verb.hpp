@@ -5,7 +5,6 @@
 #include <vector>
 #include <cli/argument.hpp>
 #include <cli/command.hpp>
-#include <cli/app_info.hpp>
 
 namespace cli
 {
@@ -13,22 +12,9 @@ namespace cli
 class Verb
 {
 public:
-    Verb(std::string const & name, Command command);
-    ~Verb();
-    void setApp(AppInfo & appInfo_);
-    std::string const & getName() const;
-    std::string const & getHelpText() const;
-    int run(int argc, char * argv[]) const;
-    Verb & add(Argument arg);
-    Verb & setHelpText(std::string const & helpText_);
-private:
-    void printUsage() const;
-
-    std::string name;
-    Command command;
-    std::vector<Argument> args;
-    std::string helpText;
-    AppInfo * appInfo;
+    virtual ~Verb() { }
+    virtual Verb & setHelpText(std::string const & helpText_) = 0;
+    virtual Verb & add(Argument arg) = 0;
 };
 
 

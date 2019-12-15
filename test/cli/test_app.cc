@@ -17,7 +17,7 @@ protected:
         app->setCopyright("(c) 2019 Falk Werner");
         app->setDescription("a simple app");
         app->setAdditionalInfo("<FOOTER>");
-        app->add(Verb("run", AppTest::Run));
+        app->add("run", AppTest::Run);
     }
 
     void TearDown() override

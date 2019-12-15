@@ -8,35 +8,27 @@
 #include <string>
 #include <vector>
 
-#include "cli/app_info.hpp"
 #include "cli/argument.hpp"
 #include "cli/arguments.hpp"
 #include "cli/verb.hpp"
+#include "cli/command.hpp"
 
 namespace cli
 {
 
-class App: public AppInfo
+class App
 {
 public:
     App(std::string const & name_);    
-    ~App() override;    
-    std::string const & getName() const override;
-    std::string const & getDescription() const override;
-    std::string const & getCopyright() const override;
+    ~App();    
     int run(int argc, char* argv[]) const;
-    App & add(Verb const & verb);
+    Verb & add(std::string const & name, Command command);
     App & setCopyright(std::string const & value);
     App & setDescription(std::string const & value);
     App & setAdditionalInfo(std::string const & value);
 private:
-    void printUsage() const;
-    Verb const * getVerb(std::string const & name) const;
-    std::string name;
-    std::string copyright;
-    std::string description;
-    std::string additionalInfo;
-    std::vector<Verb> verbs;
+    class Private;
+    Private * d;
 };
 
 }
