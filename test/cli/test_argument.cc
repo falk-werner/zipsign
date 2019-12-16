@@ -1,87 +1,62 @@
 #include <gtest/gtest.h>
-#include <cli/cli.hpp>
+#include <cli/argument.hpp>
 
 using cli::Argument;
+using cli::ArgumentType;
 
 TEST(Argument, Id)
 {
-    Argument arg('a', "argument");
+    Argument arg('a', "argument", ArgumentType::STRING, "", true, "");
 
     ASSERT_EQ('a', arg.getId());
 }
 
 TEST(Argument, Name)
 {
-    Argument arg('a', "argument");
+    Argument arg('a', "argument", ArgumentType::STRING, "", true, "");
 
     ASSERT_STREQ("argument", arg.getName().c_str());
 }
 
 TEST(Argument, HelpText)
 {
-    Argument arg('a', "argument");
-    arg.setHelpText("Description");
+    Argument arg('a', "argument", ArgumentType::STRING, "Description", true, "");
 
     ASSERT_STREQ("Description", arg.getHelpText().c_str());
 }
 
 TEST(Argument, DefaultValue)
 {
-    Argument arg('a', "argument");
-    arg.setDefaultValue("Value");
+    Argument arg('a', "argument", ArgumentType::STRING, "", true, "Value");
 
     ASSERT_STREQ("Value", arg.getDefaultValue().c_str());
     ASSERT_TRUE(arg.hasDefaultValue());
 }
 
-TEST(Argument, IsOptionalDefaultOff)
+TEST(DefaultArgument, IsOptionalTrue)
 {
-    Argument arg('a', "argument");
-    ASSERT_FALSE(arg.isOptional());
-}
-
-TEST(Argument, IsOptionalTrue)
-{
-    Argument arg('a', "argument");
-    arg.setOptional(true);
+    Argument arg('a', "argument", ArgumentType::STRING, "", false, "");
 
     ASSERT_TRUE(arg.isOptional());
 }
 
 TEST(Argument, IsOptionalFalse)
 {
-    Argument arg('a', "argument");
-    arg.setOptional(false);
+    Argument arg('a', "argument", ArgumentType::STRING, "", true, "");
 
     ASSERT_FALSE(arg.isOptional());
 }
 
-TEST(Argument, IsFlagDefaultOff)
+TEST(Argument, ArgumentTypeFlag)
 {
-    Argument arg('a', "argument");
-
-    ASSERT_FALSE(arg.isFlag());
-}
-
-TEST(Argument, IsFlagTrue)
-{
-    Argument arg('a', "argument");
-    arg.setFlag(true);
+    Argument arg('a', "argument", ArgumentType::FLAG, "", false, "");
 
     ASSERT_TRUE(arg.isFlag());
 }
 
 TEST(Argument, IsFlagFalse)
 {
-    Argument arg('a', "argument");
-    arg.setFlag(false);
+    Argument arg('a', "argument", ArgumentType::STRING, "", true, "");
 
     ASSERT_FALSE(arg.isFlag());
-}
-
-TEST(Argument, HasDefaultValueDefaultOff)
-{
-    Argument arg('a', "argument");
-    
-    ASSERT_FALSE(arg.hasDefaultValue());
 }

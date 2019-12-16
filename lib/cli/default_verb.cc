@@ -38,9 +38,31 @@ Verb & DefaultVerb::setHelpText(std::string const & helpText_)
     return *this;
 }
 
-Verb & DefaultVerb::add(Argument arg)
+Verb & DefaultVerb::addFlag(char id, std::string const & name, std::string const & description)
 {
-    args.push_back(arg);
+    args.push_back(Argument(id, name, ArgumentType::FLAG, description, false, ""));
+    return *this;
+}
+
+Verb & DefaultVerb::addArg(
+    char id,
+    std::string const & name,
+    std::string const & description,
+    bool isRequired,
+    std::string const & defaultValue)
+{
+    args.push_back(Argument(id, name, ArgumentType::STRING, description, isRequired, ""));
+    return *this;
+}
+
+Verb & DefaultVerb::addList(
+    char id,
+    std::string const & name,
+    std::string const & description,
+    bool isRequired,
+    std::string const & defaultValue)
+{
+    args.push_back(Argument(id, name, ArgumentType::LIST, description, isRequired, ""));
     return *this;
 }
 

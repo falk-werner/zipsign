@@ -7,12 +7,19 @@
 namespace cli
 {
 
-Argument::Argument(char id_, std::string const & name_)
+Argument::Argument(
+        char id_,
+        std::string const & name_,
+        ArgumentType type_,
+        std::string const & helpText_,
+        bool isRequired_,
+        std::string const & defaultValue_)
 : id(id_)
 , name(name_)
-, is_optional(false)
-, is_flag(false)
-, has_defaultValue(false)
+, type(type_)
+, helpText(helpText_)
+, isRequired(isRequired_)
+, defaultValue(defaultValue_)
 {
 
 }
@@ -22,30 +29,6 @@ Argument::~Argument()
 
 }
 
-Argument & Argument::setHelpText(std::string const & value)
-{
-    helpText = value;
-    return *this;
-}
-
-Argument & Argument::setDefaultValue(std::string const & value)
-{
-    defaultValue = value;
-    has_defaultValue = true;
-    return *this;
-}
-
-Argument & Argument::setOptional(bool value)
-{
-    is_optional = value;
-    return *this;
-}
-
-Argument & Argument::setFlag(bool value)
-{
-    is_flag = value;
-    return *this;
-}
 
 char Argument::getId() const
 {
@@ -69,17 +52,17 @@ std::string const & Argument::getDefaultValue() const
 
 bool Argument::isOptional() const
 {
-    return is_optional;
+    return !isRequired;
 }
 
 bool Argument::isFlag() const
 {
-    return is_flag;
+    return (ArgumentType::FLAG == type);
 }
 
 bool Argument::hasDefaultValue() const
 {
-    return has_defaultValue;
+    return !defaultValue.empty();
 }
 
 

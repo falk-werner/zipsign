@@ -17,7 +17,6 @@ using zipsign::Signer;
 using zipsign::Verifier;
 
 using cli::App;
-using cli::Argument;
 using cli::Arguments;
 using cli::Verb;
 
@@ -101,18 +100,18 @@ int main(int argc, char * argv[])
 
     app.add("sign", sign)
         .setHelpText("Signs a zip archive.")
-        .add(Argument('f', "file").setHelpText("Archive to sign."))
-        .add(Argument('p', "private-key").setHelpText("Private key to sign."))
-        .add(Argument('c', "certificate").setHelpText("Certificate of signer."))
-        .add(Argument('v', "verbose").setHelpText("Enable additionl output").setFlag().setOptional())      
+        .addArg('f', "file", "Archive to sign.")
+        .addArg('p', "private-key", "Private key to sign.")
+        .addArg('c', "certificate", "Certificate of signer.")
+        .addFlag('v', "verbose", "Enable additionl output")      
     ;
 
     app.add("verify", verify)
         .setHelpText("Verifies the signature of a zip archive.")
-        .add(Argument('f', "file").setHelpText("Archive to verify."))
-        .add(Argument('c', "certificate").setHelpText("Certificate of signer."))
-        .add(Argument('k', "keyring").setHelpText("Path of keyring file.").setOptional())
-        .add(Argument('v', "verbose").setHelpText("Enable additionl output").setFlag().setOptional())      
+        .addArg('f', "file", "Archive to verify.")
+        .addArg('c', "certificate", "Certificate of signer.")
+        .addArg('k', "keyring", "Path of keyring file.", false)
+        .addFlag('v', "verbose", "Enable additionl output")      
     ;
 
     return app.run(argc, argv);

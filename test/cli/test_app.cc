@@ -5,7 +5,6 @@
 
 using cli::App;
 using cli::Verb;
-using cli::Argument;
 using cli::Arguments;
 
 class AppTest: public ::testing::Test

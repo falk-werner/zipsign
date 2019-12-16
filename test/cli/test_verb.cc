@@ -6,7 +6,6 @@
 #include "cli/mock_app_info.hpp"
 
 using cli::DefaultVerb;
-using cli::Argument;
 using cli::Arguments;
 
 using testing::ReturnRefOfCopy;
@@ -43,9 +42,9 @@ TEST(DefaultVerb, RunSuccessWithArgs)
     EXPECT_CALL(appInfo, getDescription()).Times(0);
 
     DefaultVerb verb(appInfo, "run", RunSuccess);
-    verb.add(Argument('f', "file").setHelpText("a file"));
-    verb.add(Argument('v', "verbose").setHelpText("enable chatty mode").setFlag());
-    verb.add(Argument('l', "log-level").setHelpText("set log level").setDefaultValue("error").setOptional());
+    verb.addArg('f', "file", "a file", true, "");
+    verb.addFlag('v', "verbose", "enable chatty mode");
+    verb.addArg('l', "log-level", "set log level", false, "error");
 
     char arg0[] = "run";
     char arg1[] = "--file";
@@ -77,9 +76,9 @@ TEST(DefaultVerb, Fail_MissingRequiredArg)
     EXPECT_CALL(appInfo, getDescription()).Times(1).WillOnce(ReturnRefOfCopy(std::string("Simple App")));
 
     DefaultVerb verb(appInfo, "run", RunSuccess);
-    verb.add(Argument('f', "file").setHelpText("a file"));
-    verb.add(Argument('v', "verbose").setHelpText("enable chatty mode").setFlag());
-    verb.add(Argument('l', "log-level").setHelpText("set log level").setDefaultValue("error").setOptional());
+    verb.addArg('f', "file", "a file", true, "");
+    verb.addFlag('v', "verbose", "enable chatty mode");
+    verb.addArg('l', "log-level", "set log level", true, "error");
 
     char arg0[] = "run";
     char arg1[] = "--file";
@@ -97,9 +96,9 @@ TEST(DefaultVerb, Fail_UnrecognizedArg)
     EXPECT_CALL(appInfo, getDescription()).Times(1).WillOnce(ReturnRefOfCopy(std::string("Simple App")));
 
     DefaultVerb verb(appInfo, "run", RunSuccess);
-    verb.add(Argument('f', "file").setHelpText("a file"));
-    verb.add(Argument('v', "verbose").setHelpText("enable chatty mode").setFlag());
-    verb.add(Argument('l', "log-level").setHelpText("set log level").setDefaultValue("error").setOptional());
+    verb.addArg('f', "file", "a file", true, "");
+    verb.addFlag('v', "verbose", "enable chatty mode");
+    verb.addArg('l', "log-level", "set log level", false, "error");
 
     char arg0[] = "run";
     char arg1[] = "--file";
@@ -120,9 +119,9 @@ TEST(DefaultVerb, PrintHelp)
 
     DefaultVerb verb(appInfo, "run", RunSuccess);
     verb.setHelpText("run simple app");
-    verb.add(Argument('f', "file").setHelpText("a file"));
-    verb.add(Argument('v', "verbose").setHelpText("enable chatty mode").setFlag());
-    verb.add(Argument('l', "log-level").setHelpText("set log level").setDefaultValue("error").setOptional());
+    verb.addArg('f', "file", "a file", true, "");
+    verb.addFlag('v', "verbose", "enable chatty mode");
+    verb.addArg('l', "log-level", "set log level", false, "error");
 
     char arg0[] = "run";
     char arg1[] = "-h";

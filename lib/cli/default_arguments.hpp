@@ -14,7 +14,7 @@ public:
     std::vector<std::string> const & getList(char id) const override;
     void set(char id, std::string const & value);
 private:
-    std::unordered_map<char, std::string> values;    
+    std::unordered_map<char, std::vector<std::string>> values;    
 
 };
 

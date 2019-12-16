@@ -25,6 +25,12 @@ bool DefaultArguments::contains(char id) const
 
 std::string const & DefaultArguments::get(char id) const
 {
+    auto const & list = getList(id);
+    return list[0];
+}
+
+std::vector<std::string> const & DefaultArguments::getList(char id) const
+{
     auto it = values.find(id);
     if (values.end() == it)
     {
@@ -34,15 +40,11 @@ std::string const & DefaultArguments::get(char id) const
     return it->second;
 }
 
-std::vector<std::string> const & DefaultArguments::getList(char id) const
-{
-    throw std::out_of_range("id not found: " + id);
-}
-
 
 void DefaultArguments::set(char id, std::string const & value)
 {
-    values[id] = value;
+    auto & list = values[id];
+    list.push_back(value);
 }
 
 }

@@ -3,12 +3,13 @@
 
 using cli::Options;
 using cli::Argument;
+using cli::ArgumentType;
 
 TEST(Options, ShortOpts)
 {
     std::vector<Argument> args;
-    args.push_back(Argument('f', "file"));
-    args.push_back(Argument('v', "verbose").setFlag());
+    args.push_back(Argument('f', "file", ArgumentType::STRING, "", true, ""));
+    args.push_back(Argument('v', "verbose", ArgumentType::FLAG, "", false, ""));
 
     Options opts(args);
     ASSERT_STREQ("f:vh", opts.shortOpts());
@@ -17,8 +18,8 @@ TEST(Options, ShortOpts)
 TEST(Options, LongOpts)
 {
     std::vector<Argument> args;
-    args.push_back(Argument('f', "file"));
-    args.push_back(Argument('v', "verbose").setFlag());
+    args.push_back(Argument('f', "file", ArgumentType::STRING, "", true, ""));
+    args.push_back(Argument('v', "verbose", ArgumentType::FLAG, "", false, ""));
 
     Options opts(args);
     option const * long_opts = opts.longOpts();
