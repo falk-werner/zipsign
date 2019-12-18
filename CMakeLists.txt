@@ -82,6 +82,7 @@ pkg_check_modules(GMOCK gmock)
 
 add_executable(alltests
     test/test_sign_and_verify.cc
+    test/test_informer.cc
     test/test_file.cc
     test/test_partial_input_file.cc
     test/test_zip.cc

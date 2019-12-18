@@ -117,7 +117,6 @@ To complete chain of trust, on or more intermediate certificates can be specifie
     When overused, this might not fit into the comment.
 
 -   Implementation limitations
-    - *sign:* including signer certificate is not supported yet
     - *sign:* multiple signatures are not supported yet
 
 # Build
