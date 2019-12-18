@@ -26,6 +26,7 @@ public:
     void saveToBIO(BIO * bio) const;
     bool verify(STACK_OF(X509) * certs, X509_STORE * store, BIO * indata, BIO * outdata, unsigned int flags, bool is_verbose = false);
     std::string toBase64() const;
+    std::string toString() const;
 private:
     CMS_ContentInfo * cms;
 };

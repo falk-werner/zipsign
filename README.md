@@ -25,13 +25,14 @@ Sign and verify ZIP archives.
 
     zipsign sign -f <filename> -p <private-key> -c <signers certificate> [-i <intemerdiate> ...]
 
-| Short | Long           | Argument    | Description                                              |
-| ----- | -------------- | ----------- | -------------------------------------------------------- |
-| -f    | --file         | archive.zip | Required. ZIP file to sign.                              |
-| -p    | --private-key  | key.pem     | Required. Filename of signers private key.               |
-| -c    | --certificate  | cert.pem    | Required. Filename of signers certificate.               |
-| -i    | --intermediate | inter.pem   | Optional. Filename of intermediate certifiacte to embed. |
-| -v    | --verbose      | _none_      | Optional. Enable additional output.                      |
+| Short | Long                | Argument    | Description                                              |
+| ----- | ------------------- | ----------- | -------------------------------------------------------- |
+| -f    | --file              | archive.zip | Required. ZIP file to sign.                              |
+| -p    | --private-key       | key.pem     | Required. Filename of signers private key.               |
+| -c    | --certificate       | cert.pem    | Required. Filename of signers certificate.               |
+| -i    | --intermediate      | inter.pem   | Optional. Filename of intermediate certifiacte to embed. |
+| -e    | --embed-certificate | _none_      | Optional. Embed signers certificate in signature.        |
+| -v    | --verbose           | _none_      | Optional. Enable additional output.                      |
 
 During signing the ZIP file will be altered (ZIP comment will be re-written).
 
@@ -49,6 +50,16 @@ verfication.
 | -c    | --certificate | cert.pem    | Required. Filename of signers certificate. |
 | -k    | --keyring     | keyring.pem | Optional. Filename of PKI.                 |
 | -v    | --verbose     | _none_      | Optional. Enable additional output.        |
+
+### Info
+
+    zipsign info -f <filename>
+
+| Short | Long          | Argument    | Description                                |
+| ----- | ------------- | ----------- | ------------------------------------------ |
+| -f    | --file        | archive.zip | Required. ZIP file to print info.          |
+
+Prints signature of ZIP archive in human readable form.
 
 ## How it works
 
@@ -106,7 +117,6 @@ To complete chain of trust, on or more intermediate certificates can be specifie
     When overused, this might not fit into the comment.
 
 -   Implementation limitations
-    - *sign:* including signer certificate is not supported yet
     - *sign:* multiple signatures are not supported yet
 
 # Build

@@ -1,0 +1,76 @@
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+
+#include <zipsign/zipsign.hpp>
+#include <zipsign/file.hpp>
+
+using zipsign::Signer;
+using zipsign::Informer;
+using zipsign::File;
+
+using testing::HasSubstr;
+using testing::Not;
+
+#define TEST_ARCHIVE ("informer.zip")
+
+class InformerTest: public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        File archive("test.zip", "rb");
+        File test_file(TEST_ARCHIVE, "wb");
+
+        archive.copyTo(test_file);
+    }
+
+    void TearDown() override
+    {
+        File::remove(TEST_ARCHIVE);
+    }
+};
+
+TEST_F(InformerTest, WithoutEmbeddedSignerCertificate)
+{
+    std::string key_file = "certs/alice.key";
+    std::string cert_file = "certs/alice.crt";
+
+    Signer signer(key_file, cert_file);
+    signer.sign(TEST_ARCHIVE);
+
+    Informer informer;
+    std::stringstream out;
+    informer.print(TEST_ARCHIVE, out);
+    auto info = out.str();
+
+    ASSERT_THAT(info.c_str(), HasSubstr("Signing CA"));
+    ASSERT_THAT(info.c_str(), Not(HasSubstr("Alice")));
+}
+
+TEST_F(InformerTest, WithEmbeddedSignerCertificate)
+{
+    std::string key_file = "certs/alice.key";
+    std::string cert_file = "certs/alice.crt";
+
+    Signer signer(key_file, cert_file);
+    signer.setEmbedCerts(true);
+    signer.sign(TEST_ARCHIVE);
+
+    Informer informer;
+    std::stringstream out;
+    informer.print(TEST_ARCHIVE, out);
+    auto info = out.str();
+
+    ASSERT_THAT(info.c_str(), HasSubstr("Signing CA"));
+    ASSERT_THAT(info.c_str(), HasSubstr("Alice"));
+}
+
+TEST_F(InformerTest, Fail_UnsignedArchive)
+{
+    Informer informer;
+    
+    ASSERT_THROW({
+        informer.print(TEST_ARCHIVE);
+    }, std::exception);
+}
+
