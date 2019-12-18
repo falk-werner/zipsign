@@ -33,6 +33,15 @@ namespace
         try
         {
             Signer signer(key_file, cert_file);
+
+            if (args.contains('i'))
+            {
+                for(auto & intermediate: args.getList('i'))
+                {
+                    signer.addIntermediate(intermediate);
+                }
+            }
+
             signer.sign(filename);
             result = EXIT_SUCCESS;
         }
@@ -103,6 +112,7 @@ int main(int argc, char * argv[])
         .addArg('f', "file", "Archive to sign.")
         .addArg('p', "private-key", "Private key to sign.")
         .addArg('c', "certificate", "Certificate of signer.")
+        .addList('i', "intermediate", "Add intermediate certificate", false)
         .addFlag('v', "verbose", "Enable additionl output")      
     ;
 

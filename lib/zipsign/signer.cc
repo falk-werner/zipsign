@@ -11,6 +11,7 @@
 
 using openssl::PrivateKey;
 using openssl::Certificate;
+using openssl::CertificateStack;
 using openssl::CMS;
 
 namespace zipsign
@@ -28,6 +29,11 @@ Signer::~Signer()
 
 }
 
+void Signer::addIntermediate(std::string const & filename)
+{
+    intermediates.push_back(Certificate::fromPEM(filename));
+}
+
 void Signer::sign(std::string const & filename)
 {
     auto signature = createSignature(filename);
@@ -42,9 +48,15 @@ std::string Signer::createSignature(std::string const & filename)
     PartialInputFile partialFile;
     Zip zip(filename);
 
+    CertificateStack intermetiate_certs;
+    for(auto & intermediate: intermediates) 
+    {
+        intermetiate_certs.push(intermediate);
+    }
+
     auto commentStart = zip.getCommentStart();
     auto file = partialFile.open(filename, commentStart);
-    auto cms = CMS::sign(cert, key, nullptr, file, CMS_DETACHED | CMS_NOCERTS | CMS_BINARY);
+    auto cms = CMS::sign(cert, key, intermetiate_certs, file, CMS_DETACHED | CMS_NOCERTS | CMS_BINARY);
     auto signature = cms.toBase64();
 
     return signature;

@@ -3,6 +3,7 @@
 
 #include <openssl++/openssl++.hpp>
 #include <string>
+#include <vector>
 
 namespace zipsign
 {
@@ -14,11 +15,13 @@ class Signer
 public:
     Signer(std::string const & key_file, std::string const & cert_file);
     ~Signer();
+    void addIntermediate(std::string const & filename);
     void sign(std::string const & filename);
 private:
     std::string createSignature(std::string const & filename);
     openssl::PrivateKey key;
     openssl::Certificate cert;
+    std::vector<openssl::Certificate> intermediates;
 };
 
 }
