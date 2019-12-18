@@ -19,6 +19,37 @@ Sign and verify ZIP archives.
 -   verify signature of the archive  
     `zipsign verify -f archive.zip -c cert.pem`
 
+## Command line options
+
+### Sign
+
+    zipsign sign -f <filename> -p <private-key> -c <signers certificate> [-i <intemerdiate> ...]
+
+| Short | Long           | Argument    | Description                                              |
+| ----- | -------------- | ----------- | -------------------------------------------------------- |
+| -f    | --file         | archive.zip | Required. ZIP file to sign.                              |
+| -p    | --private-key  | key.pem     | Required. Filename of signers private key.               |
+| -c    | --certificate  | cert.pem    | Required. Filename of signers certificate.               |
+| -i    | --intermediate | inter.pem   | Optional. Filename of intermediate certifiacte to embed. |
+| -v    | --verbose      | _none_      | Optional. Enable additional output.                      |
+
+During signing the ZIP file will be altered (ZIP comment will be re-written).
+
+It is possible to specifify none, one or more intermediate certificates, that will be embedded in
+the signature. Embedding intermediate certificates are used to close then chain of trust for later
+verfication.
+
+### Verify
+
+    zipsign verify -f <filename> -c <signers certificate> [-k <keyring>]
+
+| Short | Long          | Argument    | Description                                |
+| ----- | ------------- | ----------- | ------------------------------------------ |
+| -f    | --file        | archive.zip | Required. ZIP file to verify.              |
+| -c    | --certificate | cert.pem    | Required. Filename of signers certificate. |
+| -k    | --keyring     | keyring.pem | Optional. Filename of PKI.                 |
+| -v    | --verbose     | _none_      | Optional. Enable additional output.        |
+
 ## How it works
 
 [ZIP file format](https://en.wikipedia.org/wiki/Zip_(file_format)) specifies a comment field, 
