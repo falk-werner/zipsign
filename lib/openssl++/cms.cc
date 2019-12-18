@@ -111,5 +111,15 @@ std::string CMS::toBase64() const
     return std::string(encoded.data(), encoded.size());
 }
 
+std::string CMS::toString() const
+{
+    auto bio = BasicIO::fromMemory();
+    int rc = CMS_ContentInfo_print_ctx(bio, cms, 0, NULL);
+
+    BUF_MEM * buffer;
+    BIO_get_mem_ptr(bio, &buffer);
+
+    return std::string(buffer->data, buffer->length);
+}
 
 }

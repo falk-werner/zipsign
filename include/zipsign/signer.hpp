@@ -17,11 +17,13 @@ public:
     ~Signer();
     void addIntermediate(std::string const & filename);
     void sign(std::string const & filename);
+    void setEmbedCerts(bool value = true);
 private:
     std::string createSignature(std::string const & filename);
     openssl::PrivateKey key;
     openssl::Certificate cert;
     std::vector<openssl::Certificate> intermediates;
+    bool embedCerts;
 };
 
 }
