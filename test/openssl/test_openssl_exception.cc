@@ -13,6 +13,6 @@ TEST(OpenSSLException, ContainsOpenSSLError)
     ASSERT_EQ(nullptr, file);
 
     OpenSSLException ex("open file");
-    ASSERT_THAT(ex.what(), HasSubstr("[0x200"));
+    ASSERT_THAT(ex.what(), HasSubstr("[0x2"));
     ASSERT_THAT(ex.what(), HasSubstr("open file"));
 }

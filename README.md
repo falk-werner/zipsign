@@ -58,6 +58,16 @@ creates a small PKI used within unit tests.
     # verify archive using keyring
     zipsign verify -f archive.zip -c certs/alice.crt -k keyring.pem
 
+## Include intermediate certificates
+
+To complete chain of trust, on or more intermediate certificates can be specified.
+
+    # sign archive with alice's key and certificate, add signing CA as intermediate
+    zipsign sign -f archive.zip -p certs/alice.key -c certs/alice.crt -i ca/signing-ca.crt
+
+    # verify archive using root CA as keyring
+    zipsign verify -f archive.zip -c certs/alice.crt -k ca/root-ca.crt
+
 ## Known Limitations
 
 -   ZIP comments are limited to a maximum of 64 KBytes.  
@@ -66,7 +76,6 @@ creates a small PKI used within unit tests.
 
 -   Implementation limitations
     - *sign:* including signer certificate is not supported yet
-    - *sign:* including intermediate certificates is not supported yet
     - *sign:* multiple signatures are not supported yet
 
 # Build

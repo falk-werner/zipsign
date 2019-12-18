@@ -53,3 +53,31 @@ TEST_F(SignAndVerifyTest, PkiSigned)
 
     ASSERT_TRUE(verifier.verify(TEST_ARCHIVE, keyring));
 }
+
+TEST_F(SignAndVerifyTest, UseIntermediateCert)
+{
+    std::string key_file = "certs/alice.key";
+    std::string cert_file = "certs/alice.crt";
+    std::string keyring = "ca/root-ca.crt";
+    std::string intermediate = "ca/signing-ca.crt";
+
+    Signer signer(key_file, cert_file);
+    signer.addIntermediate(intermediate);
+    signer.sign(TEST_ARCHIVE);
+
+    Verifier verifier(cert_file);
+    ASSERT_TRUE(verifier.verify(TEST_ARCHIVE, keyring));
+}
+
+TEST_F(SignAndVerifyTest, Fail_ValidateWithoutIntermediateCert)
+{
+    std::string key_file = "certs/alice.key";
+    std::string cert_file = "certs/alice.crt";
+    std::string keyring = "ca/root-ca.crt";
+
+    Signer signer(key_file, cert_file);
+    signer.sign(TEST_ARCHIVE);
+
+    Verifier verifier(cert_file);
+    ASSERT_FALSE(verifier.verify(TEST_ARCHIVE, keyring));
+}
