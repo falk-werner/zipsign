@@ -71,7 +71,7 @@ bool Verifier::verify(
 
         for (auto & cert: signers)
         {
-            if (!cert.verify(store, cms.getCerts()))
+            if (!cert.verify(store, nullptr, cms.getCerts()))
             {
                 throw std::runtime_error("signers certificate is not valid");
             }

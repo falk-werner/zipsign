@@ -59,7 +59,7 @@ Certificate::operator X509*()
     return cert;
 }
 
-bool Certificate::verify(X509_STORE * store, STACK_OF(X509) * chain)
+bool Certificate::verify(X509_STORE * store, STACK_OF(X509) * chain, STACK_OF(X509) * untrusted)
 {
     std::unique_ptr<X509_STORE_CTX, void(*)(X509_STORE_CTX *)> context(X509_STORE_CTX_new(), &X509_STORE_CTX_free);
     int rc = X509_STORE_CTX_init(context.get(), store, cert, chain);
@@ -67,6 +67,8 @@ bool Certificate::verify(X509_STORE * store, STACK_OF(X509) * chain)
     {
         throw OpenSSLException("X509_STORE_CTX_init");
     }
+
+    X509_STORE_CTX_set0_untrusted(context.get(), untrusted);
 
     rc = X509_verify_cert(context.get());
     return (1 == rc);
