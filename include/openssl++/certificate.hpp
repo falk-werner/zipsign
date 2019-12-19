@@ -22,6 +22,7 @@ public:
     Certificate(Certificate && other);
     ~Certificate();
     operator X509*();
+    bool verify(X509_STORE * store, STACK_OF(X509) * chain);
 private:
     X509 * cert;
 };

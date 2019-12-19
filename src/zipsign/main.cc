@@ -22,15 +22,20 @@ namespace
     int sign(Arguments const & args)
     {
         auto const & filename = args.get('f');
-        auto const & key_file = args.get('p');
-        auto const & cert_file = args.get('c');
+        auto const & key_files = args.getList('p');
+        auto const & cert_files = args.getList('c');
         auto embed_cert = args.contains('e');
 
         int result = EXIT_FAILURE;
 
         try
         {
-            Signer signer(key_file, cert_file);
+            if (key_files.size() != cert_files.size())
+            {
+                throw std::runtime_error("count of keys and signer certificated does not match");
+            }
+
+            Signer signer(key_files[0], cert_files[0]);
             signer.setEmbedCerts(embed_cert);
             
             if (args.contains('i'))
@@ -39,6 +44,11 @@ namespace
                 {
                     signer.addIntermediate(intermediate);
                 }
+            }
+
+            for(int i = 1; i < key_files.size(); ++i)
+            {
+                signer.addSigner(key_files[i], cert_files[i]);
             }
 
             signer.sign(filename);
@@ -55,7 +65,7 @@ namespace
     int verify(Arguments const & args)
     {
         auto const & filename = args.get('f');
-        auto const & cert_file = args.get('c');
+        auto const & cert_files = args.getList('c');
         auto is_verbose = args.contains('v');
         std::string keyring_path;
         if (args.contains('k')) 
@@ -67,7 +77,11 @@ namespace
 
         try
         {
-            Verifier verifier(cert_file);
+            Verifier verifier(cert_files[0]);
+            for(int i = 1; i < cert_files.size(); ++i)
+            {
+                verifier.addCertificate(cert_files[1]);
+            }
             bool isValid = verifier.verify(filename, keyring_path, is_verbose);
 
             if (isValid)
@@ -129,8 +143,8 @@ int main(int argc, char * argv[])
     app.add("sign", sign)
         .setHelpText("Signs a zip archive.")
         .addArg('f', "file", "Archive to sign.")
-        .addArg('p', "private-key", "Private key to sign.")
-        .addArg('c', "certificate", "Certificate of signer.")
+        .addList('p', "private-key", "Private key to sign.")
+        .addList('c', "certificate", "Certificate of signer.")
         .addList('i', "intermediate", "Add intermediate certificate", false)
         .addFlag('e', "embed-certificate", "Embed signers certificate in signature")      
         .addFlag('v', "verbose", "Enable additional output")      

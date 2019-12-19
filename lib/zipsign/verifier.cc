@@ -18,14 +18,18 @@ namespace zipsign
 {
 
 Verifier::Verifier(std::string const & cert_file)
-: cert(Certificate::fromPEM(cert_file))
 {
-
+    addCertificate(cert_file);
 }
 
 Verifier::~Verifier()
 {
 
+}
+
+void Verifier::addCertificate(std::string const & filename)
+{
+    signers.push_back(Certificate::fromPEM(filename));
 }
 
 bool Verifier::verify(
@@ -55,13 +59,25 @@ bool Verifier::verify(
         {
             store.loadFromFile(keyring_path);
         }
-        store.add(cert);
-
         CertificateStack certs;
-        certs.push(cert);
+
+        for(auto & cert: signers)
+        {
+            store.add(cert);
+            certs.push(cert);
+        }
 
         auto cms = CMS::fromBase64(signature);
-        result = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY ,is_verbose);
+
+        for (auto & cert: signers)
+        {
+            if (!cert.verify(store, cms.getCerts()))
+            {
+                throw std::runtime_error("signers certificate is not valid");
+            }
+        }
+
+        result = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY, is_verbose);
     }
     catch(const std::exception& ex)
     {

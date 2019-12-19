@@ -3,6 +3,7 @@
 
 #include <openssl++/openssl++.hpp>
 #include <string>
+#include <vector>
 #include <utility>
 
 namespace zipsign
@@ -15,12 +16,13 @@ class Verifier
 public:
     Verifier(std::string const & cert_file);
     ~Verifier();
+    void addCertificate(std::string const & filename);
     bool verify(
         std::string const & filename,
         std::string const & keyring_path,
         bool is_verbose = false);
 private:
-    openssl::Certificate cert;
+    std::vector<openssl::Certificate> signers;
 };
 
 }

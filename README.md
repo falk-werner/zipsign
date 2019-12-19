@@ -23,6 +23,8 @@ Sign and verify ZIP archives.
 
 ### Sign
 
+Sign an archive.
+
     zipsign sign -f <filename> -p <private-key> -c <signers certificate> [-i <intemerdiate> ...]
 
 | Short | Long                | Argument    | Description                                              |
@@ -40,7 +42,12 @@ It is possible to specifify none, one or more intermediate certificates, that wi
 the signature. Embedding intermediate certificates are used to close then chain of trust for later
 verfication.
 
+It is also possible to specify one or more signers by adding private key and certificate pairs.  
+_Note_: It is recommended to embed signers certificates when using multiple signers.
+
 ### Verify
+
+Verfiy an archive.
 
     zipsign verify -f <filename> -c <signers certificate> [-k <keyring>]
 
@@ -51,7 +58,17 @@ verfication.
 | -k    | --keyring     | keyring.pem | Optional. Filename of PKI.                 |
 | -v    | --verbose     | _none_      | Optional. Enable additional output.        |
 
+If the archive is signed by multiple signers, multiple certificates can be
+specified for validation.
+
+_Note_: Verfication is done only against the given certificates. Other signers are
+ignored, even if the archive is signed by multiple signers.
+
+_Note_: Only one keyring can be specified.
+
 ### Info
+
+Prints signature of ZIP archive in human readable form.
 
     zipsign info -f <filename>
 
@@ -59,7 +76,6 @@ verfication.
 | ----- | ------------- | ----------- | ------------------------------------------ |
 | -f    | --file        | archive.zip | Required. ZIP file to print info.          |
 
-Prints signature of ZIP archive in human readable form.
 
 ## How it works
 
@@ -110,14 +126,39 @@ To complete chain of trust, on or more intermediate certificates can be specifie
     # verify archive using root CA as keyring
     zipsign verify -f archive.zip -c certs/alice.crt -k ca/root-ca.crt
 
+## Multiple signers
+
+An archive can be signed by multiple signers.  
+This might come in handy during certiface changes, e.g. when one certificate will expire
+shortly and the new one should be used simultaniously.
+
+To sign an archive with multiple signers, you can specify one certificate and one private
+key per signer. The certificates should be embedded in the archives signature, so they
+can be located during verification.
+
+    zipsign sign -f archive.zip \
+      -p certs/alice.key -c certs/alice.cert \
+      -p self-signed/key.pem -c self-signed/cert.pem \
+      -e
+
+During verification, you can choose the proper signer (or both).
+
+    # verify against self signed certificate
+    zipsign verfiy -f archive.zip -c self-signed/cert.pem
+
+    # verify against alice's certificates
+    zipsign verify -f archive.zip -c certs/alice.crt -k keyring.pem
+
+    # verify against both certificates
+    zipsign verify -f archive.zip \
+      -c self-signed/cert.pem \
+      -c certs/alice.crt -k keyring.pem
+
 ## Known Limitations
 
 -   ZIP comments are limited to a maximum of 64 KBytes.  
     CMS allows to include signer certificates, intermediate certificates as well as multiple signatures.
     When overused, this might not fit into the comment.
-
--   Implementation limitations
-    - *sign:* multiple signatures are not supported yet
 
 # Build
 
