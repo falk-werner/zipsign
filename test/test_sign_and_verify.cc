@@ -81,3 +81,27 @@ TEST_F(SignAndVerifyTest, Fail_ValidateWithoutIntermediateCert)
     Verifier verifier(cert_file);
     ASSERT_FALSE(verifier.verify(TEST_ARCHIVE, keyring));
 }
+
+TEST_F(SignAndVerifyTest, Multisign)
+{
+    std::string self_key = "self-signed/key.pem";
+    std::string self_crt = "self-signed/cert.pem";
+    std::string alice_key = "certs/alice.key";
+    std::string alice_crt = "certs/alice.crt";
+    std::string keyring = "keyring.pem";
+
+    Signer signer(self_key, self_crt);
+    signer.addSigner(alice_key, alice_crt);
+    signer.setEmbedCerts();
+    signer.sign(TEST_ARCHIVE);
+
+    Verifier self_verifier(self_crt);
+    ASSERT_TRUE(self_verifier.verify(TEST_ARCHIVE, ""));
+
+    Verifier alice_verifier(alice_crt);
+    ASSERT_TRUE(alice_verifier.verify(TEST_ARCHIVE, keyring));
+
+    Verifier all_verifier(alice_crt);
+    all_verifier.addCertificate(self_crt);
+    ASSERT_TRUE(all_verifier.verify(TEST_ARCHIVE, keyring));
+}

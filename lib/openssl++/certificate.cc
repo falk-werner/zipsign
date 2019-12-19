@@ -7,6 +7,9 @@
 #include "openssl++/exception.hpp"
 
 #include <openssl/pem.h>
+#include <openssl/x509_vfy.h>
+
+#include <memory>
 
 namespace openssl
 {
@@ -55,5 +58,19 @@ Certificate::operator X509*()
 {
     return cert;
 }
+
+bool Certificate::verify(X509_STORE * store, STACK_OF(X509) * chain)
+{
+    std::unique_ptr<X509_STORE_CTX, void(*)(X509_STORE_CTX *)> context(X509_STORE_CTX_new(), &X509_STORE_CTX_free);
+    int rc = X509_STORE_CTX_init(context.get(), store, cert, chain);
+    if (1 != rc)
+    {
+        throw OpenSSLException("X509_STORE_CTX_init");
+    }
+
+    rc = X509_verify_cert(context.get());
+    return (1 == rc);
+}
+
 
 }

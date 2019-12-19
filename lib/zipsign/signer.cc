@@ -18,16 +18,23 @@ namespace zipsign
 {
 
 Signer::Signer(std::string const & key_file, std::string const & cert_file)
-: key(PrivateKey::fromPEM(key_file))
-, cert(Certificate::fromPEM(cert_file))
-, embedCerts(false)
+: embedCerts(false)
 {
-
+    addSigner(key_file, cert_file);
 }
 
 Signer::~Signer()
 {
 
+}
+
+void Signer::addSigner(std::string const key_file, std::string const & cert_file)
+{
+    auto key = PrivateKey::fromPEM(key_file);
+    auto cert = Certificate::fromPEM(cert_file);
+
+    keys.push_back(std::move(key));
+    certs.push_back(std::move(cert));
 }
 
 void Signer::addIntermediate(std::string const & filename)
@@ -60,7 +67,7 @@ std::string Signer::createSignature(std::string const & filename)
         intermetiate_certs.push(intermediate);
     }
 
-    int flags = CMS_DETACHED | CMS_BINARY;
+    unsigned int flags = CMS_DETACHED | CMS_BINARY;
     if (!embedCerts)
     {
         flags |= CMS_NOCERTS;
@@ -68,7 +75,13 @@ std::string Signer::createSignature(std::string const & filename)
 
     auto commentStart = zip.getCommentStart();
     auto file = partialFile.open(filename, commentStart);
-    auto cms = CMS::sign(cert, key, intermetiate_certs, file, flags);
+    auto cms = CMS::sign(nullptr, nullptr, intermetiate_certs, file, flags | CMS_PARTIAL );
+    for (int i = 0; i < certs.size(); ++i)
+    {
+        cms.addSigner(certs[i], keys[i], nullptr, flags | CMS_PARTIAL);
+    }
+    cms.final(file, nullptr, flags);
+    
     auto signature = cms.toBase64();
 
     return signature;

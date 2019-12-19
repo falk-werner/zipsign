@@ -69,6 +69,32 @@ CMS::~CMS()
     CMS_ContentInfo_free(cms);
 }
 
+void CMS::addSigner(X509 * cert, EVP_PKEY * key, EVP_MD const * md, unsigned int flags)
+{
+    CMS_SignerInfo * info = CMS_add1_signer(cms, cert, key, md, flags);
+    if (nullptr == info)
+    {
+        throw OpenSSLException("failed to add signer");
+    }
+
+/*
+    int rc = CMS_SignerInfo_sign(info);
+    if (1 != rc)
+    {
+        throw OpenSSLException("failed to sign");
+    }
+*/
+}
+
+void CMS::final(BIO * data, BIO * dcont, unsigned int flags)
+{
+    int rc = CMS_final(cms, data, dcont, flags);
+    if (1 != rc)
+    {
+        throw OpenSSLException("finalize CMS failed");
+    }
+}
+
 CMS::operator CMS_ContentInfo*()
 {
     return cms;
@@ -94,6 +120,11 @@ bool CMS::verify(STACK_OF(X509) * certs, X509_STORE * store, BIO * indata, BIO *
 
 
     return result;
+}
+
+STACK_OF(X509) * CMS::getCerts()
+{
+    return CMS_get1_certs(cms);
 }
 
 std::string CMS::toBase64() const
