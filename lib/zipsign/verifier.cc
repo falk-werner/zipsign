@@ -35,7 +35,8 @@ void Verifier::addCertificate(std::string const & filename)
 bool Verifier::verify(
     std::string const & filename,
     std::string const & keyring_path,
-    bool is_verbose)
+    bool is_verbose,
+    bool is_self_signed)
 {
     bool result = false;
 
@@ -71,7 +72,7 @@ bool Verifier::verify(
 
         for (auto & cert: signers)
         {
-            if (!cert.verify(store, nullptr, cms.getCerts()))
+            if (!is_self_signed && !cert.verify(store, nullptr, cms.getCerts()))
             {
                 throw std::runtime_error("signers certificate is not valid");
             }

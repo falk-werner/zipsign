@@ -24,7 +24,8 @@ public:
     bool verify(
         std::string const & filename,
         std::string const & keyring_path,
-        bool is_verbose = false);
+        bool is_verbose = false,
+        bool is_self_signed = false);
 private:
     std::vector<openssl::Certificate> signers;
 };

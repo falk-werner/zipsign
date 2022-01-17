@@ -71,6 +71,7 @@ namespace
         auto const & filename = args.get('f');
         auto const & cert_files = args.getList('c');
         auto is_verbose = args.contains('v');
+        auto is_self_signed = args.contains('s');
         std::string keyring_path;
         if (args.contains('k')) 
         {
@@ -86,7 +87,7 @@ namespace
             {
                 verifier.addCertificate(cert_files[1]);
             }
-            bool isValid = verifier.verify(filename, keyring_path, is_verbose);
+            bool isValid = verifier.verify(filename, keyring_path, is_verbose, is_self_signed);
 
             if (isValid)
             {
@@ -141,6 +142,7 @@ int main(int argc, char * argv[])
             "\t\tzipsign sign -f archive.zip -p key.pem -c cert.pem\n"
             "\tVerify:\n"
             "\t\tzipsign verify -f archive.zip -c cert.pem\n"
+            "\t\tzipsign verify -f archive.zip -c cert.pem --self-signed\n"
         )
     ;
 
@@ -160,6 +162,7 @@ int main(int argc, char * argv[])
         .addArg('c', "certificate", "Certificate of signer.")
         .addArg('k', "keyring", "Path of keyring file.", false)
         .addFlag('v', "verbose", "Enable additionl output")      
+        .addFlag('s', "self-signed", "Allows self signed certificates, skip cert verify")
     ;
 
     app.add("info", info)
