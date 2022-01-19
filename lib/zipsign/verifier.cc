@@ -8,6 +8,7 @@
 #include "zipsign/signature.hpp"
 
 #include <iostream>
+#include <stdexcept>
 
 using openssl::Certificate;
 using openssl::CertificateStore;

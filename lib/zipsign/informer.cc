@@ -8,6 +8,8 @@
 #include "zipsign/partial_input_file.hpp"
 #include "zipsign/signature.hpp"
 
+#include <stdexcept>
+
 using openssl::CMS;
 
 namespace zipsign

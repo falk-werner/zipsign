@@ -4,7 +4,7 @@ project(zipsign VERSION 1.0.2)
 option(WITHOUT_TESTS   "disable unit tests"   OFF)
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(OPENSSL REQUIRED openssl)
+pkg_check_modules(OPENSSL REQUIRED openssl>=1.1)
 
 
 set(CMAKE_C_STANDARD 99)
@@ -76,9 +76,9 @@ find_package(Threads REQUIRED)
 
 include (CTest)
 
-pkg_check_modules(GTEST gtest_main)
+pkg_check_modules(GTEST REQUIRED gtest_main)
 include(GoogleTest)
-pkg_check_modules(GMOCK gmock)
+pkg_check_modules(GMOCK REQUIRED gmock)
 
 add_executable(alltests
     test/test_sign_and_verify.cc

@@ -170,9 +170,17 @@ To build the project, cmake is used.
     make
     sudo make install
 
+## Build using Docker (CentOS 7)
+
+    docker build --rm --build-arg "USER_ID=`id -u`" --tag zipsign-centos -f docker/centos7.dockerfile .
+
+To run the docker container, use
+
+    docker run --rm --user="`id -u`" -it zipsign-centos
+
 ## Dependencies
 
--   [OpenSSL](https://www.openssl.org/) (libssl-dev)
+-   [OpenSSL>=1.1](https://www.openssl.org/) (libssl-dev)
 -   [Google Test](https://github.com/google/googletest) *(Test only)*
 
 ## External references
