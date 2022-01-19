@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/falk-werner/zipsign.svg?branch=master)](https://travis-ci.org/falk-werner/zipsign)
-[![codecov](https://codecov.io/gh/falk-werner/zipsign/branch/master/graph/badge.svg)](https://codecov.io/gh/falk-werner/zipsign)
+[![Docker Image CI](https://github.com/falk-werner/zipsign/actions/workflows/docker-image.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/docker-image.yml)
 
 # zipsign
 Sign and verify ZIP archives.
