@@ -170,13 +170,15 @@ To build the project, cmake is used.
     make
     sudo make install
 
-## Build using Docker (CentOS 7)
+## Build using Docker
 
-    docker build --rm --build-arg "USER_ID=`id -u`" --tag zipsign-centos -f docker/centos7.dockerfile .
+There are some dockerfiles provided in [docker](docker) subdirectory.
+
+    docker build --rm --build-arg "USER_ID=`id -u`" --tag zipsign-ubuntu -f docker/ubuntu.dockerfile .
 
 To run the docker container, use
 
-    docker run --rm --user="`id -u`" -it zipsign-centos
+    docker run --rm --user="`id -u`" -it zipsign-ubuntu
 
 ## Dependencies
 
