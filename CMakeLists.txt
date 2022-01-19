@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.1)
-project(zipsign VERSION 1.0.2)
+project(zipsign VERSION 1.1.0)
 
 option(WITHOUT_TESTS   "disable unit tests"   OFF)
 
