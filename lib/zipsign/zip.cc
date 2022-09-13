@@ -5,12 +5,10 @@
 #include "zipsign/zip.hpp"
 #include "zipsign/file.hpp"
 
+#include <algorithm>
 #include <cstdio>
 #include <stdexcept>
 #include <vector>
-#include <algorithm>
-
-#include <unistd.h>
 
 #define MAX_COMMENT_SIZE (64 * 1024)
 #define MIN_EOCD_SIZE (22)
