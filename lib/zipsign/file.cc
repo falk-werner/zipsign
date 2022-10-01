@@ -3,32 +3,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "zipsign/file.hpp"
+#include "zipsign/ftruncate.h"
 #include "openssl++/exception.hpp"
 #include <stdexcept>
 
 #include <sys/stat.h>
 #include <sys/types.h>
-
-#if !defined(_WIN32)
-#include <unistd.h>
-#else
-#include <io.h>
-#endif
-
-
-#if defined(_WIN32)
-
-namespace
-{
-
-int ftruncate(const int fd, const int64_t size)
-{
-    return _chsize(fd, size);
-}
-
-}
-
-#endif
 
 namespace zipsign
 {
