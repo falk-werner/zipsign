@@ -5,7 +5,7 @@
 #include <unistd.h>
 #else
 #include <io.h>
-#define ftruncate(fd, length) _chsize(fd, size)
+#define ftruncate(fd, length) _chsize(fd, length)
 #endif
 
 
