@@ -5,8 +5,9 @@
 #include "zipsign/zip.hpp"
 #include "zipsign/file.hpp"
 
-#include <algorithm>
 #include <cstdio>
+
+#include <algorithm>
 #include <stdexcept>
 #include <vector>
 
