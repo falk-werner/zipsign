@@ -2,9 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-#include <gtest/gtest.h>
+#include "testutils.hpp"
+
 #include <zipsign/zipsign.hpp>
 #include <zipsign/file.hpp>
+
+#include <gtest/gtest.h>
 
 using zipsign::Signer;
 using zipsign::Verifier;
@@ -17,10 +20,7 @@ class SignAndVerifyTest: public ::testing::Test
 protected:
     void SetUp() override
     {
-        File archive("test.zip", "rb");
-        File test_file(TEST_ARCHIVE, "wb");
-
-        archive.copyTo(test_file);
+        testutils::copy_file("test.zip", TEST_ARCHIVE);
     }
 
     void TearDown() override

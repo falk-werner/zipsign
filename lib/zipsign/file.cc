@@ -10,7 +10,6 @@
 #include <sys/types.h>
 
 #if !defined(_WIN32)
-#include <sys/sendfile.h>
 #include <unistd.h>
 #else
 #include <io.h>
@@ -94,49 +93,6 @@ void File::truncate(long offset)
     {
         throw std::runtime_error("truncate failed");
     }
-}
-
-void File::copyTo(File & other)
-{
-    struct stat buffer;
-    int rc = fstat(fileno(file), &buffer);
-    if (0 != rc)
-    {
-        throw std::runtime_error("stat failed");
-    }
-
-    size_t remaining = buffer.st_size;
-
-#if !defined(_WIN32)
-    while (remaining > 0)
-    {
-        ssize_t count = sendfile(fileno(other.file), fileno(file), nullptr, remaining);
-        if (0 <= count)
-        {
-            remaining -= count;
-        }
-        else
-        {
-            throw std::runtime_error("copy failed");
-        }
-    }
-#else
-    constexpr const size_t buf_size = 1024;
-    char buf[buf_size];
-    size_t length;
-    while (0 < (length = fread(buf, 1, buf_size, file)))
-    {
-        size_t const count = fwrite(buf, 1, length, other.file);
-        if (count != length)
-        {
-            throw std::runtime_error("copy failed");
-        }
-    }
-    if (0 == feof(file))
-    {
-        throw std::runtime_error("copy failed");
-    }
-#endif
 }
 
 }

@@ -24,7 +24,6 @@ public:
     void write(void const * buffer, size_t count);
     size_t read(void * buffer, size_t count, bool check = true);
     void truncate(long offset);
-    void copyTo(File & other);
 private:
     FILE * file;
 };

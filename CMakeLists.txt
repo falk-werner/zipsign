@@ -102,6 +102,7 @@ add_executable(alltests
     test/openssl/test_certificate_stack.cc
     test/openssl/test_private_key.cc
     test/openssl/test_cms.cc
+    test/testutils.cc
 )
 
 target_include_directories(alltests PRIVATE
