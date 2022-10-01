@@ -132,7 +132,7 @@ void File::copyTo(File & other)
             throw std::runtime_error("copy failed");
         }
     }
-    if (0 != feof(file))
+    if (0 == feof(file))
     {
         throw std::runtime_error("copy failed");
     }
