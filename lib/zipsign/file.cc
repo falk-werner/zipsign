@@ -9,11 +9,26 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#ifdef __linux__
+#if !defined(_WIN32)
 #include <sys/sendfile.h>
 #include <unistd.h>
-#elif defined(_WIN32)
+#else
 #include <io.h>
+#endif
+
+
+#if defined(_WIN32)
+
+namespace
+{
+
+int ftruncate(const int fd, const int64_t size)
+{
+    return _chsize(fd, size);
+}
+
+}
+
 #endif
 
 namespace zipsign
@@ -72,13 +87,6 @@ size_t File::read(void * buffer, size_t count, bool check)
     return result;
 }
 
-#if defined(_WIN32)
-    int ftruncate(const int fd, const int64_t size)
-    {
-        return _chsize(fd, size);
-    }
-#endif
-
 void File::truncate(long offset)
 {
     int rc = ftruncate(fileno(file), offset);
@@ -99,7 +107,7 @@ void File::copyTo(File & other)
 
     size_t remaining = buffer.st_size;
 
-#ifdef __linux__
+#if !defined(_WIN32)
     while (remaining > 0)
     {
         ssize_t count = sendfile(fileno(other.file), fileno(file), nullptr, remaining);
@@ -112,12 +120,21 @@ void File::copyTo(File & other)
             throw std::runtime_error("copy failed");
         }
     }
-#elif defined(_WIN32)
-    char buff[1024];
-    int len;
-    while ((len = fread(buff, 1, sizeof(buff), other.file)))
+#else
+    constexpr const size_t buf_size = 1024;
+    char buf[buf_size];
+    size_t length;
+    while (0 < (length = fread(buf, 1, buf_size, file)))
     {
-        fwrite(buff, 1, len, file);
+        size_t const count = fwrite(buf, 1, length, other.file);
+        if (count != length)
+        {
+            throw std::runtime_error("copy failed");
+        }
+    }
+    if (0 != feof(file))
+    {
+        throw std::runtime_error("copy failed");
     }
 #endif
 }
