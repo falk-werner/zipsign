@@ -18,10 +18,17 @@ class Verifier
     Verifier operator=(Verifier const &) = delete;
     Verifier(Verifier const &) = delete;
 public:
+    enum Result {
+        Good = 0,
+        Bad = 1,
+        BadMissingSignature = 2,
+        BadInvalidCertificateChain = 3,
+        BadInvalidSignature = 4
+    };
     Verifier(std::string const & cert_file);
     ~Verifier();
     void addCertificate(std::string const & filename);
-    bool verify(
+    Result verify(
         std::string const & filename,
         std::string const & keyring_path,
         bool is_verbose = false,

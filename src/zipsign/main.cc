@@ -78,7 +78,7 @@ namespace
             keyring_path = args.get('k');
         }
 
-        int result = EXIT_FAILURE;
+        Verifier::Result result = Verifier::Bad;
 
         try
         {
@@ -87,16 +87,26 @@ namespace
             {
                 verifier.addCertificate(cert_files[1]);
             }
-            bool isValid = verifier.verify(filename, keyring_path, is_verbose, is_self_signed);
+            result = verifier.verify(filename, keyring_path, is_verbose, is_self_signed);
 
-            if (isValid)
-            {
-                std::cout << "OK" << std::endl;
-                result = EXIT_SUCCESS;
-            }
-            else
-            {
-                std::cout << "INVALID" << std::endl;
+            switch (result) {
+                case Verifier::Good:
+                    std::cout << "OK" << std::endl;
+                    break;
+                case Verifier::BadMissingSignature:
+                    std::cout << "INVALID_MISSING_SIGNATURE" << std::endl;
+                    break;
+                case Verifier::BadInvalidCertificateChain:
+                    std::cout << "INVALID_CERTIFICATE_CHAIN" << std::endl;
+                    break;
+                case Verifier::BadInvalidSignature:
+                    std::cout << "INVALID_SIGNATURE" << std::endl;
+                    break;
+                case Verifier::Bad:
+                    // fall-through
+                default:
+                    std::cout << "INVALID" << std::endl;
+                    break;
             }
         }
         catch (std::exception const & ex)
@@ -104,7 +114,7 @@ namespace
             std::cerr << "error: " << ex.what() << std::endl;
         }
         
-        return result;
+        return static_cast<int>(result);
     }
 
     int info(Arguments const & args)
