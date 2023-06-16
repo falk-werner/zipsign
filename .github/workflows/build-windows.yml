@@ -11,35 +11,35 @@ jobs:
   build:
     runs-on: windows-latest
 
-  defaults:
-    run:
-      shell: msys2 {0}
-  
-  steps:
-    - name: Setup msys2
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: mingw64
-        update: true
-        install: >-
-          openssl-devel
-          mingw-w64-x86_64-openssl
-          mingw-w64-x86_64-cmake
-          mingw-w64-x86_64-gcc
-          mingw-w64-x86_64-pkg-config
-          mingw-w64-x86_64-gtest
+    defaults:
+      run:
+        shell: msys2 {0}
+    
+    steps:
+      - name: Setup msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw64
+          update: true
+          install: >-
+            openssl-devel
+            mingw-w64-x86_64-openssl
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-pkg-config
+            mingw-w64-x86_64-gtest
 
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Configure
-      run: |
-        cmake -B build
+      - name: Configure
+        run: |
+          cmake -B build
 
-    - name: Build
-      run: |
-        cmake --build build
+      - name: Build
+        run: |
+          cmake --build build
 
-    - name: Unit Test
-      run: |
-        cmake --build build --target test
+      - name: Unit Test
+        run: |
+          cmake --build build --target test
