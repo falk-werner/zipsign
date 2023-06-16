@@ -65,6 +65,16 @@ ignored, even if the archive is signed by multiple signers.
 
 _Note_: Only one keyring can be specified.
 
+#### Return Codes
+
+| Return Code | Description |
+| ----------- | ----------- |
+| 0           | Verification succeeded |
+| 1           | General error |
+| 2           | Error - signature is missing |
+| 3           | Error - invalid certificate chain |
+| 4           | Error - invalid signature |
+
 ### Info
 
 Prints signature of ZIP archive in human readable form.

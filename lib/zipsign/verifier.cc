@@ -33,13 +33,13 @@ void Verifier::addCertificate(std::string const & filename)
     signers.push_back(Certificate::fromPEM(filename));
 }
 
-bool Verifier::verify(
+Verifier::Result Verifier::verify(
     std::string const & filename,
     std::string const & keyring_path,
     bool is_verbose,
     bool is_self_signed)
 {
-    bool result = false;
+    Result result = Bad;
 
     try
     {
@@ -52,6 +52,7 @@ bool Verifier::verify(
         auto comment = zip.getComment();
         if (0 != comment.find(ZIPSIGN_SIGNATURE_PREFIX))
         {
+            result = BadMissingSignature;
             throw std::runtime_error("missing signature");
         }
         auto signature = comment.substr(std::string(ZIPSIGN_SIGNATURE_PREFIX).size());
@@ -75,11 +76,21 @@ bool Verifier::verify(
         {
             if (!is_self_signed && !cert.verify(store, nullptr, cms.getCerts()))
             {
+                result = BadInvalidCertificateChain;
                 throw std::runtime_error("signers certificate is not valid");
             }
         }
 
-        result = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY, is_verbose);
+        auto const chain_valid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY | CMS_NO_CONTENT_VERIFY, is_verbose);
+        if (!chain_valid)
+        {
+            result = BadInvalidCertificateChain;
+            throw std::runtime_error("certificate chain is not valid");
+        }
+
+        file = partialFile.open(filename, commentSize);
+        auto const valid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY, is_verbose);
+        result = valid ? Good : BadInvalidSignature;
     }
     catch(const std::exception& ex)
     {
@@ -87,9 +98,7 @@ bool Verifier::verify(
         {
             std::cerr << "error: " << ex.what() << std::endl;
         }
-    }
-    
-    
+    }    
 
     return result;
 }

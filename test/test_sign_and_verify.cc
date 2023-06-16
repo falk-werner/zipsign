@@ -35,12 +35,12 @@ TEST_F(SignAndVerifyTest, SelfSigned)
     std::string cert_file = "self-signed/cert.pem";
 
     Verifier verifier(cert_file);
-    ASSERT_FALSE(verifier.verify(TEST_ARCHIVE, ""));
+    ASSERT_EQ(Verifier::BadMissingSignature, verifier.verify(TEST_ARCHIVE, ""));
 
     Signer signer(key_file, cert_file);
     signer.sign(TEST_ARCHIVE);
 
-    ASSERT_TRUE(verifier.verify(TEST_ARCHIVE, ""));
+    ASSERT_EQ(Verifier::Good, verifier.verify(TEST_ARCHIVE, "", false, true));
 }
 
 TEST_F(SignAndVerifyTest, PkiSigned)
@@ -50,12 +50,12 @@ TEST_F(SignAndVerifyTest, PkiSigned)
     std::string keyring = "keyring.pem";
 
     Verifier verifier(cert_file);
-    ASSERT_FALSE(verifier.verify(TEST_ARCHIVE, keyring));
+    ASSERT_EQ(Verifier::BadMissingSignature, verifier.verify(TEST_ARCHIVE, ""));
 
     Signer signer(key_file, cert_file);
     signer.sign(TEST_ARCHIVE);
 
-    ASSERT_TRUE(verifier.verify(TEST_ARCHIVE, keyring));
+    ASSERT_EQ(Verifier::Good, verifier.verify(TEST_ARCHIVE, keyring));
 }
 
 TEST_F(SignAndVerifyTest, UseIntermediateCert)
@@ -70,7 +70,7 @@ TEST_F(SignAndVerifyTest, UseIntermediateCert)
     signer.sign(TEST_ARCHIVE);
 
     Verifier verifier(cert_file);
-    ASSERT_TRUE(verifier.verify(TEST_ARCHIVE, keyring));
+    ASSERT_EQ(Verifier::Good, verifier.verify(TEST_ARCHIVE, keyring));
 }
 
 TEST_F(SignAndVerifyTest, Fail_ValidateWithoutIntermediateCert)
@@ -83,7 +83,7 @@ TEST_F(SignAndVerifyTest, Fail_ValidateWithoutIntermediateCert)
     signer.sign(TEST_ARCHIVE);
 
     Verifier verifier(cert_file);
-    ASSERT_FALSE(verifier.verify(TEST_ARCHIVE, keyring));
+    ASSERT_EQ(Verifier::BadInvalidCertificateChain, verifier.verify(TEST_ARCHIVE, keyring));
 }
 
 TEST_F(SignAndVerifyTest, Multisign)
@@ -100,12 +100,12 @@ TEST_F(SignAndVerifyTest, Multisign)
     signer.sign(TEST_ARCHIVE);
 
     Verifier self_verifier(self_crt);
-    ASSERT_TRUE(self_verifier.verify(TEST_ARCHIVE, ""));
+    ASSERT_EQ(Verifier::Good, self_verifier.verify(TEST_ARCHIVE, ""));
 
     Verifier alice_verifier(alice_crt);
-    ASSERT_TRUE(alice_verifier.verify(TEST_ARCHIVE, keyring));
+    ASSERT_EQ(Verifier::Good, alice_verifier.verify(TEST_ARCHIVE, keyring));
 
     Verifier all_verifier(alice_crt);
     all_verifier.addCertificate(self_crt);
-    ASSERT_TRUE(all_verifier.verify(TEST_ARCHIVE, keyring));
+    ASSERT_EQ(Verifier::Good, all_verifier.verify(TEST_ARCHIVE, keyring));
 }
