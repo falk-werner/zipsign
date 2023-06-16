@@ -1,0 +1,36 @@
+name: Ubuntu Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: sudo apt install openssl openssl-dev libgtest-dev libgmock-dev valgrind
+
+      - name: Configure
+        run: |
+          cmake -B build
+
+      - name: Build
+        run: |
+          cmake --build build
+
+      - name: Unit Test
+        run: |
+          cmake --build build --target test
+
+      - name: Memcheck
+        run: |
+          valgrind --error-exitcode=1 build/alltest.elf
+
