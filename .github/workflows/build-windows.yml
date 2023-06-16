@@ -44,5 +44,4 @@ jobs:
       - name: Unit Test
         working-directory: build
         run: |
-          bash ../test/openssl/create-pki.sh ../test/openssl
-          ./alltests
+          cmake --build build --target test
