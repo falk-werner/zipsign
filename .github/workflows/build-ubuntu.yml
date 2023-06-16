@@ -31,6 +31,7 @@ jobs:
           cmake --build build --target test
 
       - name: Memcheck
+        working-directory: build
         run: |
-          valgrind --error-exitcode=1 build/alltests
+          valgrind --error-exitcode=1 ./alltests
 
