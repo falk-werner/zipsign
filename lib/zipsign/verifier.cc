@@ -74,11 +74,14 @@ Verifier::Result Verifier::verify(
 
         for (auto & cert: signers)
         {
-            if (!is_self_signed && !cert.verify(store, nullptr, cms.getCerts()))
+            STACK_OF(X509) * untrusted = cms.getCerts();
+            if (!is_self_signed && !cert.verify(store, nullptr, untrusted))
             {
+                sk_X509_pop_free(untrusted, X509_free);
                 result = BadInvalidCertificateChain;
                 throw std::runtime_error("signers certificate is not valid");
             }
+            sk_X509_pop_free(untrusted, X509_free);
         }
 
         auto const chain_valid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY | CMS_NO_CONTENT_VERIFY, is_verbose);
