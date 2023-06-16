@@ -1,4 +1,6 @@
-[![Docker Image CI](https://github.com/falk-werner/zipsign/actions/workflows/docker-image.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/docker-image.yml)
+[![Ubuntu Build](https://github.com/falk-werner/zipsign/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/build-ubuntu.yml)
+[![Windows Build](https://github.com/falk-werner/zipsign/actions/workflows/build-windows.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/build-windows.yml)
+[![Cent OS Build (OpenSSL 1.1.1)](https://github.com/falk-werner/zipsign/actions/workflows/build-centos.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/build-centos.yml)
 
 # zipsign
 Sign and verify ZIP archives.
