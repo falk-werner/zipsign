@@ -42,6 +42,5 @@ jobs:
           cmake --build build
 
       - name: Unit Test
-        working-directory: build
         run: |
           cmake --build build --target test
