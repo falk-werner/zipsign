@@ -6,6 +6,7 @@
 #include "zipsign/file.hpp"
 
 #include <cstdio>
+#include <cinttypes>
 
 #include <algorithm>
 #include <stdexcept>
