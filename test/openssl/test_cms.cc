@@ -10,16 +10,10 @@ using openssl::CertificateStack;
 using openssl::BasicIO;
 using openssl::OpenSSLException;
 
-#ifdef _WIN32
-#define PATH_SEPARATOR "\\"
-#else
-#define PATH_SEPARATOR "/"
-#endif
-
 TEST(CMS, SignAndVerify)
 {
-    PrivateKey key = PrivateKey::fromPEM("self-signed" PATH_SEPARATOR "key.pem");
-    Certificate cert = Certificate::fromPEM("self-signed" PATH_SEPARATOR "cert.pem");
+    PrivateKey key = PrivateKey::fromPEM("self-signed/key.pem");
+    Certificate cert = Certificate::fromPEM("self-signed/cert.pem");
     BasicIO file = BasicIO::openInputFile("test.zip");
 
     CMS cms = CMS::sign(cert, key, nullptr, file, CMS_DETACHED | CMS_NOCERTS | CMS_BINARY);
