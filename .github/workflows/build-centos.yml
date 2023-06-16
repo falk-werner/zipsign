@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Cent OS Build (OpenSSL 1.1.1)
 
 on:
   push:
@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build and Test
-      run: docker build . --file docker/ubuntu.dockerfile --tag zipsign:$(date +%s)
+      run: docker build . --file docker/centos7.dockerfile --tag zipsign:$(date +%s)
