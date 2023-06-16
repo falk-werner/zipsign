@@ -22,6 +22,7 @@ jobs:
           msystem: mingw64
           update: true
           install: >-
+            bash
             openssl-devel
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-cmake
