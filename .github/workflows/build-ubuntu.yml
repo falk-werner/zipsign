@@ -32,5 +32,5 @@ jobs:
 
       - name: Memcheck
         run: |
-          valgrind --error-exitcode=1 build/alltest.elf
+          valgrind --error-exitcode=1 build/alltests
 
