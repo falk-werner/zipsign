@@ -11,29 +11,16 @@
 namespace
 {
 
-std::string getErrFuncName(unsigned long error_code)
-{
-#ifndef ERR_func_error_string_n
-    char const * func_name = ERR_func_error_string(error_code);
-#else
-    constexpr size_t const max_func_name = 128;
-    char func_name[max_func_name];
-    ERR_func_error_string_n(error_code, func_name, max_func_name);
-#endif
-    return func_name;
-}
-
 std::string getOpenSSLError(std::string const & message)
 {
-    unsigned long error_code = ERR_get_error();
+    constexpr size_t buffer_size = 256;
+    char buffer[buffer_size] = "\0";
+    unsigned long const error_code = ERR_get_error();
+    ERR_error_string_n(error_code, buffer, buffer_size);
     
-    char const * lib_name = ERR_lib_error_string(error_code);
-    auto const func_name = getErrFuncName(error_code);
-    char const * reason = ERR_reason_error_string(error_code);
-
     std::stringstream stream;
     stream << "error: " << message
-        << " (OpenSSL: " << lib_name << ": " << func_name << ": " << reason 
+        << " (OpenSSL: " << buffer
         << " [0x" << std::setw(8) << std::setfill('0') << std::hex << error_code << "])"
     ;
 
