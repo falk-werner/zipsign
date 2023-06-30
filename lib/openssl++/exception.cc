@@ -11,12 +11,24 @@
 namespace
 {
 
+std::string getErrFuncName(unsigned long error_code)
+{
+#ifndef ERR_func_error_string_n
+    char const * func_name = ERR_func_error_string(error_code);
+#else
+    constexpr size_t const max_func_name = 128;
+    char func_name[max_func_name];
+    ERR_func_error_string_n(error_code, func_name, max_func_name);
+#endif
+    return func_name;
+}
+
 std::string getOpenSSLError(std::string const & message)
 {
     unsigned long error_code = ERR_get_error();
     
     char const * lib_name = ERR_lib_error_string(error_code);
-    char const * func_name = ERR_func_error_string(error_code);
+    auto const func_name = getErrFuncName(error_code);
     char const * reason = ERR_reason_error_string(error_code);
 
     std::stringstream stream;
