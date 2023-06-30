@@ -50,7 +50,7 @@ namespace
                 }
             }
 
-            for(int i = 1; i < key_files.size(); ++i)
+            for(size_t i = 1; i < key_files.size(); ++i)
             {
                 signer.addSigner(key_files[i], cert_files[i]);
             }
@@ -83,7 +83,7 @@ namespace
         try
         {
             Verifier verifier(cert_files[0]);
-            for(int i = 1; i < cert_files.size(); ++i)
+            for(size_t i = 1; i < cert_files.size(); ++i)
             {
                 verifier.addCertificate(cert_files[1]);
             }

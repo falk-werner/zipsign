@@ -24,7 +24,7 @@ Certificate Certificate::fromPEM(std::string const & filename)
         throw OpenSSLException("failed to parse certificate file");
     }
 
-    return std::move(Certificate(cert));
+    return Certificate(cert);
 
 }
 

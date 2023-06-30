@@ -22,7 +22,7 @@ PrivateKey PrivateKey::fromPEM(std::string const & filename)
         throw OpenSSLException("failed to parse key file");
     }
 
-    return std::move(PrivateKey(key));
+    return PrivateKey(key);
 }
 
 PrivateKey::PrivateKey(EVP_PKEY * key_)

@@ -85,7 +85,7 @@ TEST(File, FailedToReadOutOfBounds)
 
         ASSERT_THROW({
             uint8_t data[3];
-            auto length = file.read(data, 4);
+            file.read(data, 4);
         }, std::exception);
     }
 

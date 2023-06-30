@@ -18,19 +18,19 @@ BasicIO BasicIO::openInputFile(std::string const & filename)
         throw FileNotFoundException(filename);
     }
 
-    return std::move(BasicIO(file));
+    return BasicIO(file);
 }
 
 BasicIO BasicIO::fromMemory()
 {
     BIO * bio = BIO_new(BIO_s_mem());
-    return std::move(BasicIO(bio));
+    return BasicIO(bio);
 }
 
 BasicIO BasicIO::fromMemory(void const * data, size_t size)
 {
     BIO * bio = BIO_new_mem_buf(data, size);
-    return std::move(BasicIO(bio));
+    return BasicIO(bio);
 }
 
 BasicIO::BasicIO(BIO * bio_)

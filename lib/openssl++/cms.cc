@@ -27,7 +27,7 @@ CMS CMS::fromBase64(std::string const & data)
         throw OpenSSLException("failed to read file");
     }
 
-    return std::move(CMS(cms));
+    return CMS(cms);
 
 }
 
@@ -39,7 +39,7 @@ CMS CMS::sign(X509 * cert, EVP_PKEY * key, STACK_OF(X509) * certs, BIO * data, u
         throw OpenSSLException("unable to sign file");
     }
 
-    return std::move(CMS(cms));
+    return CMS(cms);
 }
 
 CMS::CMS(CMS_ContentInfo * cms_)
@@ -145,7 +145,7 @@ std::string CMS::toBase64() const
 std::string CMS::toString() const
 {
     auto bio = BasicIO::fromMemory();
-    int rc = CMS_ContentInfo_print_ctx(bio, cms, 0, NULL);
+    CMS_ContentInfo_print_ctx(bio, cms, 0, NULL);
 
     BUF_MEM * buffer;
     BIO_get_mem_ptr(bio, &buffer);

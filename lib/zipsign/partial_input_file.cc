@@ -93,7 +93,7 @@ BasicIO PartialInputFile::open(std::string const & filename, std::size_t upperLi
 
     BIO_set_init(bio, 1);
 
-    return std::move(BasicIO(bio));
+    return BasicIO(bio);
 }
 
 

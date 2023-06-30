@@ -30,6 +30,7 @@ protected:
 
     static int Run(Arguments const & args)
     {
+        (void) args;
         return EXIT_SUCCESS;
     }
 
