@@ -28,4 +28,5 @@ TEST(CertificateStack, CastToX509Stack)
 {
     CertificateStack stack;
     STACK_OF(X509) * certs = static_cast<STACK_OF(X509) *>(stack);
+    (void) certs;
 }

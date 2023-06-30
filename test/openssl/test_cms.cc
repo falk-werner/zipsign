@@ -116,6 +116,7 @@ TEST(CMS, CastToContentInfo)
 
     CMS cms = CMS::sign(cert, key, nullptr, file, CMS_DETACHED | CMS_NOCERTS | CMS_BINARY);
     CMS_ContentInfo * contentInfo = static_cast<CMS_ContentInfo*>(cms);
+    (void) contentInfo;
 }
 
 TEST(CMS, MoveConstructible)

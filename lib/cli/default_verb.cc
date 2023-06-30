@@ -55,6 +55,7 @@ Verb & DefaultVerb::addArg(
     bool isRequired,
     std::string const & defaultValue)
 {
+    (void) defaultValue;
     args.push_back(Argument(id, name, ArgumentType::STRING, description, isRequired, ""));
     return *this;
 }
@@ -66,6 +67,7 @@ Verb & DefaultVerb::addList(
     bool isRequired,
     std::string const & defaultValue)
 {
+    (void) defaultValue;
     args.push_back(Argument(id, name, ArgumentType::LIST, description, isRequired, ""));
     return *this;
 }

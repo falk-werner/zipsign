@@ -17,11 +17,13 @@ using testing::AtLeast;
 
 int RunSuccess(Arguments const & args)
 {
+    (void) args;
     return EXIT_SUCCESS;
 }
 
 int RunFailure(Arguments const & args)
 {
+    (void) args;
     return EXIT_FAILURE;
 }
 

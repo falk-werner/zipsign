@@ -145,7 +145,7 @@ std::string CMS::toBase64() const
 std::string CMS::toString() const
 {
     auto bio = BasicIO::fromMemory();
-    int rc = CMS_ContentInfo_print_ctx(bio, cms, 0, NULL);
+    CMS_ContentInfo_print_ctx(bio, cms, 0, NULL);
 
     BUF_MEM * buffer;
     BIO_get_mem_ptr(bio, &buffer);

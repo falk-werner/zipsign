@@ -76,7 +76,7 @@ std::string Signer::createSignature(std::string const & filename)
     auto commentStart = zip.getCommentStart();
     auto file = partialFile.open(filename, commentStart);
     auto cms = CMS::sign(nullptr, nullptr, intermetiate_certs, file, flags | CMS_PARTIAL );
-    for (int i = 0; i < certs.size(); ++i)
+    for (size_t i = 0; i < certs.size(); ++i)
     {
         cms.addSigner(certs[i], keys[i], nullptr, flags | CMS_PARTIAL);
     }
