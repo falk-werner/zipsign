@@ -4,13 +4,13 @@ project(zipsign VERSION 1.3.0)
 option(WITHOUT_TESTS   "disable unit tests"   OFF)
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(OPENSSL REQUIRED openssl>=1.1)
+pkg_check_modules(OPENSSL REQUIRED openssl>=3.0)
 
 
 set(CMAKE_C_STANDARD 99)
 set(C_WARNINGS -Wall -Wextra -Wpedantic -Werror)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror")
 

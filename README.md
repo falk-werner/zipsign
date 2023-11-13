@@ -193,7 +193,7 @@ To run the docker container, use
 
 ## Dependencies
 
--   [OpenSSL>=1.1](https://www.openssl.org/) (libssl-dev)
+-   [OpenSSL>=3.0](https://www.openssl.org/) (libssl-dev)
 -   [Google Test](https://github.com/google/googletest) *(Test only)*
 
 ## External references
