@@ -1,0 +1,21 @@
+{
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "remoteUser": "user",
+    "mounts": [{
+        "source": "${localEnv:HOME}/.ssh",
+        "target": "/home/user/.ssh",
+        "type": "bind"
+    }],
+    
+    "customizations": {
+        "vscode": {
+            "extensions": [],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash"
+            }
+        }
+    }
+}
