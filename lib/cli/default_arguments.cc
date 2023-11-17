@@ -34,7 +34,7 @@ std::vector<std::string> const & DefaultArguments::getList(char id) const
     auto it = values.find(id);
     if (values.end() == it)
     {
-        throw  std::out_of_range("id not found : " + id);
+        throw  std::out_of_range("id not found : " + std::string(1, id));
     }
 
     return it->second;
