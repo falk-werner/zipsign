@@ -42,9 +42,9 @@ add_library(openssl++ STATIC
     lib/openssl++/certificate_stack.cc
     lib/openssl++/cms.cc
 )
-target_include_directories(openssl++ PRIVATE lib include)
+target_include_directories(openssl++ PUBLIC lib include ${OPENSSL_INCLUDE_DIRS})
 target_compile_options(openssl++ PUBLIC ${OPENSSL_CFLAGS_OTHER})
-target_link_libraries(openssl++ PUBLIC ${OPENSSL_LIBRARIES})
+target_link_libraries(openssl++ PUBLIC ${OPENSSL_LINK_LIBRARIES})
 
 add_library(zipsign STATIC
         lib/zipsign/file.cc
@@ -115,8 +115,8 @@ target_include_directories(alltests PRIVATE
 )
 
 target_link_libraries(alltests PRIVATE zipsign)
-target_compile_options(alltests PRIVATE ${GMOCK_CFLAGS} ${GTEST_CFLAGS} "-pthread")
-target_link_libraries(alltests PRIVATE zipsign cli ${GMOCK_LIBRARIES} ${GTEST_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+target_compile_options(alltests PRIVATE ${GMOCK_CFLAGS} ${GTEST_CFLAGS} "-pthread" "-Wno-sign-compare")
+target_link_libraries(alltests PRIVATE zipsign cli ${GMOCK_LINK_LIBRARIES} ${GTEST_LINK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 add_custom_command(TARGET alltests PRE_BUILD
     COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/create-pki.sh ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl
