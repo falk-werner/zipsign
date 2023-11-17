@@ -1,6 +1,6 @@
 [![Ubuntu Build](https://github.com/falk-werner/zipsign/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/build-ubuntu.yml)
 [![Windows Build](https://github.com/falk-werner/zipsign/actions/workflows/build-windows.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/build-windows.yml)
-
+[![Mac OS Build](https://github.com/falk-werner/zipsign/actions/workflows/build-maxos.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/build-maxos.yml)
 
 # zipsign
 Sign and verify ZIP archives.
