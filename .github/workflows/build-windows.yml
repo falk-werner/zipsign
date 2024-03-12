@@ -5,6 +5,8 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: '0 17 * * 5'
 
 jobs:
 
@@ -31,7 +33,7 @@ jobs:
             mingw-w64-x86_64-gtest
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configure
         run: |
