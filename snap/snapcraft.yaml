@@ -1,0 +1,29 @@
+name: zipsign 
+base: core22
+version: '1.4.0'
+license: 'MPL-2.0'
+summary: sign and verify ZIP archives
+description: |
+  Command line tool sign and verify ZIP archives.
+website: 'https://github.com/falk-werner/zipsign'
+issues: 'https://github.com/falk-werner/zipsign/issues'
+
+grade: stable
+confinement: strict
+
+parts:
+  zipsign:
+    plugin: cmake
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DWITHOUT_TESTS=ON
+    source: .
+    build-packages:
+      - pkg-config
+      - libssl-dev
+
+apps:
+  zipsign:
+    plugs:
+      - home
+    command: usr/bin/zipsign
