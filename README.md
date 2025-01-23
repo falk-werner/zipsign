@@ -2,6 +2,8 @@
 [![Windows Build](https://github.com/falk-werner/zipsign/actions/workflows/build-windows.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/build-windows.yml)
 [![Mac OS Build](https://github.com/falk-werner/zipsign/actions/workflows/build-maxos.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/build-maxos.yml)
 
+[![Snap Store](https://raw.githubusercontent.com/snapcore/snap-store-badges/master/EN/[EN]-snap-store-white.png)](https://snapcraft.io/zipsign)
+
 # zipsign
 Sign and verify ZIP archives.
 
@@ -190,6 +192,14 @@ There are some dockerfiles provided in [docker](docker) subdirectory.
 To run the docker container, use
 
     docker run --rm --user="`id -u`" -it zipsign-ubuntu
+
+## Build snap
+
+To build the snap, install [snapcraft](https://snapcraft.io/docs/installing-snapcraft) and run the following command:
+
+```
+snapcraft
+```
 
 ## Dependencies
 
