@@ -17,7 +17,7 @@ protected:
     void SetUp() override
     {
         app = new App("SimpleApp");
-        app->setCopyright("(c) 2019 Falk Werner");
+        app->setCopyright("(c) Falk Werner");
         app->setDescription("a simple app");
         app->setAdditionalInfo("<FOOTER>");
         app->add("run", AppTest::Run);

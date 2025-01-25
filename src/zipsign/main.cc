@@ -144,7 +144,7 @@ int main(int argc, char * argv[])
 
     App app("zipsign");
     app
-        .setCopyright("2019 Falk Werner")
+        .setCopyright("2019-2025 Falk Werner")
         .setDescription("Signs and verifies ZIP archives")
         .setAdditionalInfo(
             "Examples:\n"

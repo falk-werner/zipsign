@@ -120,7 +120,7 @@ TEST(DefaultVerb, PrintHelp)
 {
     AppInfoMock appInfo;
     EXPECT_CALL(appInfo, getName()).Times(AtLeast(1)).WillRepeatedly(ReturnRefOfCopy(std::string("app")));
-    EXPECT_CALL(appInfo, getCopyright()).Times(1).WillOnce(ReturnRefOfCopy(std::string("2019 Falk Werner")));
+    EXPECT_CALL(appInfo, getCopyright()).Times(1).WillOnce(ReturnRefOfCopy(std::string("Falk Werner")));
     EXPECT_CALL(appInfo, getDescription()).Times(1).WillOnce(ReturnRefOfCopy(std::string("Simple App")));
 
     DefaultVerb verb(appInfo, "run", RunSuccess);
