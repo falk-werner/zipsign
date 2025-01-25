@@ -7,6 +7,7 @@ description: |
   Command line tool sign and verify ZIP archives.
 website: 'https://github.com/falk-werner/zipsign'
 issues: 'https://github.com/falk-werner/zipsign/issues'
+icon: logo/logo.png
 
 grade: stable
 confinement: strict
