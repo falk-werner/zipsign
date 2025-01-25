@@ -1,7 +1,13 @@
 cmake_minimum_required (VERSION 3.1)
-project(zipsign VERSION 1.4.0)
+project(zipsign 
+    VERSION 1.4.0
+    DESCRIPTION "Sign and verify ZIP archives."
+    HOMEPAGE_URL "https://github.com/falk-werner/zipsign"
+    LANGUAGES C CXX
+)
 
 option(WITHOUT_TESTS   "disable unit tests"   OFF)
+option(WITHOUT_DEB     "disable cpack configuration for debian packages" OFF)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(OPENSSL REQUIRED openssl>=3.0)
@@ -157,3 +163,18 @@ add_custom_target(coverage-report
 add_dependencies(coverage-report coverage)
 
 endif(NOT WITHOUT_TESTS)
+
+## CPack
+
+set(CPACK_PACKAGE_VENDOR "Falk Werner")
+
+if(NOT WITHOUT_DEB)
+
+list(APPEND CPACK_GENERATOR "DEB")
+
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Falk Werner <github.com/falk-werner>")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS openssl)
+
+endif(NOT WITHOUT_DEB)
+
+include(CPack)
