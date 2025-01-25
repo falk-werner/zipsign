@@ -39,3 +39,8 @@ jobs:
         run: |
           valgrind --error-exitcode=1 ./alltests
 
+      - name: CPack
+        run: |
+          cd build
+          cpack
+
