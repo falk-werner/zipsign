@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.16)
 project(zipsign 
     VERSION 1.4.0
     DESCRIPTION "Sign and verify ZIP archives."
@@ -110,6 +110,7 @@ add_executable(alltests
     test/openssl/test_private_key.cc
     test/openssl/test_cms.cc
     test/testutils.cc
+    ${CMAKE_CURRENT_BINARY_DIR}/keyring.pem
 )
 
 target_include_directories(alltests PRIVATE
@@ -124,7 +125,16 @@ target_link_libraries(alltests PRIVATE zipsign)
 target_compile_options(alltests PRIVATE ${GMOCK_CFLAGS} ${GTEST_CFLAGS} "-pthread" "-Wno-sign-compare")
 target_link_libraries(alltests PRIVATE zipsign cli ${GMOCK_LINK_LIBRARIES} ${GTEST_LINK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
-add_custom_command(TARGET alltests PRE_BUILD
+add_custom_command(OUTPUT
+        self-signed/key.pem
+        self-signed/cert.pem
+        ca/root-ca/private/root-ca.key
+        ca/root-ca.crt
+        ca/signing-ca/private/signing-ca.key
+        ca/signing-ca.crt
+        certs/alice.key
+        certs/alice.crt
+        keyring.pem
     COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/create-pki.sh ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl
     DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/create-pki.sh
