@@ -52,6 +52,7 @@ jobs:
             mingw-w64-x86_64-gcc
             mingw-w64-x86_64-pkg-config
             mingw-w64-x86_64-gtest
+            mingw-w64-x86_64-github-cli
 
       - name: Checkout
         uses: actions/checkout@v4
