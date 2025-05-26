@@ -3,9 +3,6 @@ name: Windows Release Build
 on:
   push:
     tags: [ "v*" ]
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
 
@@ -64,4 +61,12 @@ jobs:
           cp LICENSE dist
           cp 3rd-party-licenses/* dist
           cd dist && zip zipsign-win32.zip -r *
+
+      - name: Upload Artifact
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release upload "${tag}" dist/zipsign-win32.zip
+
 
