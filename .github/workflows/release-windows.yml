@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  build:
+  release-build:
     runs-on: windows-latest
 
     defaults:
@@ -24,6 +24,7 @@ jobs:
           update: true
           install: >-
             bash
+            zip
             openssl-devel
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-cmake
@@ -51,3 +52,17 @@ jobs:
       - name: Print Dependencies
         run: |
           ldd build/zipsign.exe
+
+      - name: Prepare Dist
+        run: |
+          mkdir dist
+          cp build/zipsign.exe dist
+          cp /mingw64/bin/libgcc_s_seh-1.dll dist
+          cp /mingw64/bin/libwinpthread-1.dll dist
+          cp /mingw64/bin/libstdc++-6.dll dist
+          cp /mingw64/bin/libcrypto-3-x64.dll dist          
+          cp LICENSE dist
+          mkdir dist/3rd-party-licenses
+          cp 3rd-party-licenses/* dist/3rd-party-licenses
+          cd dist && zip zipsign-win32.zip *
+
