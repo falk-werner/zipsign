@@ -1,0 +1,53 @@
+name: Windows Release Build
+
+on:
+  push:
+    tags: [ "v*" ]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: msys2 {0}
+    
+    steps:
+      - name: Setup msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw64
+          update: true
+          install: >-
+            bash
+            openssl-devel
+            mingw-w64-x86_64-openssl
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-pkg-config
+            mingw-w64-x86_64-gtest
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure
+        env:
+          CXXFLAGS: -Wno-error=cpp
+        run: |
+          cmake -B build -D CMAKE_BUILD_TYPE=release
+
+      - name: Build
+        run: |
+          cmake --build build
+
+      - name: Unit Test
+        run: |
+          cmake --build build --target test
+
+      - name: Print Dependencies
+        run: |
+          ldd build/zipsign.exe
