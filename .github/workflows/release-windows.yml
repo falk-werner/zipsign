@@ -1,0 +1,98 @@
+name: Windows Release Build
+
+on:
+  push:
+    tags: [ "v*" ]
+
+jobs:
+
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+              --generate-notes  \
+              --latest \
+              --verify-tag 
+
+  release-build:
+    needs: release
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    defaults:
+      run:
+        shell: msys2 {0}
+    
+    steps:
+      - name: Setup msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw64
+          update: true
+          install: >-
+            bash
+            zip
+            git
+            mingw-w64-x86_64-github-cli
+            openssl-devel
+            mingw-w64-x86_64-openssl
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-pkg-config
+            mingw-w64-x86_64-gtest
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure
+        env:
+          CXXFLAGS: -Wno-error=cpp
+        run: |
+          cmake -B build -D CMAKE_BUILD_TYPE=release
+
+      - name: Build
+        run: |
+          cmake --build build
+
+      - name: Unit Test
+        run: |
+          cmake --build build --target test
+
+      - name: Print Dependencies
+        run: |
+          ldd build/zipsign.exe
+
+      - name: Prepare Dist
+        run: |
+          mkdir dist
+          cp build/zipsign.exe dist
+          cp /mingw64/bin/libgcc_s_seh-1.dll dist
+          cp /mingw64/bin/libwinpthread-1.dll dist
+          cp /mingw64/bin/libstdc++-6.dll dist
+          cp /mingw64/bin/libcrypto-3-x64.dll dist          
+          cp LICENSE dist
+          cp 3rd-party-licenses/* dist
+          cd dist && zip zipsign-win32.zip -r *
+
+      - name: Upload Artifact
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release upload "${tag}" dist/zipsign-win32.zip
+
+
