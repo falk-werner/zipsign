@@ -62,7 +62,6 @@ jobs:
           cp /mingw64/bin/libstdc++-6.dll dist
           cp /mingw64/bin/libcrypto-3-x64.dll dist          
           cp LICENSE dist
-          mkdir dist/3rd-party-licenses
-          cp 3rd-party-licenses/* dist/3rd-party-licenses
-          cd dist && zip zipsign-win32.zip *
+          cp 3rd-party-licenses/* dist
+          cd dist && zip zipsign-win32.zip -r *
 
