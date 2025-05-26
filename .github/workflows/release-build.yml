@@ -1,4 +1,4 @@
-name: Windows Release Build
+name: Release Build
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
               --latest \
               --verify-tag 
 
-  release-build:
+  windows-release:
     needs: release
     runs-on: windows-latest
     permissions:
@@ -96,3 +96,50 @@ jobs:
           gh release upload "${tag}" dist/zipsign-win32.zip
 
 
+  ubuntu-release:
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install openssl libssl-dev libgtest-dev libgmock-dev valgrind
+
+      - name: Configure
+        run: |
+          cmake -B build -D CMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: |
+          cmake --build build
+
+      - name: Unit Test
+        run: |
+          cmake --build build --target test
+
+      - name: Memcheck
+        working-directory: build
+        run: |
+          valgrind --error-exitcode=1 ./alltests
+
+      - name: CPack
+        run: |
+          cd build
+          cpack
+
+      - name: Upload Artifact
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          mv build/zipsign-*.deb zipsign-${tag#v}-amd64.deb
+          sha256sum zipsign-${tag#v}-amd64.deb > zipsign-${tag#v}-amd64.deb.sha256
+          gh release upload "${tag}" \
+            zipsign-${tag#v}-amd64.deb \
+            zipsign-${tag#v}-amd64.deb.sha256
