@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.16)
 project(zipsign 
-    VERSION 1.5.0
+    VERSION 1.5.1
     DESCRIPTION "Sign and verify ZIP archives."
     HOMEPAGE_URL "https://github.com/falk-werner/zipsign"
     LANGUAGES C CXX
