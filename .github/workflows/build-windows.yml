@@ -33,7 +33,7 @@ jobs:
             mingw-w64-x86_64-gtest
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Configure
         env:
