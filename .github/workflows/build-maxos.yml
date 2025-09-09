@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Install dependencies
-        run: brew install openssl cmake googletest
+        run: brew install googletest
 
       - name: Configure
         run: |
