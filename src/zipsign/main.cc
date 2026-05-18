@@ -85,7 +85,7 @@ namespace
             Verifier verifier(cert_files[0]);
             for(size_t i = 1; i < cert_files.size(); ++i)
             {
-                verifier.addCertificate(cert_files[1]);
+                verifier.addCertificate(cert_files[i]);
             }
             result = verifier.verify(filename, keyring_path, is_verbose, is_self_signed);
 
