@@ -13,16 +13,24 @@ namespace
 
 std::string getOpenSSLError(std::string const & message)
 {
-    constexpr size_t buffer_size = 256;
-    char buffer[buffer_size] = "\0";
-    unsigned long const error_code = ERR_get_error();
-    ERR_error_string_n(error_code, buffer, buffer_size);
-    
     std::stringstream stream;
-    stream << "error: " << message
-        << " (OpenSSL: " << buffer
-        << " [0x" << std::setw(8) << std::setfill('0') << std::hex << error_code << "])"
-    ;
+    stream << "error: " << message;
+
+
+    unsigned long error_code = ERR_get_error();
+    if (error_code != 0)
+    {
+        stream << " (OpenSSL:";
+        while (error_code != 0)
+        {
+            constexpr size_t buffer_size = 256;
+            char buffer[buffer_size] = "\0";
+            ERR_error_string_n(error_code, buffer, buffer_size);
+            stream << ' ' << buffer << " [0x" << std::setw(8) << std::setfill('0') << std::hex << error_code << ']';
+            error_code = ERR_get_error();
+        }    
+        stream << ')';
+    }
 
     return stream.str();
 }
