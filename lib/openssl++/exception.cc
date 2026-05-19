@@ -14,7 +14,7 @@ namespace
 std::string getOpenSSLError(std::string const & message)
 {
     std::stringstream stream;
-    stream << "error: " << message;
+    stream << message;
 
 
     unsigned long error_code = ERR_get_error();
