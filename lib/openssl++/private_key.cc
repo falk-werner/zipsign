@@ -33,10 +33,13 @@ PrivateKey::PrivateKey(EVP_PKEY * key_)
 
 PrivateKey & PrivateKey::operator=(PrivateKey && other)
 {
-    EVP_PKEY_free(this->key);
+    if (this != &other)
+    {
+        EVP_PKEY_free(this->key);
 
-    this->key = other.key;
-    other.key = nullptr;
+        this->key = other.key;
+        other.key = nullptr;
+    }
 
     return *this;
 }

@@ -35,10 +35,13 @@ Certificate::Certificate(X509 * cert_)
 }
 Certificate & Certificate::operator=(Certificate && other)
 {
-    X509_free(this->cert);
+    if (this != &other)
+    {
+        X509_free(this->cert);
 
-    this->cert = other.cert;
-    other.cert = nullptr;
+        this->cert = other.cert;
+        other.cert = nullptr;
+    }
 
     return *this;
 }

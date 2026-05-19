@@ -46,10 +46,13 @@ BasicIO::~BasicIO()
 
 BasicIO & BasicIO::operator=(BasicIO && other)
 {
-    BIO_free_all(this->bio);
+    if (this != &other)
+    {
+        BIO_free_all(this->bio);
 
-    this->bio = other.bio;
-    other.bio = nullptr;
+        this->bio = other.bio;
+        other.bio = nullptr;
+    }
 
     return *this;
 }

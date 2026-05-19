@@ -24,10 +24,13 @@ CertificateStore::~CertificateStore()
 
 CertificateStore & CertificateStore::operator=(CertificateStore && other)
 {
-    X509_STORE_free(this->store);
+    if (this != &other)
+    {
+        X509_STORE_free(this->store);
 
-    this->store = other.store;
-    other.store = nullptr;
+        this->store = other.store;
+        other.store = nullptr;
+    }
 
     return *this;
 }
