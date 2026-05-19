@@ -159,18 +159,10 @@ add_dependencies(memcheck alltests)
 
 add_custom_target(coverage
     mkdir -p coverage
-	COMMAND lcov --initial --capture --directory . --output-file coverage/lcov.info
 	COMMAND ./alltests
-	COMMAND lcov --capture --directory . --output-file coverage/lcov.info
-	COMMAND lcov --remove coverage/lcov.info '/usr/*' --output-file coverage/lcov.info
-	COMMAND lcov --remove coverage/lcov.info '*/test/*' --output-file coverage/lcov.info
+	COMMAND gcovr --html-details coverage/zipsign.html -r .. -e ../test -e ../src 
 )
 add_dependencies(coverage alltests)
-
-add_custom_target(coverage-report
-	COMMAND genhtml -branch-coverage --highlight --legend coverage/lcov.info --output-directory coverage/report
-)
-add_dependencies(coverage-report coverage)
 
 endif(NOT WITHOUT_TESTS)
 
