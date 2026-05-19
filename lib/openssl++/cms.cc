@@ -6,7 +6,7 @@
 #include "openssl++/exception.hpp"
 #include "openssl++/basic_io.hpp"
 
-#include "base64/base64.h"
+#include "base64/base64.hpp"
 
 #include <iostream>
 #include <vector>
@@ -16,15 +16,14 @@ namespace openssl
 
 CMS CMS::fromBase64(std::string const & data)
 {
-    size_t decoded_size = base64_decoded_size(data.c_str(), data.size());
-    std::vector<uint8_t> decoded(decoded_size);
-    base64_decode(data.c_str(), data.size(), decoded.data(), decoded.size());
+    std::vector<uint8_t> decoded;
+    base64::decode(data, decoded);
 
     auto bio = BasicIO::fromMemory(decoded.data(), decoded.size());
     CMS_ContentInfo * cms = d2i_CMS_bio(bio, nullptr);
     if (NULL == cms)
     {
-        throw OpenSSLException("failed to read file");
+        throw OpenSSLException("failed parsing CMS from base64");
     }
 
     return CMS(cms);
@@ -135,11 +134,7 @@ std::string CMS::toBase64() const
     BUF_MEM * buffer;
     BIO_get_mem_ptr(bio, &buffer);
 
-    size_t encoded_size = base64_encoded_size(buffer->length);
-    std::vector<char> encoded(encoded_size);
-    base64_encode(reinterpret_cast<uint8_t *>(buffer->data), buffer->length, encoded.data(), encoded.size());
-
-    return std::string(encoded.data(), encoded.size());
+    return base64::encode(reinterpret_cast<uint8_t *>(buffer->data), buffer->length);
 }
 
 std::string CMS::toString() const

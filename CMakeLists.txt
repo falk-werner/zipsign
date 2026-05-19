@@ -24,7 +24,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(coverage)
 
 add_library(base64 STATIC
-    lib/base64/base64.c
+    lib/base64/base64.cc
 )
 target_include_directories(base64 PRIVATE lib include)
 

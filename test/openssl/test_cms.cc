@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <openssl++/openssl++.hpp>
-#include <base64/base64.h>
+#include <base64/base64.hpp>
 
 using openssl::CMS;
 using openssl::PrivateKey;
@@ -99,9 +99,7 @@ TEST(CMS, FailFromBase64InvalidContent)
 {
     char text[] = "Hugo";
     size_t text_size = sizeof(text) - 1;
-    char buffer[80];
-    size_t length = base64_encode((uint8_t const*) text, text_size, buffer, 80);
-    std::string data(buffer, length);
+    std::string data(base64::encode((uint8_t const*) text, text_size));
 
     ASSERT_THROW({
         CMS::fromBase64(data);
