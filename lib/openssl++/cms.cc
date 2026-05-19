@@ -55,10 +55,13 @@ CMS::CMS(CMS && other)
 
 CMS & CMS::operator=(CMS && other)
 {
-    CMS_ContentInfo_free(this->cms);
-
-    this->cms = other.cms;
-    other.cms = nullptr;
+    if (this != &other)
+    {
+        CMS_ContentInfo_free(this->cms);
+    
+        this->cms = other.cms;
+        other.cms = nullptr;
+    }
 
     return *this;
 }
