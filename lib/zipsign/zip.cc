@@ -56,10 +56,18 @@ std::string Zip::getComment()
     size_t commentPos = getCommentStart();
     File file(filename, "rb");
 
+    file.seek(0, SEEK_END);
+    size_t const fileSize = file.tell();
+
     file.seek(commentPos);
     uint8_t buffer[2];
     file.read(buffer, 2);
     size_t commentLength = (buffer[1] << 8) | buffer[0];
+
+    if ((commentPos + 2 + commentLength) > fileSize)
+    {
+        throw std::runtime_error("comment size exceeds file size");
+    }
 
     std::string comment;
     if (commentLength > 0)
