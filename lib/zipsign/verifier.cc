@@ -91,7 +91,7 @@ Verifier::Result Verifier::verify(
         }
 
         file = PartialInputFile::open(filename, commentSize);
-        auto const valid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY, is_verbose);
+        auto const valid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY | CMS_NOINTERN | CMS_NO_SIGNER_CERT_VERIFY, is_verbose);
         result = valid ? Good : BadInvalidSignature;
     }
     catch(const std::exception& ex)
