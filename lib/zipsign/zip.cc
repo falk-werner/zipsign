@@ -91,19 +91,16 @@ std::size_t Zip::getCommentStart()
     file.read(buffer.data(),buffer.size());
 
     bool found = false;
-    size_t pos = buffer_size - MIN_EOCD_SIZE;
+    size_t pos = buffer_size - MIN_EOCD_SIZE + 1;
     while ((!found) && (pos > 0))
     {
+        pos--;
         if (   (buffer[pos + 3] == 0x06)
             && (buffer[pos + 2] == 0x05)
             && (buffer[pos + 1] == 0x4b)
             && (buffer[pos + 0] == 0x50))
         {
             found = true;
-        }
-        else
-        {
-            pos--;
         }
     }
 
