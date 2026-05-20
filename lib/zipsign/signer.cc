@@ -58,7 +58,6 @@ void Signer::setEmbedCerts(bool value)
 
 std::string Signer::createSignature(std::string const & filename) 
 {
-    PartialInputFile partialFile;
     Zip zip(filename);
 
     CertificateStack intermetiate_certs;
@@ -74,7 +73,7 @@ std::string Signer::createSignature(std::string const & filename)
     }
 
     auto commentStart = zip.getCommentStart();
-    auto file = partialFile.open(filename, commentStart);
+    auto file = PartialInputFile::open(filename, commentStart);
     auto cms = CMS::sign(nullptr, nullptr, intermetiate_certs, file, flags | CMS_PARTIAL );
     for (size_t i = 0; i < certs.size(); ++i)
     {

@@ -49,30 +49,49 @@ static int zipsign_PartialInputFile_read(BIO * bio, char * buffer, int count)
 
 }
 
-namespace zipsign
+namespace
 {
 
-PartialInputFile::PartialInputFile()
+class PartialInputFileMethod
 {
-    int type = BIO_get_new_index();
-
-    method = BIO_meth_new(type, "ZipSign_PartialInputFile");
-    if (nullptr == method)
+public:
+    PartialInputFileMethod()
     {
-        throw OpenSSLException("failed to register BIO");
+        int type = BIO_get_new_index();
+
+        method = BIO_meth_new(type, "ZipSign_PartialInputFile");
+        if (nullptr == method)
+        {
+            throw OpenSSLException("failed to register BIO");
+        }
+
+        BIO_meth_set_create(method, zipsign_PartialInputFile_create);
+        BIO_meth_set_destroy(method, zipsign_PartialInputFile_destroy);
+        BIO_meth_set_read(method, zipsign_PartialInputFile_read);
     }
 
-    BIO_meth_set_create(method, zipsign_PartialInputFile_create);
-    BIO_meth_set_destroy(method, zipsign_PartialInputFile_destroy);
-    BIO_meth_set_read(method, zipsign_PartialInputFile_read);
+    ~PartialInputFileMethod()
+    {
+        BIO_meth_free(method);
+    }
+
+    BIO_METHOD * get_method() const
+    {
+        return method;
+    }
+
+private:
+    BIO_METHOD * method;
+};
+
+PartialInputFileMethod g_method;
+
 }
 
-PartialInputFile::~PartialInputFile()
+namespace zipsign::PartialInputFile
 {
-    BIO_meth_free(method);
-}
 
-BasicIO PartialInputFile::open(std::string const & filename, std::size_t upperLimit)
+BasicIO open(std::string const & filename, std::size_t upperLimit)
 {
     FILE * file = fopen(filename.c_str(), "rb");
     if (nullptr == file)
@@ -80,7 +99,7 @@ BasicIO PartialInputFile::open(std::string const & filename, std::size_t upperLi
         throw std::runtime_error("failed to open file");
     }
 
-    BIO * bio = BIO_new(method);
+    BIO * bio = BIO_new(g_method.get_method());
     if (nullptr == bio)
     {
         throw OpenSSLException("failed to create file;");
@@ -95,6 +114,5 @@ BasicIO PartialInputFile::open(std::string const & filename, std::size_t upperLi
 
     return BasicIO(bio);
 }
-
 
 }

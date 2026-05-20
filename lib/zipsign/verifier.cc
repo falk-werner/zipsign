@@ -46,8 +46,7 @@ Verifier::Result Verifier::verify(
         Zip zip(filename);
 
         auto commentSize = zip.getCommentStart();
-        PartialInputFile partialFile;
-        auto file = partialFile.open(filename, commentSize);
+        auto file = PartialInputFile::open(filename, commentSize);
 
         auto comment = zip.getComment();
         if (0 != comment.find(ZIPSIGN_SIGNATURE_PREFIX))
@@ -91,7 +90,7 @@ Verifier::Result Verifier::verify(
             throw std::runtime_error("certificate chain is not valid");
         }
 
-        file = partialFile.open(filename, commentSize);
+        file = PartialInputFile::open(filename, commentSize);
         auto const valid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY, is_verbose);
         result = valid ? Good : BadInvalidSignature;
     }

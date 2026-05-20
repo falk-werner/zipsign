@@ -30,8 +30,7 @@ void Informer::print(std::string const & filename, std::ostream & out)
     Zip zip(filename);
 
     auto commentSize = zip.getCommentStart();
-    PartialInputFile partialFile;
-    auto file = partialFile.open(filename, commentSize);
+    auto file = PartialInputFile::open(filename, commentSize);
 
     auto comment = zip.getComment();
     if (0 != comment.find(ZIPSIGN_SIGNATURE_PREFIX))
