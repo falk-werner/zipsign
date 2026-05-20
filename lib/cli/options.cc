@@ -38,7 +38,7 @@ namespace cli
 Options::Options(std::vector<Argument> const & args)
 {
     size_t const length = args.size();
-    long_opts = new option[length + 2];
+    long_opts.resize(length + 2);
     short_opts = "";
 
     for(size_t i = 0; i < length; i++)
@@ -57,11 +57,6 @@ Options::Options(std::vector<Argument> const & args)
     setOption(long_opts[length + 1], '\0', nullptr, 0);
 }
 
-Options::~Options()
-{
-    delete[] long_opts;
-}
-
 char const * Options::shortOpts() const
 {
     return short_opts.c_str();
@@ -69,7 +64,7 @@ char const * Options::shortOpts() const
 
 option const * Options::longOpts() const
 {
-    return long_opts;
+    return long_opts.data();
 }
 
 }

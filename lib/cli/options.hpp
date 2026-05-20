@@ -23,11 +23,11 @@ class Options
 {
 public:
     explicit Options(std::vector<Argument> const & args);
-    ~Options();
+    ~Options() = default;
     char const * shortOpts() const;
     option const * longOpts() const;
 private:
-    option * long_opts;
+    std::vector<option> long_opts;
     std::string short_opts;
 };
 
