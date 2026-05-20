@@ -68,7 +68,13 @@ size_t File::read(void * buffer, size_t count, bool check)
 
 void File::truncate(long offset)
 {
-    int rc = ftruncate(fileno(file), offset);
+    int rc = fflush(file);
+    if (0 != rc)
+    {
+        throw std::runtime_error("truncate failed (flush)");
+    }
+
+    rc = ftruncate(fileno(file), offset);
     if (0 != rc)
     {
         throw std::runtime_error("truncate failed");
