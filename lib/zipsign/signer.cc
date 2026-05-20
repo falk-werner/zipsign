@@ -28,7 +28,7 @@ Signer::~Signer()
 
 }
 
-void Signer::addSigner(std::string const key_file, std::string const & cert_file)
+void Signer::addSigner(std::string const & key_file, std::string const & cert_file)
 {
     auto key = PrivateKey::fromPEM(key_file);
     auto cert = Certificate::fromPEM(cert_file);

@@ -19,7 +19,7 @@ class Signer
 public:
     Signer(std::string const & key_file, std::string const & cert_file);
     ~Signer();
-    void addSigner(std::string const key_file, std::string const & cert_file);
+    void addSigner(std::string const & key_file, std::string const & cert_file);
     void addIntermediate(std::string const & filename);
     void sign(std::string const & filename);
     void setEmbedCerts(bool value = true);
