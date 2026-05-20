@@ -28,7 +28,7 @@ static int zipsign_PartialInputFile_create(BIO * bio)
     return 1;
 }
 
-static int zipsign_PartialInputFile_destory(BIO * bio)
+static int zipsign_PartialInputFile_destroy(BIO * bio)
 {
     auto * data = reinterpret_cast<zipsign_PartialInputFile*>(BIO_get_data(bio));
     fclose(data->file);
@@ -63,7 +63,7 @@ PartialInputFile::PartialInputFile()
     }
 
     BIO_meth_set_create(method, zipsign_PartialInputFile_create);
-    BIO_meth_set_destroy(method, zipsign_PartialInputFile_destory);
+    BIO_meth_set_destroy(method, zipsign_PartialInputFile_destroy);
     BIO_meth_set_read(method, zipsign_PartialInputFile_read);
 }
 
