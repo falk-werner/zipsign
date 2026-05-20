@@ -5,12 +5,9 @@
 #include <gtest/gtest.h>
 #include "zipsign/partial_input_file.hpp"
 
-using zipsign::PartialInputFile;
-
 TEST(zipsign, dummy)
 {
-    PartialInputFile partialFile;
-    auto file = partialFile.open("message.txt", 2);
+    auto file = zipsign::PartialInputFile::open("message.txt", 2);
 
     BIO * in = file;
 
