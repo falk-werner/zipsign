@@ -50,6 +50,7 @@ jobs:
             mingw-w64-x86_64-github-cli
             openssl-devel
             mingw-w64-x86_64-openssl
+            mingw-w64-x86_64-osslsigncode
             mingw-w64-x86_64-cmake
             mingw-w64-x86_64-gcc
             mingw-w64-x86_64-pkg-config
@@ -76,10 +77,23 @@ jobs:
         run: |
           ldd build/zipsign.exe
 
+      - name: Sign
+        env:
+          SIGN_KEY: ${{ secrets.SIGN_KEY }}
+          SIGN_PASS: ${{ secrets.SIGN_PASSWORD }}
+        run: |
+          echo "$SIGN_KEY" > /tmp/sign_key.pem
+          osslsigncode sign -certs certs/sign_cert.pem \
+            -key /tmp/sign_key.pem -pass "$SIGN_PASS" \
+            -n "ZipSign" -i https://github.com/falk-werner/zipsign \
+            -t http://timestamp.digicert.com \
+            -in build/zipsign.exe -out build/zipsign_signed.exe
+          rm /tmp/sign_key.pem
+
       - name: Prepare Dist
         run: |
           mkdir dist
-          cp build/zipsign.exe dist
+          cp build/zipsign_signed.exe dist/zipsign.exe
           cp /mingw64/bin/libgcc_s_seh-1.dll dist
           cp /mingw64/bin/libwinpthread-1.dll dist
           cp /mingw64/bin/libstdc++-6.dll dist
