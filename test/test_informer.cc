@@ -10,6 +10,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include <sstream>
+
 using zipsign::Signer;
 using zipsign::Informer;
 using zipsign::File;
@@ -73,7 +75,8 @@ TEST_F(InformerTest, Fail_UnsignedArchive)
     Informer informer;
     
     ASSERT_THROW({
-        informer.print(TEST_ARCHIVE);
+        std::stringstream out;
+        informer.print(TEST_ARCHIVE, out);
     }, std::exception);
 }
 

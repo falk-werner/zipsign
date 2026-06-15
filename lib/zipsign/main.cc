@@ -116,14 +116,13 @@ namespace
 
     int info(Arguments const & args, std::ostream & out, std::ostream & err)
     {
-        (void) out;
         int result = EXIT_FAILURE;
         auto const & filename = args.get('f');
 
         try
         {
             Informer informer;
-            informer.print(filename);
+            informer.print(filename, out);
 
             result = EXIT_SUCCESS;
         }

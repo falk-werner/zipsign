@@ -18,7 +18,7 @@ class Informer
 public:
     Informer();
     ~Informer();
-    void print(std::string const & filename, std::ostream & out = std::cout);
+    void print(std::string const & filename, std::ostream & out);
 };
 
 }
