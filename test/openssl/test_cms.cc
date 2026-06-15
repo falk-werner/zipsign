@@ -2,6 +2,8 @@
 #include <openssl++/openssl++.hpp>
 #include <base64/base64.hpp>
 
+#include <sstream>
+
 using openssl::CMS;
 using openssl::PrivateKey;
 using openssl::Certificate;
@@ -26,8 +28,10 @@ TEST(CMS, SignAndVerify)
 
     file = BasicIO::openInputFile("test.zip");
     
-    bool isValid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY, std::cerr, false);
+    std::stringstream err;
+    bool isValid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY, err, false);
     ASSERT_TRUE(isValid);
+    ASSERT_TRUE(err.str().empty());
 }
 
 TEST(CMS, FailedToSign)
@@ -54,8 +58,10 @@ TEST(CMS, FailedToVerify)
 
     file = BasicIO::openInputFile("test.zip");
     
-    bool isValid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY, std::cerr, true);
+    std::stringstream err;
+    bool isValid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY, err, true);
     ASSERT_FALSE(isValid);
+    ASSERT_FALSE(err.str().empty());
 }
 
 TEST(CMS, SaveToBIO)
