@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <ostream>
 
 #include "cli/verb.hpp"
 #include "cli/command.hpp"
@@ -19,7 +20,7 @@ class App
 public:
     App(std::string const & name_);    
     ~App();    
-    int run(int argc, char* argv[]) const;
+    int run(int argc, char* argv[], std::ostream & out, std::ostream & err) const;
     Verb & add(std::string const & name, Command command);
     App & setCopyright(std::string const & value);
     App & setDescription(std::string const & value);

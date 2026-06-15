@@ -36,6 +36,7 @@ void Verifier::addCertificate(std::string const & filename)
 Verifier::Result Verifier::verify(
     std::string const & filename,
     std::string const & keyring_path,
+    std::ostream & err,
     bool is_verbose,
     bool is_self_signed)
 {
@@ -83,7 +84,7 @@ Verifier::Result Verifier::verify(
             sk_X509_pop_free(untrusted, X509_free);
         }
 
-        auto const chain_valid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY | CMS_NO_CONTENT_VERIFY, is_verbose);
+        auto const chain_valid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY | CMS_NO_SIGNER_CERT_VERIFY | CMS_NO_CONTENT_VERIFY, err, is_verbose);
         if (!chain_valid)
         {
             result = BadInvalidCertificateChain;
@@ -91,14 +92,14 @@ Verifier::Result Verifier::verify(
         }
 
         file = PartialInputFile::open(filename, commentSize);
-        auto const valid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY | CMS_NOINTERN | CMS_NO_SIGNER_CERT_VERIFY, is_verbose);
+        auto const valid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY | CMS_NOINTERN | CMS_NO_SIGNER_CERT_VERIFY, err, is_verbose);
         result = valid ? Good : BadInvalidSignature;
     }
     catch(const std::exception& ex)
     {
         if (is_verbose)
         {
-            std::cerr << "error: " << ex.what() << std::endl;
+            err << "error: " << ex.what() << std::endl;
         }
     }    
 

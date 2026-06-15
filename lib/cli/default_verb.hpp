@@ -35,9 +35,9 @@ public:
 
     std::string const & getName() const;
     std::string const & getHelpText() const;
-    int run(int argc, char * argv[]) const;
+    int run(int argc, char * argv[], std::ostream & out, std::ostream & err) const;
 private:
-    void printUsage() const;
+    void printUsage(std::ostream & out) const;
 
     AppInfo & appInfo;
     std::string name;

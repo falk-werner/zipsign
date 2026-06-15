@@ -28,9 +28,11 @@ protected:
         delete app;
     }
 
-    static int Run(Arguments const & args)
+    static int Run(Arguments const & args, std::ostream & out, std::ostream & err)
     {
         (void) args;
+        (void) out;
+        (void) err;
         return EXIT_SUCCESS;
     }
 
@@ -42,7 +44,7 @@ TEST_F(AppTest, RunSuccess)
     char arg0[] = "app";
     char arg1[] = "run";
     char * argv[] = {arg0, arg1, nullptr};
-    int exitCode = app->run(2, argv);
+    int exitCode = app->run(2, argv, std::cout, std::cerr);
 
     ASSERT_EQ(EXIT_SUCCESS, exitCode);
 }
@@ -52,7 +54,7 @@ TEST_F(AppTest, PrintHelp)
     char arg0[] = "app";
     char arg1[] = "--help";
     char * argv[] = {arg0, arg1, nullptr};
-    int exitCode = app->run(2, argv);
+    int exitCode = app->run(2, argv, std::cout, std::cerr);
     ASSERT_EQ(EXIT_SUCCESS, exitCode);
 }
 
@@ -62,13 +64,13 @@ TEST_F(AppTest, PrintHelpForVerb)
     char arg1[] = "run";
     char arg2[] = "--help";
     char * argv[] = {arg0, arg1, arg2, nullptr}; 
-    int exitCode = app->run(3, argv);
+    int exitCode = app->run(3, argv, std::cout, std::cerr);
     ASSERT_EQ(EXIT_SUCCESS, exitCode);
 }
 
 TEST_F(AppTest, Fail_MissingVerb)
 {
-    int exitCode = app->run(0, nullptr);
+    int exitCode = app->run(0, nullptr, std::cout, std::cerr);
     ASSERT_EQ(EXIT_FAILURE, exitCode);
 }
 
@@ -77,6 +79,6 @@ TEST_F(AppTest, Fail_InvalidVerb)
     char arg0[] = "app";
     char arg1[] = "invalid";
     char * argv[] = { arg0, arg1, nullptr };
-    int exitCode = app->run(2, argv);
+    int exitCode = app->run(2, argv, std::cout, std::cerr);
     ASSERT_EQ(EXIT_FAILURE, exitCode);
 }

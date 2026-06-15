@@ -31,6 +31,7 @@ public:
     Result verify(
         std::string const & filename,
         std::string const & keyring_path,
+        std::ostream & err,
         bool is_verbose = false,
         bool is_self_signed = false);
 private:

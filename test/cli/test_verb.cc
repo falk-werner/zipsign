@@ -15,15 +15,19 @@ using cli::Arguments;
 using testing::ReturnRefOfCopy;
 using testing::AtLeast;
 
-int RunSuccess(Arguments const & args)
+int RunSuccess(Arguments const & args, std::ostream & out, std::ostream & err)
 {
     (void) args;
+    (void) out;
+    (void) err;
     return EXIT_SUCCESS;
 }
 
-int RunFailure(Arguments const & args)
+int RunFailure(Arguments const & args, std::ostream & out, std::ostream & err)
 {
     (void) args;
+    (void) out;
+    (void) err;
     return EXIT_FAILURE;
 }
 
@@ -36,7 +40,7 @@ TEST(DefaultVerb, RunSuccess)
 
     DefaultVerb verb(appInfo, "run", RunSuccess);
 
-    int exitCode = verb.run(0, nullptr);
+    int exitCode = verb.run(0, nullptr, std::cout, std::cerr);
     ASSERT_EQ(EXIT_SUCCESS, exitCode);    
 }
 
@@ -57,7 +61,7 @@ TEST(DefaultVerb, RunSuccessWithArgs)
     char arg2[] = "some.file";
     char arg3[] = "--verbose";
     char * argv[] = { arg0, arg1, arg2, arg3, nullptr };
-    int exitCode = verb.run(4, argv);
+    int exitCode = verb.run(4, argv, std::cout, std::cerr);
     ASSERT_EQ(EXIT_SUCCESS, exitCode);    
 }
 
@@ -70,7 +74,7 @@ TEST(DefaultVerb, RunFailure)
 
     DefaultVerb verb(appInfo, "run", RunFailure);
 
-    int exitCode = verb.run(0, nullptr);
+    int exitCode = verb.run(0, nullptr, std::cout, std::cerr);
     ASSERT_EQ(EXIT_FAILURE, exitCode);    
 }
 
@@ -90,7 +94,7 @@ TEST(DefaultVerb, Fail_MissingRequiredArg)
     char arg1[] = "--file";
     char arg2[] = "some.file";
     char * argv[] = { arg0, arg1, arg2, nullptr };
-    int exitCode = verb.run(3, argv);
+    int exitCode = verb.run(3, argv, std::cout, std::cerr);
     ASSERT_EQ(EXIT_FAILURE, exitCode);    
 }
 
@@ -112,7 +116,7 @@ TEST(DefaultVerb, Fail_UnrecognizedArg)
     char arg3[] = "-v";
     char arg4[] = "--unknown";
     char * argv[] = { arg0, arg1, arg2, arg3, arg4, nullptr };
-    int exitCode = verb.run(5, argv);
+    int exitCode = verb.run(5, argv, std::cout, std::cerr);
     ASSERT_EQ(EXIT_FAILURE, exitCode);    
 }
 
@@ -132,6 +136,6 @@ TEST(DefaultVerb, PrintHelp)
     char arg0[] = "run";
     char arg1[] = "-h";
     char * argv[] = { arg0, arg1, nullptr };
-    int exitCode = verb.run(2, argv);
+    int exitCode = verb.run(2, argv, std::cout, std::cerr);
     ASSERT_EQ(EXIT_SUCCESS, exitCode);
 }

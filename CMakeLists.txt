@@ -57,6 +57,7 @@ add_library(zipsign STATIC
         lib/zipsign/signer.cc
         lib/zipsign/verifier.cc
         lib/zipsign/informer.cc
+        lib/zipsign/main.cc
 )
 target_include_directories(zipsign PRIVATE lib include)
 target_compile_options(zipsign PUBLIC ${OPENSSL_CFLAGS_OTHER})
