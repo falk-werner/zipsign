@@ -39,7 +39,6 @@ target_include_directories(cli PRIVATE lib include)
 
 add_library(openssl++ STATIC
     lib/openssl++/exception.cc
-    lib/openssl++/init.cc
     lib/openssl++/basic_io.cc
     lib/openssl++/private_key.cc
     lib/openssl++/certificate.cc
@@ -98,7 +97,6 @@ add_executable(alltests
     test/cli/test_default_arguments.cc
     test/cli/test_options.cc
     test/cli/test_verb.cc
-    test/openssl/openssl_environment.cc
     test/openssl/test_basic_io.cc
     test/openssl/test_openssl_exception.cc
     test/openssl/test_openssl_base_exception.cc
