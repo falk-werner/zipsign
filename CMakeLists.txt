@@ -3,7 +3,7 @@ project(zipsign
     VERSION 1.6.0
     DESCRIPTION "Sign and verify ZIP archives."
     HOMEPAGE_URL "https://github.com/falk-werner/zipsign"
-    LANGUAGES C CXX
+    LANGUAGES CXX
 )
 
 option(WITHOUT_TESTS   "disable unit tests"   OFF)
@@ -13,12 +13,11 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(OPENSSL REQUIRED openssl>=3.0)
 
 
-set(CMAKE_C_STANDARD 99)
-set(C_WARNINGS -Wall -Wextra -Wpedantic -Werror)
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror")
+
+add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(coverage)
