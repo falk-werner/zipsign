@@ -11,8 +11,6 @@
 #include "openssl++/openssl++.hpp"
 #include "cli/cli.hpp"
 
-using openssl::OpenSSL;
-
 using zipsign::Signer;
 using zipsign::Verifier;
 using zipsign::Informer;
@@ -140,8 +138,6 @@ namespace
 
 int main(int argc, char * argv[])
 {
-    OpenSSL::init();
-
     App app("zipsign");
     app
         .setCopyright("2019-2025 Falk Werner")

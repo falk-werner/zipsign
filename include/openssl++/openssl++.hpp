@@ -6,7 +6,6 @@
 #define OPENSSL_HPP
 
 #include <openssl++/exception.hpp>
-#include <openssl++/init.hpp>
 #include <openssl++/private_key.hpp>
 #include <openssl++/basic_io.hpp>
 #include <openssl++/certificate.hpp>
