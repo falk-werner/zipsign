@@ -6,12 +6,13 @@
 #define CLI_COMMAND_HPP
 
 #include <functional>
+#include <ostream>
 #include <cli/arguments.hpp>
 
 namespace cli
 {
 
-using Command = std::function<int (Arguments const &)>;
+using Command = std::function<int (Arguments const &, std::ostream & out, std::ostream & err)>;
 
 }
 

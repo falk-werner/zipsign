@@ -7,6 +7,7 @@
 
 #include <openssl/cms.h>
 #include <string>
+#include <ostream>
 
 namespace openssl
 {
@@ -26,7 +27,7 @@ public:
     void addSigner(X509 * cert, EVP_PKEY * key, EVP_MD const * md, unsigned int flags);
     void final(BIO * data, BIO * dcont, unsigned int flags);
     void saveToBIO(BIO * bio) const;
-    bool verify(STACK_OF(X509) * certs, X509_STORE * store, BIO * indata, BIO * outdata, unsigned int flags, bool is_verbose = false);
+    bool verify(STACK_OF(X509) * certs, X509_STORE * store, BIO * indata, BIO * outdata, unsigned int flags, std::ostream & err, bool is_verbose = false);
     STACK_OF(X509) * getCerts();
     std::string toBase64() const;
     std::string toString() const;

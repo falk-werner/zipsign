@@ -2,12 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-#ifndef ZIPSIGN_ZIPSIGN_HPP
-#define ZIPSIGN_ZIPSIGN_HPP
+#ifndef ZIPSIGN_MAIN_HPP
+#define ZIPSIGN_MAIN_HPP
 
-#include <zipsign/signer.hpp>
-#include <zipsign/verifier.hpp>
-#include <zipsign/informer.hpp>
-#include <zipsign/main.hpp>
+#include <ostream>
+
+namespace zipsign
+{
+
+int main(int argc, char* argv[], std::ostream & out, std::ostream & err) noexcept;
+
+}
 
 #endif

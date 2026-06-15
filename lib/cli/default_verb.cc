@@ -72,8 +72,9 @@ Verb & DefaultVerb::addList(
     return *this;
 }
 
-int DefaultVerb::run(int argc, char* argv[]) const
+int DefaultVerb::run(int argc, char* argv[], std::ostream & out, std::ostream & err) const
 {
+    (void) out;
     DefaultArguments arguments;
 
     for(auto & arg: args)
@@ -107,7 +108,7 @@ int DefaultVerb::run(int argc, char* argv[]) const
                 print_usage = true;
                 break;
             case '?':
-                std::cout << "error: unrecognized argument" << std::endl;
+                err << "error: unrecognized argument" << std::endl;
                 is_finished = true;
                 print_usage = true;
                 result = EXIT_FAILURE;
@@ -124,7 +125,7 @@ int DefaultVerb::run(int argc, char* argv[]) const
         {
             if ((!arg.isOptional()) && (!arguments.contains(arg.getId())))
             {
-                std::cerr << "error: missing required argument: -" << arg.getId() << std::endl;
+                err << "error: missing required argument: -" << arg.getId() << std::endl;
                 print_usage = true;
                 result = EXIT_FAILURE;                
             }
@@ -133,80 +134,80 @@ int DefaultVerb::run(int argc, char* argv[]) const
 
     if (!print_usage)
     {
-        result = command(arguments);
+        result = command(arguments, out, err);
     }
     else
     {
-        printUsage();
+        printUsage(out);
     }
 
     return result;
 }
 
 
-void DefaultVerb::printUsage() const
+void DefaultVerb::printUsage(std::ostream & out) const
 {
-    std::cout
+    out
         << appInfo.getName() << ", Copyright (c) " << appInfo.getCopyright() << std::endl
         << appInfo.getDescription() << std::endl
         << std::endl
         ;
     
-    std::cout << name << ": " << helpText << std::endl << std::endl;
+    out << name << ": " << helpText << std::endl << std::endl;
 
-    std::cout
+    out
         << "Usage:" << std::endl
         << '\t' << appInfo.getName() << ' ' << name
     ;
 
     for (auto const & arg: args)
     {
-        std::cout << ' ';
+        out << ' ';
         if (arg.isOptional())
         {
-            std::cout << '[';
+            out << '[';
         }
 
-        std::cout << '-' << arg.getId();
+        out << '-' << arg.getId();
         if (!arg.isFlag())
         {
-            std::cout << " <value>";
+            out << " <value>";
         }
 
         if (arg.isOptional())
         {
-            std::cout << ']';
+            out << ']';
         }
     }
 
-    std::cout 
+    out 
         << " | -h" << std::endl
         << std::endl
         << "Arguments:" << std::endl;
 
     for (auto const & arg: args)
     {
-        std::cout 
+        out 
             << "\t-" << arg.getId() 
             << ", --" << std::left << std::setw(20) << arg.getName()
             << "\t";
             
         if (!arg.isOptional())
         {
-            std::cout << "Required. ";
+            out << "Required. ";
         }
 
-        std::cout << arg.getHelpText();
+        out << arg.getHelpText();
 
         if (arg.hasDefaultValue())
         {
-            std::cout << " (default: " << arg.getDefaultValue() << ')';
+            out << " (default: " << arg.getDefaultValue() << ')';
         }
 
-        std::cout << std::endl;
+        out << std::endl;
     }
 
-    std::cout
+    out
         << "\t-h, --" << std::left << std::setw(20) << "help" << "\tPrint usage." << std::endl
         << std::endl;    
 }

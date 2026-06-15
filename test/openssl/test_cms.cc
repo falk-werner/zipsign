@@ -26,7 +26,7 @@ TEST(CMS, SignAndVerify)
 
     file = BasicIO::openInputFile("test.zip");
     
-    bool isValid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY, false);
+    bool isValid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY, std::cerr, false);
     ASSERT_TRUE(isValid);
 }
 
@@ -54,7 +54,7 @@ TEST(CMS, FailedToVerify)
 
     file = BasicIO::openInputFile("test.zip");
     
-    bool isValid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY, true);
+    bool isValid = cms.verify(certs, store, file, nullptr,  CMS_DETACHED | CMS_BINARY, std::cerr, true);
     ASSERT_FALSE(isValid);
 }
 

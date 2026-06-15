@@ -22,13 +22,13 @@ public:
     std::string const & getName() const override;
     std::string const & getDescription() const override;
     std::string const & getCopyright() const override;
-    int run(int argc, char* argv[]) const;
+    int run(int argc, char* argv[], std::ostream & out, std::ostream & err) const;
     Verb & add(std::string const & name, Command command);
     void setCopyright(std::string const & value);
     void setDescription(std::string const & value);
     void setAdditionalInfo(std::string const & value);
 private:
-    void printUsage() const;
+    void printUsage(std::ostream & out) const;
     DefaultVerb const * getVerb(std::string const & name) const;
     std::string name;
     std::string copyright;
@@ -48,9 +48,9 @@ App::~App()
     delete d;
 }   
 
-int App::run(int argc, char* argv[]) const
+int App::run(int argc, char* argv[], std::ostream & out, std::ostream & err) const
 {
-    return d->run(argc, argv);
+    return d->run(argc, argv, out, err);
 }
 
 Verb & App::add(std::string const & name, Command command)
@@ -101,7 +101,7 @@ std::string const & App::Private::getCopyright() const
     return copyright;
 }
 
-int App::Private::run(int argc, char* argv[]) const
+int App::Private::run(int argc, char* argv[], std::ostream & out, std::ostream & err) const
 {
     int exitCode = EXIT_FAILURE;
 
@@ -112,23 +112,23 @@ int App::Private::run(int argc, char* argv[]) const
 
         if (nullptr != verb)
         {
-            exitCode = verb->run(argc - 1, &argv[1]);
+            exitCode = verb->run(argc - 1, &argv[1], out, err);
         }
         else if ((verbName == "-h") || (verbName == "--help"))
         {
-            printUsage();
+            printUsage(out);
             exitCode = EXIT_SUCCESS;
         }
         else
         {
-            std::cerr << "error: unknwon verb: " << verbName << std::endl;
-            printUsage();
+            err << "error: unknwon verb: " << verbName << std::endl;
+            printUsage(out);
         }
     }
     else
     {
-        std::cerr << "error: missing verb" << std::endl;        
-        printUsage();
+        err << "error: missing verb" << std::endl;        
+        printUsage(out);
     }
 
     return exitCode;
@@ -170,9 +170,9 @@ DefaultVerb const * App::Private::getVerb(std::string const & name) const
 }
 
 
-void App::Private::printUsage(void) const
+void App::Private::printUsage(std::ostream & out) const
 {
-    std::cout
+    out
         << name << ", Copyright (c) " << copyright << std::endl
         << description << std::endl
         << std::endl
@@ -182,27 +182,27 @@ void App::Private::printUsage(void) const
 
     for (auto const & verb: verbs)
     {
-        std::cout << verb.getName() << " <args...> | ";
+        out << verb.getName() << " <args...> | ";
     }
 
-    std::cout 
+    out 
         << "-h" << std::endl
         << std::endl
         << "Verbs:" << std::endl;
 
     for (auto const & verb: verbs)
     {
-        std::cout 
+        out 
             << "\t" << std::left << std::setw(20) << verb.getName()
             << "\t" << verb.getHelpText()
             << std::endl;
     }
 
-    std::cout
+    out
         << "\t" << std::left << std::setw(20) << "-h, --help" << "\tPrint usage." << std::endl
         << std::endl;
     
-    std::cout << additionalInfo;
+    out << additionalInfo;
 
 }
 
