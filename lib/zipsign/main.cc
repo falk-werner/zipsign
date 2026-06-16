@@ -55,7 +55,7 @@ int main(int argc, char* argv[], std::ostream & out, std::ostream & err) noexcep
                 return info(argc - 1, &argv[1], out, err);
             }
             else {
-                err << "error: unknwon verb: " << verb << std::endl;
+                err << "error: unknown verb: " << verb << std::endl;
                 printUsage(out);
                 return EXIT_FAILURE;
             }
