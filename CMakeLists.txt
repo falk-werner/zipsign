@@ -95,6 +95,8 @@ add_executable(alltests
     test-src/openssl/test_private_key.cc
     test-src/openssl/test_cms.cc
     test-src/testutils.cc
+    test-src/cli/test_print_usage.cc
+    test-src/cli/test_main.cc
     ${CMAKE_CURRENT_BINARY_DIR}/keyring.pem
 )
 
