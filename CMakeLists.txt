@@ -27,16 +27,6 @@ add_library(base64 STATIC
 )
 target_include_directories(base64 PRIVATE lib include)
 
-
-add_library(cli STATIC
-    lib/cli/app.cc
-    lib/cli/argument.cc
-    lib/cli/default_arguments.cc
-    lib/cli/options.cc
-    lib/cli/default_verb.cc
-)
-target_include_directories(cli PRIVATE lib include)
-
 add_library(openssl++ STATIC
     lib/openssl++/exception.cc
     lib/openssl++/basic_io.cc
@@ -58,6 +48,9 @@ add_library(zipsign STATIC
         lib/zipsign/verifier.cc
         lib/zipsign/informer.cc
         lib/zipsign/main.cc
+        lib/zipsign/sign.cc
+        lib/zipsign/verify.cc
+        lib/zipsign/info.cc
 )
 target_include_directories(zipsign PRIVATE lib include)
 target_compile_options(zipsign PUBLIC ${OPENSSL_CFLAGS_OTHER})
@@ -66,8 +59,7 @@ target_link_libraries(zipsign PUBLIC openssl++ base64)
 add_executable(app
     src/zipsign/main.cc)
 set_target_properties(app PROPERTIES OUTPUT_NAME "zipsign")
-target_include_directories(app PRIVATE include src/cli)
-target_link_libraries(app PRIVATE zipsign cli)
+target_link_libraries(app PRIVATE zipsign)
 
 install(TARGETS app DESTINATION bin)
 
@@ -93,11 +85,6 @@ add_executable(alltests
     test/test_partial_input_file.cc
     test/test_zip.cc
     test/base64/test_base64.cc
-    test/cli/test_app.cc
-    test/cli/test_argument.cc
-    test/cli/test_default_arguments.cc
-    test/cli/test_options.cc
-    test/cli/test_verb.cc
     test/openssl/test_basic_io.cc
     test/openssl/test_openssl_exception.cc
     test/openssl/test_openssl_base_exception.cc
@@ -121,7 +108,7 @@ target_include_directories(alltests PRIVATE
 
 target_link_libraries(alltests PRIVATE zipsign)
 target_compile_options(alltests PRIVATE ${GMOCK_CFLAGS} ${GTEST_CFLAGS} "-pthread" "-Wno-sign-compare")
-target_link_libraries(alltests PRIVATE zipsign cli ${GMOCK_LINK_LIBRARIES} ${GTEST_LINK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(alltests PRIVATE zipsign ${GMOCK_LINK_LIBRARIES} ${GTEST_LINK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 add_custom_command(OUTPUT
         self-signed/key.pem

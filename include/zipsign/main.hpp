@@ -12,6 +12,13 @@ namespace zipsign
 
 int main(int argc, char* argv[], std::ostream & out, std::ostream & err) noexcept;
 
+int sign(int argc, char* argv[], std::ostream & out, std::ostream & err);
+
+int verify(int argc, char* argv[], std::ostream & out, std::ostream & err);
+
+int info(int argc, char* argv[], std::ostream & out, std::ostream & err);
+
+
 }
 
 #endif
