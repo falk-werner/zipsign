@@ -79,22 +79,22 @@ include(GoogleTest)
 pkg_check_modules(GMOCK REQUIRED gmock)
 
 add_executable(alltests
-    test/test_sign_and_verify.cc
-    test/test_informer.cc
-    test/test_file.cc
-    test/test_partial_input_file.cc
-    test/test_zip.cc
-    test/base64/test_base64.cc
-    test/openssl/test_basic_io.cc
-    test/openssl/test_openssl_exception.cc
-    test/openssl/test_openssl_base_exception.cc
-    test/openssl/test_file_not_found_exception.cc
-    test/openssl/test_certificate.cc
-    test/openssl/test_certificate_store.cc
-    test/openssl/test_certificate_stack.cc
-    test/openssl/test_private_key.cc
-    test/openssl/test_cms.cc
-    test/testutils.cc
+    test-src/test_sign_and_verify.cc
+    test-src/test_informer.cc
+    test-src/test_file.cc
+    test-src/test_partial_input_file.cc
+    test-src/test_zip.cc
+    test-src/base64/test_base64.cc
+    test-src/openssl/test_basic_io.cc
+    test-src/openssl/test_openssl_exception.cc
+    test-src/openssl/test_openssl_base_exception.cc
+    test-src/openssl/test_file_not_found_exception.cc
+    test-src/openssl/test_certificate.cc
+    test-src/openssl/test_certificate_store.cc
+    test-src/openssl/test_certificate_stack.cc
+    test-src/openssl/test_private_key.cc
+    test-src/openssl/test_cms.cc
+    test-src/testutils.cc
     ${CMAKE_CURRENT_BINARY_DIR}/keyring.pem
 )
 
@@ -120,16 +120,16 @@ add_custom_command(OUTPUT
         certs/alice.key
         certs/alice.crt
         keyring.pem
-    COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/create-pki.sh ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl
+    COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/test-src/openssl/create-pki.sh ${CMAKE_CURRENT_SOURCE_DIR}/test-src/openssl
     DEPENDS
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/create-pki.sh
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/openssl/root-ca.conf
+        ${CMAKE_CURRENT_SOURCE_DIR}/test-src/openssl/create-pki.sh
+        ${CMAKE_CURRENT_SOURCE_DIR}/test-src/openssl/root-ca.conf
 )
 
 
 # copy test data
-configure_file(test/resources/test.zip test.zip COPYONLY)
-configure_file(test/resources/message.txt message.txt COPYONLY)
+configure_file(test-src/resources/test.zip test.zip COPYONLY)
+configure_file(test-src/resources/message.txt message.txt COPYONLY)
 
 enable_testing()
 gtest_discover_tests(alltests TEST_PREFIX alltests:)
