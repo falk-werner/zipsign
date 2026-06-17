@@ -3,8 +3,10 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "zipsign/main.hpp"
-#include "zipsign/informer.hpp"
 #include "zipsign/cli_command.hpp"
+#include "zipsign/zip.hpp"
+#include "zipsign/partial_input_file.hpp"
+#include "zipsign/signature.hpp"
 
 #include <getopt.h>
 
@@ -90,8 +92,20 @@ Arguments:
 
 void run(std::string const & filename, std::ostream & out)
 {
-    zipsign::Informer informer;
-    informer.print(filename, out);
+    zipsign::Zip zip(filename);
+
+    auto commentSize = zip.getCommentStart();
+    auto file = zipsign::PartialInputFile::open(filename, commentSize);
+
+    auto comment = zip.getComment();
+    if (0 != comment.find(ZIPSIGN_SIGNATURE_PREFIX))
+    {
+        throw std::runtime_error("missing signature");
+    }
+    auto signature = comment.substr(std::string(ZIPSIGN_SIGNATURE_PREFIX).size());
+
+    auto cms = openssl::CMS::fromBase64(signature);
+    out << cms.toString() << std::endl;
 }
 
 }

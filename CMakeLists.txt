@@ -35,7 +35,6 @@ add_library(zipsign STATIC
     lib/zipsign/zip.cpp
     lib/zipsign/signer.cpp
     lib/zipsign/verifier.cpp
-    lib/zipsign/informer.cpp
     lib/zipsign/main.cpp
     lib/zipsign/sign.cpp
     lib/zipsign/verify.cpp
@@ -71,7 +70,7 @@ pkg_check_modules(GMOCK REQUIRED gmock)
 
 add_executable(alltests
     test-src/test_sign_and_verify.cpp
-    test-src/test_informer.cpp
+    test-src/test_info.cpp
     test-src/test_file.cpp
     test-src/test_partial_input_file.cpp
     test-src/test_zip.cpp
