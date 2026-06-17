@@ -23,41 +23,41 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(coverage)
 
 add_library(base64 STATIC
-    lib/base64/base64.cc
+    lib/base64/base64.cpp
 )
 target_include_directories(base64 PRIVATE lib include)
 
 add_library(openssl++ STATIC
-    lib/openssl++/exception.cc
-    lib/openssl++/basic_io.cc
-    lib/openssl++/private_key.cc
-    lib/openssl++/certificate.cc
-    lib/openssl++/certificate_store.cc
-    lib/openssl++/certificate_stack.cc
-    lib/openssl++/cms.cc
+    lib/openssl++/exception.cpp
+    lib/openssl++/basic_io.cpp
+    lib/openssl++/private_key.cpp
+    lib/openssl++/certificate.cpp
+    lib/openssl++/certificate_store.cpp
+    lib/openssl++/certificate_stack.cpp
+    lib/openssl++/cms.cpp
 )
 target_include_directories(openssl++ PUBLIC lib include ${OPENSSL_INCLUDE_DIRS})
 target_compile_options(openssl++ PUBLIC ${OPENSSL_CFLAGS_OTHER})
 target_link_libraries(openssl++ PUBLIC ${OPENSSL_LINK_LIBRARIES})
 
 add_library(zipsign STATIC
-        lib/zipsign/file.cc
-        lib/zipsign/partial_input_file.cc
-        lib/zipsign/zip.cc
-        lib/zipsign/signer.cc
-        lib/zipsign/verifier.cc
-        lib/zipsign/informer.cc
-        lib/zipsign/main.cc
-        lib/zipsign/sign.cc
-        lib/zipsign/verify.cc
-        lib/zipsign/info.cc
+        lib/zipsign/file.cpp
+        lib/zipsign/partial_input_file.cpp
+        lib/zipsign/zip.cpp
+        lib/zipsign/signer.cpp
+        lib/zipsign/verifier.cpp
+        lib/zipsign/informer.cpp
+        lib/zipsign/main.cpp
+        lib/zipsign/sign.cpp
+        lib/zipsign/verify.cpp
+        lib/zipsign/info.cpp
 )
 target_include_directories(zipsign PRIVATE lib include)
 target_compile_options(zipsign PUBLIC ${OPENSSL_CFLAGS_OTHER})
 target_link_libraries(zipsign PUBLIC openssl++ base64)
 
 add_executable(app
-    src/zipsign/main.cc)
+    src/zipsign/main.cpp)
 set_target_properties(app PROPERTIES OUTPUT_NAME "zipsign")
 target_link_libraries(app PRIVATE zipsign)
 
@@ -79,24 +79,24 @@ include(GoogleTest)
 pkg_check_modules(GMOCK REQUIRED gmock)
 
 add_executable(alltests
-    test-src/test_sign_and_verify.cc
-    test-src/test_informer.cc
-    test-src/test_file.cc
-    test-src/test_partial_input_file.cc
-    test-src/test_zip.cc
-    test-src/base64/test_base64.cc
-    test-src/openssl/test_basic_io.cc
-    test-src/openssl/test_openssl_exception.cc
-    test-src/openssl/test_openssl_base_exception.cc
-    test-src/openssl/test_file_not_found_exception.cc
-    test-src/openssl/test_certificate.cc
-    test-src/openssl/test_certificate_store.cc
-    test-src/openssl/test_certificate_stack.cc
-    test-src/openssl/test_private_key.cc
-    test-src/openssl/test_cms.cc
-    test-src/testutils.cc
-    test-src/cli/test_print_usage.cc
-    test-src/cli/test_main.cc
+    test-src/test_sign_and_verify.cpp
+    test-src/test_informer.cpp
+    test-src/test_file.cpp
+    test-src/test_partial_input_file.cpp
+    test-src/test_zip.cpp
+    test-src/base64/test_base64.cpp
+    test-src/openssl/test_basic_io.cpp
+    test-src/openssl/test_openssl_exception.cpp
+    test-src/openssl/test_openssl_base_exception.cpp
+    test-src/openssl/test_file_not_found_exception.cpp
+    test-src/openssl/test_certificate.cpp
+    test-src/openssl/test_certificate_store.cpp
+    test-src/openssl/test_certificate_stack.cpp
+    test-src/openssl/test_private_key.cpp
+    test-src/openssl/test_cms.cpp
+    test-src/testutils.cpp
+    test-src/cli/test_print_usage.cpp
+    test-src/cli/test_main.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/keyring.pem
 )
 
