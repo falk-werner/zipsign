@@ -22,12 +22,7 @@ add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(coverage)
 
-add_library(base64 STATIC
-    lib/base64/base64.cpp
-)
-target_include_directories(base64 PRIVATE lib include)
-
-add_library(openssl++ STATIC
+add_library(zipsign STATIC
     lib/openssl++/exception.cpp
     lib/openssl++/basic_io.cpp
     lib/openssl++/private_key.cpp
@@ -35,26 +30,22 @@ add_library(openssl++ STATIC
     lib/openssl++/certificate_store.cpp
     lib/openssl++/certificate_stack.cpp
     lib/openssl++/cms.cpp
+    lib/zipsign/file.cpp
+    lib/zipsign/partial_input_file.cpp
+    lib/zipsign/zip.cpp
+    lib/zipsign/signer.cpp
+    lib/zipsign/verifier.cpp
+    lib/zipsign/informer.cpp
+    lib/zipsign/main.cpp
+    lib/zipsign/sign.cpp
+    lib/zipsign/verify.cpp
+    lib/zipsign/info.cpp
+    lib/zipsign/base64.cpp
 )
-target_include_directories(openssl++ PUBLIC lib include ${OPENSSL_INCLUDE_DIRS})
-target_compile_options(openssl++ PUBLIC ${OPENSSL_CFLAGS_OTHER})
-target_link_libraries(openssl++ PUBLIC ${OPENSSL_LINK_LIBRARIES})
-
-add_library(zipsign STATIC
-        lib/zipsign/file.cpp
-        lib/zipsign/partial_input_file.cpp
-        lib/zipsign/zip.cpp
-        lib/zipsign/signer.cpp
-        lib/zipsign/verifier.cpp
-        lib/zipsign/informer.cpp
-        lib/zipsign/main.cpp
-        lib/zipsign/sign.cpp
-        lib/zipsign/verify.cpp
-        lib/zipsign/info.cpp
-)
-target_include_directories(zipsign PRIVATE lib include)
+target_include_directories(zipsign PUBLIC include)
+target_include_directories(zipsign PRIVATE lib ${OPENSSL_INCLUDE_DIRS})
 target_compile_options(zipsign PUBLIC ${OPENSSL_CFLAGS_OTHER})
-target_link_libraries(zipsign PUBLIC openssl++ base64)
+target_link_libraries(zipsign PUBLIC ${OPENSSL_LINK_LIBRARIES})
 
 add_executable(app
     src/zipsign/main.cpp)
@@ -84,7 +75,7 @@ add_executable(alltests
     test-src/test_file.cpp
     test-src/test_partial_input_file.cpp
     test-src/test_zip.cpp
-    test-src/base64/test_base64.cpp
+    test-src/test_base64.cpp
     test-src/openssl/test_basic_io.cpp
     test-src/openssl/test_openssl_exception.cpp
     test-src/openssl/test_openssl_base_exception.cpp

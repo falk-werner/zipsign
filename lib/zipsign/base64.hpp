@@ -9,12 +9,12 @@
 #include <vector>
 #include <cinttypes>
 
-namespace base64
+namespace zipsign
 {
 
-std::string encode(uint8_t const * buffer, size_t length);
+std::string b64_encode(uint8_t const * buffer, size_t length);
 
-void decode(std::string const &from, std::vector<uint8_t> &to);
+void b64_decode(std::string const &from, std::vector<uint8_t> &to);
 
 
 }

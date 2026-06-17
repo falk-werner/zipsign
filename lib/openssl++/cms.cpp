@@ -6,7 +6,7 @@
 #include "openssl++/exception.hpp"
 #include "openssl++/basic_io.hpp"
 
-#include "base64/base64.hpp"
+#include "zipsign/base64.hpp"
 
 #include <iostream>
 #include <vector>
@@ -17,7 +17,7 @@ namespace openssl
 CMS CMS::fromBase64(std::string const & data)
 {
     std::vector<uint8_t> decoded;
-    base64::decode(data, decoded);
+    zipsign::b64_decode(data, decoded);
 
     auto bio = BasicIO::fromMemory(decoded.data(), decoded.size());
     CMS_ContentInfo * cms = d2i_CMS_bio(bio, nullptr);
@@ -137,7 +137,7 @@ std::string CMS::toBase64() const
     BUF_MEM * buffer;
     BIO_get_mem_ptr(bio, &buffer);
 
-    return base64::encode(reinterpret_cast<uint8_t *>(buffer->data), buffer->length);
+    return zipsign::b64_encode(reinterpret_cast<uint8_t *>(buffer->data), buffer->length);
 }
 
 std::string CMS::toString() const
