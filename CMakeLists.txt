@@ -41,8 +41,8 @@ add_library(zipsign STATIC
     lib/zipsign/info.cpp
     lib/zipsign/base64.cpp
 )
-target_include_directories(zipsign PUBLIC include)
-target_include_directories(zipsign PRIVATE lib ${OPENSSL_INCLUDE_DIRS})
+target_include_directories(zipsign PUBLIC include ${OPENSSL_INCLUDE_DIRS})
+target_include_directories(zipsign PRIVATE lib)
 target_compile_options(zipsign PUBLIC ${OPENSSL_CFLAGS_OTHER})
 target_link_libraries(zipsign PUBLIC ${OPENSSL_LINK_LIBRARIES})
 
