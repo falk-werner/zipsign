@@ -3,14 +3,15 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "zipsign/main.hpp"
+#include "zipsign/version.hpp"
 
 namespace
 {
 
 void printUsage(std::ostream & out)
 {
-    out << R"(zipsign, Copyright (c) 2019-2025 Falk Werner
-Signs and verifies ZIP archives
+    out << "zipsign v" << zipsign::version() << ", Copyright (c) 2019-2026 Falk Werner\n";
+    out << R"(Signs and verifies ZIP archives
 
 Usage:
         zipsign sign <args...> | verify <args...> | info <args...> | -h
@@ -19,6 +20,7 @@ Verbs:
         sign                    Signs a zip archive.
         verify                  Verifies the signature of a zip archive.
         info                    Print info about the signature of zip archive.
+        -V, --version           Print version.
         -h, --help              Print usage.
 
 Examples:
@@ -43,6 +45,10 @@ int main(int argc, char* argv[], std::ostream & out, std::ostream & err) noexcep
 
             if ((verb == "-h") || (verb == "--help")) {
                 printUsage(out);
+                return EXIT_SUCCESS;
+            }
+            else if ((verb == "-V") || (verb == "--version")) {
+                out << zipsign::version() << '\n';
                 return EXIT_SUCCESS;
             }
             else if (verb == "sign") {
