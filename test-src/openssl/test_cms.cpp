@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <openssl++/openssl++.hpp>
-#include <base64/base64.hpp>
+#include <zipsign/base64.hpp>
 
 #include <sstream>
 
@@ -105,7 +105,7 @@ TEST(CMS, FailFromBase64InvalidContent)
 {
     char text[] = "Hugo";
     size_t text_size = sizeof(text) - 1;
-    std::string data(base64::encode((uint8_t const*) text, text_size));
+    std::string data(zipsign::b64_encode((uint8_t const*) text, text_size));
 
     ASSERT_THROW({
         CMS::fromBase64(data);

@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-#include "base64/base64.hpp"
+#include "zipsign/base64.hpp"
 #include <stdexcept>
 
 namespace
@@ -46,10 +46,10 @@ uint8_t base64_valueof(uint8_t c)
 
 }
 
-namespace base64
+namespace zipsign
 {
 
-std::string encode(uint8_t const * buffer, size_t length)
+std::string b64_encode(uint8_t const * buffer, size_t length)
 {
     if (length > (SIZE_MAX / 2))
     {
@@ -89,7 +89,7 @@ std::string encode(uint8_t const * buffer, size_t length)
 }
 
 
-void decode(std::string const &from, std::vector<uint8_t> &to)
+void b64_decode(std::string const &from, std::vector<uint8_t> &to)
 {
     if ((from.size() % 4) != 0)
     {
