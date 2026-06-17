@@ -1,0 +1,11 @@
+#include "zipsign/version.hpp"
+
+namespace zipsign
+{
+
+char const * version()
+{
+    return "@CMAKE_PROJECT_VERSION@";
+}
+
+}

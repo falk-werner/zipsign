@@ -5,6 +5,7 @@
 #include "zipsign/main.hpp"
 #include "zipsign/verifier.hpp"
 #include "zipsign/cli_command.hpp"
+#include "zipsign/version.hpp"
 
 #include <getopt.h>
 
@@ -102,7 +103,7 @@ struct VerifyContext
 
 void printUsage(std::ostream & out)
 {
-    out << "zipsign, Copyright (c) 2019-2025 Falk Werner\n";
+    out << "zipsign v" << zipsign::version() << ", Copyright (c) 2019-2026 Falk Werner\n";
     out << R"(Signs and verifies ZIP archives
 
 verify: Verifies the signature of a zip archive.

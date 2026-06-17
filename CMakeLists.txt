@@ -23,6 +23,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(coverage)
 
 add_library(zipsign STATIC
+    ${CMAKE_CURRENT_BINARY_DIR}/zipsign_version.cpp
     lib/openssl++/exception.cpp
     lib/openssl++/basic_io.cpp
     lib/openssl++/private_key.cpp
@@ -45,6 +46,9 @@ target_include_directories(zipsign PUBLIC include ${OPENSSL_INCLUDE_DIRS})
 target_include_directories(zipsign PRIVATE lib)
 target_compile_options(zipsign PUBLIC ${OPENSSL_CFLAGS_OTHER})
 target_link_libraries(zipsign PUBLIC ${OPENSSL_LINK_LIBRARIES})
+
+configure_file(${CMAKE_CURRENT_LIST_DIR}/lib/zipsign/version.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/zipsign_version.cpp @ONLY)
+
 
 add_executable(app
     src/zipsign/main.cpp)
