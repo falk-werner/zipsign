@@ -13,7 +13,6 @@
 #include <sstream>
 
 using zipsign::Signer;
-using zipsign::info;
 using zipsign::File;
 
 using testing::HasSubstr;
@@ -43,14 +42,15 @@ TEST_F(InfoTest, WithoutEmbeddedSignerCertificate)
     Signer signer(key_file, cert_file);
     signer.sign(TEST_ARCHIVE);
 
-    int argc = 3;
-    char arg0[] = "info";
-    char arg1[] = "-f";
-    char arg2[] = TEST_ARCHIVE;
-    char* argv[] = {arg0, arg1, arg2, nullptr};
+    int argc = 4;
+    char arg0[] = "zipsign";
+    char arg1[] = "info";
+    char arg2[] = "-f";
+    char arg3[] = TEST_ARCHIVE;
+    char* argv[] = {arg0, arg1, arg2, arg3, nullptr};
     std::stringstream err;
     std::stringstream out;
-    auto result = info(argc, argv, out, err);
+    auto result = zipsign::main(argc, argv, out, err);
     ASSERT_EQ(0, result);
     ASSERT_TRUE(err.str().empty());
 
@@ -68,14 +68,15 @@ TEST_F(InfoTest, WithEmbeddedSignerCertificate)
     signer.setEmbedCerts(true);
     signer.sign(TEST_ARCHIVE);
 
-    int argc = 3;
-    char arg0[] = "info";
-    char arg1[] = "-f";
-    char arg2[] = TEST_ARCHIVE;
-    char* argv[] = {arg0, arg1, arg2, nullptr};
+    int argc = 4;
+    char arg0[] = "zipsign";
+    char arg1[] = "info";
+    char arg2[] = "-f";
+    char arg3[] = TEST_ARCHIVE;
+    char* argv[] = {arg0, arg1, arg2, arg3, nullptr};
     std::stringstream err;
     std::stringstream out;
-    auto result = info(argc, argv, out, err);
+    auto result = zipsign::main(argc, argv, out, err);
     ASSERT_EQ(0, result);
     ASSERT_TRUE(err.str().empty());
 
@@ -93,15 +94,16 @@ TEST_F(InfoTest, Fail_InvalidArgument)
     signer.setEmbedCerts(true);
     signer.sign(TEST_ARCHIVE);
 
-    int argc = 4;
-    char arg0[] = "info";
-    char arg1[] = "-f";
-    char arg2[] = TEST_ARCHIVE;
-    char arg3[] = "--invalid";
-    char* argv[] = {arg0, arg1, arg2, arg3, nullptr};
+    int argc = 5;
+    char arg0[] = "zipsign";
+    char arg1[] = "info";
+    char arg2[] = "-f";
+    char arg3[] = TEST_ARCHIVE;
+    char arg4[] = "--invalid";
+    char* argv[] = {arg0, arg1, arg2, arg3, arg4, nullptr};
     std::stringstream err;
     std::stringstream out;
-    auto const result = info(argc, argv, out, err);
+    auto const result = zipsign::main(argc, argv, out, err);
 
     ASSERT_EQ(EXIT_FAILURE, result);
     ASSERT_FALSE(err.str().empty());
@@ -110,27 +112,30 @@ TEST_F(InfoTest, Fail_InvalidArgument)
 
 TEST_F(InfoTest, Fail_UnsignedArchive)
 {
-    int argc = 3;
-    char arg0[] = "info";
-    char arg1[] = "-f";
-    char arg2[] = TEST_ARCHIVE;
-    char* argv[] = {arg0, arg1, arg2, nullptr};
+    int argc = 4;
+    char arg0[] = "zipsign";
+    char arg1[] = "info";
+    char arg2[] = "-f";
+    char arg3[] = TEST_ARCHIVE;
+    char* argv[] = {arg0, arg1, arg2, arg3, nullptr};
     std::stringstream err;
     std::stringstream out;
+    auto const result = zipsign::main(argc, argv, out, err);
     
-    ASSERT_THROW({
-        info(argc, argv, out, err);
-    }, std::exception);
+    ASSERT_EQ(EXIT_FAILURE, result);
+    ASSERT_FALSE(err.str().empty());
+    ASSERT_TRUE(out.str().empty());
 }
 
 TEST(info, fail_missing_filename)
 {
-    int argc = 1;
-    char arg0[] = "info";
-    char* argv[] = {arg0, nullptr};
+    int argc = 2;
+    char arg0[] = "zipsign";
+    char arg1[] = "info";
+    char* argv[] = {arg0, arg1, nullptr};
     std::stringstream err;
     std::stringstream out;
-    auto const result = info(argc, argv, out, err);
+    auto const result = zipsign::main(argc, argv, out, err);
 
     ASSERT_EQ(EXIT_FAILURE, result);
     ASSERT_FALSE(err.str().empty());
@@ -139,15 +144,18 @@ TEST(info, fail_missing_filename)
 
 TEST(info, fail_nonexisting_file)
 {
-    int argc = 3;
-    char arg0[] = "info";
-    char arg1[] = "-f";
-    char arg2[] = TEST_ARCHIVE ".nonexisting";
-    char* argv[] = {arg0, arg1, arg2, nullptr};
+    int argc = 4;
+    char arg0[] = "zipsign";
+    char arg1[] = "info";
+    char arg2[] = "-f";
+    char arg3[] = TEST_ARCHIVE ".nonexisting";
+    char* argv[] = {arg0, arg1, arg2, arg3, nullptr};
     std::stringstream err;
     std::stringstream out;
+    auto const result = zipsign::main(argc, argv, out, err);
 
-    ASSERT_THROW({
-        info(argc, argv, out, err);
-    }, std::exception);
+    ASSERT_EQ(EXIT_FAILURE, result);
+    ASSERT_FALSE(err.str().empty());
+    ASSERT_TRUE(out.str().empty());
 }
+
