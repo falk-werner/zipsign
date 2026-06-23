@@ -145,3 +145,30 @@ TEST(CMS, MoveAssignable)
     CMS other = CMS::sign(cert, key, nullptr, file, CMS_DETACHED | CMS_NOCERTS | CMS_BINARY);
     other = std::move(cms);
 }
+
+TEST(CMS, SelfMoveAssignment)
+{
+    PrivateKey key = PrivateKey::fromPEM("certs/alice.key");
+    Certificate cert = Certificate::fromPEM("certs/alice.crt");
+
+    BasicIO file = BasicIO::openInputFile("test.zip");
+    CMS cms = CMS::sign(cert, key, nullptr, file, CMS_DETACHED | CMS_NOCERTS | CMS_BINARY);
+
+    CMS &ref = cms;
+    cms = std::move(ref);
+
+    ASSERT_NE(nullptr, static_cast<CMS_ContentInfo*>(cms));
+}
+
+TEST(CMS, AddInvalidSigner)
+{
+    PrivateKey key = PrivateKey::fromPEM("certs/alice.key");
+    Certificate cert = Certificate::fromPEM("certs/alice.crt");
+
+    BasicIO file = BasicIO::openInputFile("test.zip");
+    CMS cms = CMS::sign(cert, key, nullptr, file, CMS_DETACHED | CMS_NOCERTS | CMS_BINARY);
+
+    ASSERT_THROW({
+        cms.addSigner(nullptr, nullptr, nullptr, CMS_DETACHED | CMS_NOCERTS | CMS_BINARY);
+    }, OpenSSLException);
+}

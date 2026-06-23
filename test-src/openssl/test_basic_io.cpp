@@ -44,3 +44,12 @@ TEST(BasicIO, MoveAssignable)
     ASSERT_EQ(nullptr, static_cast<BIO*>(bio));
     ASSERT_NE(nullptr, static_cast<BIO*>(x));
 }
+
+TEST(BasicIO, SelfMoveAssignment)
+{
+    BasicIO bio = BasicIO::fromMemory();
+    BasicIO &ref = bio;
+    bio = std::move(ref);
+
+    ASSERT_NE(nullptr, static_cast<BIO*>(bio));
+}

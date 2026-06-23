@@ -66,3 +66,12 @@ TEST(CertificateStore, MoveAssignable)
     ASSERT_EQ(nullptr, static_cast<X509_STORE*>(store));
     ASSERT_NE(nullptr, static_cast<X509_STORE*>(other));
 }
+
+TEST(CertificateStore, SelfMoveAssignment)
+{
+    CertificateStore store;
+    CertificateStore &ref = store;
+    store = std::move(ref);
+
+    ASSERT_NE(nullptr, static_cast<X509_STORE*>(store));
+}

@@ -8,7 +8,7 @@
 namespace zipsign
 {
 
-char const * version();
+char const * version() noexcept;
 
 }
 

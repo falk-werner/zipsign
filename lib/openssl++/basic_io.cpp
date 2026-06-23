@@ -21,19 +21,19 @@ BasicIO BasicIO::openInputFile(std::string const & filename)
     return BasicIO(file);
 }
 
-BasicIO BasicIO::fromMemory()
+BasicIO BasicIO::fromMemory() noexcept
 {
     BIO * bio = BIO_new(BIO_s_mem());
     return BasicIO(bio);
 }
 
-BasicIO BasicIO::fromMemory(void const * data, size_t size)
+BasicIO BasicIO::fromMemory(void const * data, size_t size) noexcept
 {
     BIO * bio = BIO_new_mem_buf(data, size);
     return BasicIO(bio);
 }
 
-BasicIO::BasicIO(BIO * bio_)
+BasicIO::BasicIO(BIO * bio_) noexcept
 : bio(bio_)
 {
 
@@ -63,7 +63,7 @@ BasicIO::BasicIO(BasicIO && other)
     other.bio = nullptr;
 }
 
-BasicIO::operator BIO*()
+BasicIO::operator BIO*() noexcept
 {
     return bio;
 }

@@ -17,13 +17,13 @@ class BasicIO
     BasicIO(BasicIO const &) = delete;
 public:
     static BasicIO openInputFile(std::string const & filename);
-    static BasicIO fromMemory();
-    static BasicIO fromMemory(void const * data, size_t size);
-    explicit BasicIO(BIO * bio_);
+    static BasicIO fromMemory() noexcept;
+    static BasicIO fromMemory(void const * data, size_t size) noexcept;
+    explicit BasicIO(BIO * bio_) noexcept;
     BasicIO & operator=(BasicIO && other);
     BasicIO(BasicIO && other);
     ~BasicIO();
-    operator BIO*();
+    operator BIO*() noexcept;
 private:
     BIO * bio;
 };

@@ -8,6 +8,7 @@
 
 using openssl::Certificate;
 using openssl::OpenSSLException;
+using openssl::FileNotFoundException;
 
 TEST(Certificate, FromPEM)
 {
@@ -19,6 +20,13 @@ TEST(Certificate, Fail_FromPEMInvalidFile)
     ASSERT_THROW({
         Certificate::fromPEM("certs/alice.csr");
     }, OpenSSLException);
+}
+
+TEST(Certificate, Fail_FromNonExistingFile)
+{
+    ASSERT_THROW({
+        Certificate::fromPEM("certs/non_existing.crt");
+    }, FileNotFoundException);
 }
 
 
@@ -39,4 +47,13 @@ TEST(Certificate, MoveAssignable)
 
     ASSERT_EQ(nullptr, static_cast<X509*>(cert));
     ASSERT_NE(nullptr, static_cast<X509*>(other));
+}
+
+TEST(Certificate, SelfMoveAssignment)
+{
+    Certificate cert = Certificate::fromPEM("certs/alice.crt");
+    Certificate &ref = cert;
+    cert = std::move(ref);
+
+    ASSERT_NE(nullptr, static_cast<X509*>(cert));
 }

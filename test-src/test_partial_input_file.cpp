@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include "zipsign/partial_input_file.hpp"
 
-TEST(zipsign, dummy)
+TEST(PartialInputFile, open)
 {
     auto file = zipsign::PartialInputFile::open("message.txt", 2);
 
@@ -16,4 +16,11 @@ TEST(zipsign, dummy)
     ASSERT_EQ(2, i);
     ASSERT_EQ('4', buffer[0]);
     ASSERT_EQ('2', buffer[1]);
+}
+
+TEST(PartialInputFile, openNonExistingFile)
+{
+    ASSERT_THROW({
+        auto file = zipsign::PartialInputFile::open("non_existing_file.txt", 2);
+    }, std::runtime_error);
 }
