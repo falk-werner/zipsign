@@ -8,6 +8,7 @@
 #include "zipsign/partial_input_file.hpp"
 #include "zipsign/signature.hpp"
 #include "zipsign/version.hpp"
+#include "zipsign/exception.hpp"
 
 #include <getopt.h>
 
@@ -102,7 +103,7 @@ void run(std::string const & filename, std::ostream & out)
     auto comment = zip.getComment();
     if (0 != comment.find(ZIPSIGN_SIGNATURE_PREFIX))
     {
-        throw std::runtime_error("missing signature");
+        throw zipsign::ZipSignException("missing signature");
     }
     auto signature = comment.substr(std::string(ZIPSIGN_SIGNATURE_PREFIX).size());
 

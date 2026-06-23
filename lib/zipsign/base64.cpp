@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "zipsign/base64.hpp"
-#include <stdexcept>
+#include <zipsign/exception.hpp>
 
 namespace
 {
@@ -34,11 +34,11 @@ uint8_t base64_valueof(uint8_t c)
     uint8_t const value = table[c];
     if (value == 0x80)
     {
-        throw std::runtime_error("base64 decoding error: invalid value");
+        throw zipsign::ZipSignException("base64 decoding error: invalid value");
     }
     else if (value == 0xff)
     {
-        throw std::runtime_error("base64 decoding error: invalid use of padding");
+        throw zipsign::ZipSignException("base64 decoding error: invalid use of padding");
     }
 
     return value;
@@ -53,7 +53,7 @@ std::string b64_encode(uint8_t const * buffer, size_t length)
 {
     if (length > (SIZE_MAX / 2))
     {
-        throw std::runtime_error("base64 encoding error: buffer too large");
+        throw zipsign::ZipSignException("base64 encoding error: buffer too large");
     }
 
     constexpr const char table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -93,7 +93,7 @@ void b64_decode(std::string const &from, std::vector<uint8_t> &to)
 {
     if ((from.size() % 4) != 0)
     {
-        throw std::runtime_error("base64 decoding error: invalid size");
+        throw zipsign::ZipSignException("base64 decoding error: invalid size");
     }
 
     to.clear();

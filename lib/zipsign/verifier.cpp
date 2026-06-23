@@ -6,9 +6,9 @@
 #include "zipsign/zip.hpp"
 #include "zipsign/partial_input_file.hpp"
 #include "zipsign/signature.hpp"
+#include "zipsign/exception.hpp"
 
 #include <iostream>
-#include <stdexcept>
 
 using openssl::Certificate;
 using openssl::CertificateStore;
@@ -53,7 +53,7 @@ Verifier::Result Verifier::verify(
         if (0 != comment.find(ZIPSIGN_SIGNATURE_PREFIX))
         {
             result = BadMissingSignature;
-            throw std::runtime_error("missing signature");
+            throw ZipSignException("missing signature");
         }
         auto signature = comment.substr(std::string(ZIPSIGN_SIGNATURE_PREFIX).size());
 
@@ -79,7 +79,7 @@ Verifier::Result Verifier::verify(
             {
                 sk_X509_pop_free(untrusted, X509_free);
                 result = BadInvalidCertificateChain;
-                throw std::runtime_error("signers certificate is not valid");
+                throw ZipSignException("signers certificate is not valid");
             }
             sk_X509_pop_free(untrusted, X509_free);
         }
@@ -88,7 +88,7 @@ Verifier::Result Verifier::verify(
         if (!chain_valid)
         {
             result = BadInvalidCertificateChain;
-            throw std::runtime_error("certificate chain is not valid");
+            throw ZipSignException("certificate chain is not valid");
         }
 
         file = PartialInputFile::open(filename, commentSize);

@@ -48,7 +48,7 @@ int main(int argc, char* argv[], std::ostream & out, std::ostream & err) noexcep
                 return EXIT_SUCCESS;
             }
             else if ((verb == "-V") || (verb == "--version")) {
-                out << zipsign::version() << '\n';
+                out << zipsign::version() << std::endl;
                 return EXIT_SUCCESS;
             }
             else if (verb == "sign") {

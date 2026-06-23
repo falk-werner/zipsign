@@ -7,8 +7,6 @@
 #include "zipsign/partial_input_file.hpp"
 #include "zipsign/signature.hpp"
 
-#include <stdexcept>
-
 using openssl::PrivateKey;
 using openssl::Certificate;
 using openssl::CertificateStack;

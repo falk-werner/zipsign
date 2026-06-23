@@ -3,12 +3,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <gtest/gtest.h>
-#include <openssl++/exception.hpp>
+#include <zipsign/exception.hpp>
 
-using openssl::OpenSSLBaseException;
+using zipsign::ZipSignException;
 
-TEST(OpenSSLBaseException, what)
+TEST(ZipSignException, what)
 {
-    OpenSSLBaseException ex("some error message");
+    ZipSignException ex("some error message");
     ASSERT_STREQ("some error message", ex.what());
 }

@@ -15,7 +15,7 @@ BasicIO BasicIO::openInputFile(std::string const & filename)
     BIO * file = BIO_new_file(filename.c_str(), "rb");
     if (NULL == file)
     {
-        throw FileNotFoundException(filename);
+        throw FileNotFoundException(filename.c_str());
     }
 
     return BasicIO(file);

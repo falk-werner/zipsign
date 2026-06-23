@@ -5,13 +5,14 @@
 #include "openssl++/exception.hpp"
 
 #include <openssl/err.h>
+#include <cstring>
 #include <sstream>
 #include <iomanip>
 
 namespace
 {
 
-std::string getOpenSSLError(std::string const & message)
+std::string getOpenSSLError(char const * message)
 {
     std::stringstream stream;
     stream << message;
@@ -40,48 +41,23 @@ std::string getOpenSSLError(std::string const & message)
 namespace openssl
 {
 
-OpenSSLBaseException::OpenSSLBaseException(std::string const & message_)
-: message(message_)
+FileNotFoundException::FileNotFoundException(char const * filename) noexcept
+: zipsign::ZipSignException("file not found")
 {
-
+    (void) snprintf(message, sizeof(message), "file not found: %s", filename);
 }
 
-OpenSSLBaseException::~OpenSSLBaseException()
+OpenSSLException::OpenSSLException(char const * message_) noexcept
+: zipsign::ZipSignException(message_)
 {
-
-}
-
-char const * OpenSSLBaseException::what() const noexcept
-{
-    return message.c_str();
-}
-
-FileNotFoundException::FileNotFoundException(std::string const & filename_)
-: OpenSSLBaseException("file not found: " + filename_)
-, filename(filename_)
-{
-
-}
-
-FileNotFoundException::~FileNotFoundException()
-{
-
-}
-
-std::string const & FileNotFoundException::path() const
-{
-    return filename;
-}
-
-OpenSSLException::OpenSSLException(std::string const & message_)
-: OpenSSLBaseException(getOpenSSLError(message_))
-{
-
-}
-
-OpenSSLException::~OpenSSLException()
-{
-
+    try
+    {
+        (void) snprintf(message, sizeof(message), "%s", getOpenSSLError(message_).c_str());
+    }
+    catch(...)
+    {
+        // message is already initialized by the base class constructor
+    }
 }
 
 }

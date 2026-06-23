@@ -5,37 +5,25 @@
 #ifndef OPENSSL_EXCEPTION_HPP
 #define OPENSSL_EXCEPTION_HPP
 
+#include <zipsign/exception.hpp>
 #include <exception>
 #include <string>
 
 namespace openssl
 {
 
-class OpenSSLBaseException: public std::exception
+class FileNotFoundException: public zipsign::ZipSignException
 {
 public:
-    OpenSSLBaseException(std::string const & message_);
-    ~OpenSSLBaseException();
-    char const * what() const noexcept override;
-private:
-    std::string message;
+    FileNotFoundException(char const * filename) noexcept;
+    ~FileNotFoundException() = default;
 };
 
-class FileNotFoundException: public OpenSSLBaseException
+class OpenSSLException: public zipsign::ZipSignException
 {
 public:
-    FileNotFoundException(std::string const & filename_);
-    ~FileNotFoundException();
-    std::string const & path() const;
-private:
-    std::string filename;
-};
-
-class OpenSSLException: public OpenSSLBaseException
-{
-public:
-    OpenSSLException(std::string const & message_);
-    ~OpenSSLException();
+    OpenSSLException(char const * message_) noexcept;
+    ~OpenSSLException() = default;
 };
 
 }

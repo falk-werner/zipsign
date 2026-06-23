@@ -4,12 +4,12 @@
 
 #include "zipsign/zip.hpp"
 #include "zipsign/file.hpp"
+#include "zipsign/exception.hpp"
 
 #include <cstdio>
 #include <cinttypes>
 
 #include <algorithm>
-#include <stdexcept>
 #include <vector>
 
 #define MAX_COMMENT_SIZE (64 * 1024)
@@ -35,7 +35,7 @@ void Zip::setComment(std::string const & comment)
 {
     if (comment.size() > MAX_COMMENT_SIZE)
     {
-        throw std::runtime_error("zip comment too long");
+        throw ZipSignException("zip comment too long");
     }
 
     size_t commentStart = getCommentStart(); 
@@ -66,7 +66,7 @@ std::string Zip::getComment()
 
     if ((commentPos + 2 + commentLength) > fileSize)
     {
-        throw std::runtime_error("comment size exceeds file size");
+        throw ZipSignException("comment size exceeds file size");
     }
 
     std::string comment;
@@ -88,7 +88,7 @@ std::size_t Zip::getCommentStart()
     size_t length = file.tell();
     if (length < MIN_EOCD_SIZE)
     {
-        throw std::runtime_error("invalid zip archive (too small)");        
+        throw ZipSignException("invalid zip archive (too small)");        
     }
 
     size_t buffer_size = std::min<size_t>(length, MAX_EOCD_SIZE);
@@ -114,7 +114,7 @@ std::size_t Zip::getCommentStart()
 
     if (!found)
     {
-        throw std::runtime_error("invalid zip archive: EOCD not found");        
+        throw ZipSignException("invalid zip archive: EOCD not found");        
     }
 
     return offset + pos + EOCD_COMMENT_POS;

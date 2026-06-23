@@ -11,5 +11,5 @@ TEST(FileNotFoundException, path)
 {
     FileNotFoundException ex("some.file");
 
-    ASSERT_STREQ("some.file", ex.path().c_str());
+    ASSERT_STREQ("file not found: some.file", ex.what());
 }

@@ -31,6 +31,7 @@ add_library(zipsign STATIC
     lib/openssl++/certificate_store.cpp
     lib/openssl++/certificate_stack.cpp
     lib/openssl++/cms.cpp
+    lib/zipsign/exception.cpp
     lib/zipsign/file.cpp
     lib/zipsign/partial_input_file.cpp
     lib/zipsign/zip.cpp
@@ -79,9 +80,9 @@ add_executable(alltests
     test-src/test_partial_input_file.cpp
     test-src/test_zip.cpp
     test-src/test_base64.cpp
+    test-src/test_exception.cpp
     test-src/openssl/test_basic_io.cpp
     test-src/openssl/test_openssl_exception.cpp
-    test-src/openssl/test_openssl_base_exception.cpp
     test-src/openssl/test_file_not_found_exception.cpp
     test-src/openssl/test_certificate.cpp
     test-src/openssl/test_certificate_store.cpp

@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "zipsign/partial_input_file.hpp"
-#include <stdexcept>
+#include "zipsign/exception.hpp"
 #include <cstdio>
 #include <algorithm>
 
@@ -96,7 +96,7 @@ BasicIO open(std::string const & filename, std::size_t upperLimit)
     FILE * file = fopen(filename.c_str(), "rb");
     if (nullptr == file)
     {
-        throw std::runtime_error("failed to open file");
+        throw zipsign::ZipSignException("failed to open file");
     }
 
     BIO * bio = BIO_new(g_method.get_method());
