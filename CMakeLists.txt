@@ -92,10 +92,12 @@ add_executable(alltests
     test-src/testutils.cpp
     test-src/cli/test_print_usage.cpp
     test-src/cli/test_main.cpp
+    test-src/cli/test_sign.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/keyring.pem
 )
 
 target_include_directories(alltests PRIVATE
+    test-src
     include
     lib
     test
