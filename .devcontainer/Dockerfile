@@ -6,6 +6,7 @@ RUN apt update && apt install -y --no-install-recommends \
     ca-certificates \
     git \
     openssh-client \
+    gnupg \
     build-essential \
     pkg-config \
     cmake \
@@ -15,7 +16,8 @@ RUN apt update && apt install -y --no-install-recommends \
     valgrind \
     libssl-dev \
     openssl \
-    gcovr
+    gcovr \
+    bats
 
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 ENV LANG en_US.UTF-8  

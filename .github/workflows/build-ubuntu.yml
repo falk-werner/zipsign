@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install openssl libssl-dev libgtest-dev libgmock-dev valgrind
+          sudo apt install openssl libssl-dev libgtest-dev libgmock-dev valgrind bats
 
       - name: Configure
         run: |
@@ -38,6 +38,10 @@ jobs:
         working-directory: build
         run: |
           valgrind --error-exitcode=1 ./alltests
+        
+      - name: Integration Test
+        run: |
+          bats ./test/
 
       - name: CPack
         run: |

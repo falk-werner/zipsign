@@ -31,6 +31,11 @@ jobs:
             mingw-w64-x86_64-gcc
             mingw-w64-x86_64-pkg-config
             mingw-w64-x86_64-gtest
+            mingw-w64-x86_64-nodejs
+
+      - name: Setup bats
+        run: |
+           npm install -g bats
 
       - name: Checkout
         uses: actions/checkout@v7
@@ -48,3 +53,8 @@ jobs:
       - name: Unit Test
         run: |
           cmake --build build --target test
+
+      - name: Integration Test
+        run: |
+          $(npm prefix -g)/bin/bats ./test/
+
