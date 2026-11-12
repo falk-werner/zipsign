@@ -16,6 +16,40 @@ setup() {
     (cd "$BATS_TEST_TMPDIR" && zip -q archive.zip sample.txt)
 }
 
+assert_sign_help() {
+    local text
+    text=$(printf '%s\n' "$1" | tr -d '\r')
+
+    [[ "$text" =~ zipsign[[:space:]]+v[0-9]+\.[0-9]+\.[0-9]+,[[:space:]]+Copyright[[:space:]]+\(c\)[[:space:]]+[0-9]{4}(-[0-9]{4})?[[:space:]]+Falk[[:space:]]+Werner ]]
+    [[ "$text" =~ Signs[[:space:]]+and[[:space:]]+verifies[[:space:]]+ZIP[[:space:]]+archives ]]
+    [[ "$text" =~ sign:[[:space:]]+Signs[[:space:]]+a[[:space:]]+zip[[:space:]]+archive\. ]]
+    [[ "$text" =~ Usage: ]]
+    [[ "$text" =~ zipsign[[:space:]]+sign[[:space:]]+-f[[:space:]]+\<value\>[[:space:]]+-p[[:space:]]+\<value\>[[:space:]]+-c[[:space:]]+\<value\> ]]
+    [[ "$text" =~ -f,[[:space:]]+--file ]]
+    [[ "$text" =~ -p,[[:space:]]+--private-key ]]
+    [[ "$text" =~ -c,[[:space:]]+--certificate ]]
+    [[ "$text" =~ -i,[[:space:]]+--intermediate ]]
+    [[ "$text" =~ -e,[[:space:]]+--embed-certificate ]]
+    [[ "$text" =~ -v,[[:space:]]+--verbose ]]
+    [[ "$text" =~ -h,[[:space:]]+--help ]]
+}
+
+# ==============================================================================
+# Help Tests
+# ==============================================================================
+
+@test "print sign help (short opt -h)" {
+    run "$ZIPSIGN" sign -h
+    [ "$status" -eq 0 ]
+    assert_sign_help "$output"
+}
+
+@test "print sign help (long opt --help)" {
+    run "$ZIPSIGN" sign --help
+    [ "$status" -eq 0 ]
+    assert_sign_help "$output"
+}
+
 # ==============================================================================
 # Basic Signing Tests
 # ==============================================================================
@@ -40,6 +74,42 @@ setup() {
 
 @test "sign zip archive using long options and verify" {
     run "$ZIPSIGN" sign --file "$ARCHIVE_FILE" --private-key "$KEY_FILE" --certificate "$CERT_FILE"
+    [ "$status" -eq 0 ]
+
+    extract_cms_signature "$ARCHIVE_FILE" "$BATS_TEST_TMPDIR/signature.der" "$BATS_TEST_TMPDIR/signed_data.bin"
+
+    run openssl cms -verify \
+        -binary \
+        -inform DER \
+        -in "$BATS_TEST_TMPDIR/signature.der" \
+        -content "$BATS_TEST_TMPDIR/signed_data.bin" \
+        -certfile "$CERT_FILE" \
+        -CAfile "$CERT_FILE" \
+        -out "$BATS_TEST_TMPDIR/verified.bin"
+    [ "$status" -eq 0 ]
+    [[ "$output" =~ "CMS Verification successful" ]]
+}
+
+@test "sign zip archive with verbose output (short opt -v)" {
+    run "$ZIPSIGN" sign -f "$ARCHIVE_FILE" -p "$KEY_FILE" -c "$CERT_FILE" -v
+    [ "$status" -eq 0 ]
+
+    extract_cms_signature "$ARCHIVE_FILE" "$BATS_TEST_TMPDIR/signature.der" "$BATS_TEST_TMPDIR/signed_data.bin"
+
+    run openssl cms -verify \
+        -binary \
+        -inform DER \
+        -in "$BATS_TEST_TMPDIR/signature.der" \
+        -content "$BATS_TEST_TMPDIR/signed_data.bin" \
+        -certfile "$CERT_FILE" \
+        -CAfile "$CERT_FILE" \
+        -out "$BATS_TEST_TMPDIR/verified.bin"
+    [ "$status" -eq 0 ]
+    [[ "$output" =~ "CMS Verification successful" ]]
+}
+
+@test "sign zip archive with verbose output (long opt --verbose)" {
+    run "$ZIPSIGN" sign --file "$ARCHIVE_FILE" --private-key "$KEY_FILE" --certificate "$CERT_FILE" --verbose
     [ "$status" -eq 0 ]
 
     extract_cms_signature "$ARCHIVE_FILE" "$BATS_TEST_TMPDIR/signature.der" "$BATS_TEST_TMPDIR/signed_data.bin"
@@ -352,6 +422,7 @@ setup() {
         -p "$KEY2"
     [ "$status" -eq 1 ]
     [[ "$output" =~ "count of keys and signer certificated does not match" ]]
+    assert_sign_help "$output"
 }
 
 @test "fail signing when certificate count exceeds key count (negative)" {
@@ -365,6 +436,7 @@ setup() {
         -c "$CERT2"
     [ "$status" -eq 1 ]
     [[ "$output" =~ "count of keys and signer certificated does not match" ]]
+    assert_sign_help "$output"
 }
 
 @test "fail signing when private key does not match certificate (negative)" {
@@ -418,18 +490,21 @@ setup() {
     run "$ZIPSIGN" sign -p "$KEY_FILE" -c "$CERT_FILE"
     [ "$status" -eq 1 ]
     [[ "$output" =~ "miss" && "$output" =~ "required argument: -f" ]]
+    assert_sign_help "$output"
 }
 
 @test "fail signing when -p option is missing (negative)" {
     run "$ZIPSIGN" sign -f "$ARCHIVE_FILE" -c "$CERT_FILE"
     [ "$status" -eq 1 ]
     [[ "$output" =~ "miss" && "$output" =~ "required argument: -p" ]]
+    assert_sign_help "$output"
 }
 
 @test "fail signing when -c option is missing (negative)" {
     run "$ZIPSIGN" sign -f "$ARCHIVE_FILE" -p "$KEY_FILE"
     [ "$status" -eq 1 ]
     [[ "$output" =~ "miss" && "$output" =~ "required argument: -c" ]]
+    assert_sign_help "$output"
 }
 
 @test "fail signing when archive file does not exist (negative)" {
@@ -453,5 +528,6 @@ setup() {
     run "$ZIPSIGN" sign -f "$ARCHIVE_FILE" -p "$KEY_FILE" -c "$CERT_FILE" --unrecognized-option
     [ "$status" -eq 1 ]
     [[ "$output" =~ "unrecognized argument" ]]
+    assert_sign_help "$output"
 }
 
