@@ -77,8 +77,7 @@ struct InfoContext
 
 void printUsage(std::ostream & out)
 {
-    out << "zipsign v" << zipsign::version() << ", Copyright (c) 2019-2026 Falk Werner";
-    out << "zipsign, Copyright (c) 2019-2025 Falk Werner\n";
+    out << "zipsign v" << zipsign::version() << ", Copyright (c) 2019-2026 Falk Werner\n";
     out << R"(Signs and verifies ZIP archives
 
 info: Print info about the signature of zip archive.
