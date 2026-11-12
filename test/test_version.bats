@@ -1,20 +1,6 @@
 #!/usr/bin/env bats
 
-setup() {
-    if [ -n "$ZIPSIGN_BIN" ]; then
-        ZIPSIGN="$ZIPSIGN_BIN"
-    elif [ -x "build/zipsign" ]; then
-        ZIPSIGN="build/zipsign"
-    elif [ -x "build/zipsign.exe" ]; then
-        ZIPSIGN="build/zipsign.exe"
-    elif [ -x "./zipsign" ]; then
-        ZIPSIGN="./zipsign"
-    elif [ -x "./zipsign.exe" ]; then
-        ZIPSIGN="./zipsign.exe"
-    else
-        ZIPSIGN="zipsign"
-    fi
-}
+load 'test_helper.sh'
 
 @test "print version (short opts)" {
     run "$ZIPSIGN" -V
