@@ -1,6 +1,6 @@
 [![Ubuntu Build](https://github.com/falk-werner/zipsign/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/build-ubuntu.yml)
 [![Windows Build](https://github.com/falk-werner/zipsign/actions/workflows/build-windows.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/build-windows.yml)
-[![Mac OS Build](https://github.com/falk-werner/zipsign/actions/workflows/build-maxos.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/build-maxos.yml)
+[![Mac OS Build](https://github.com/falk-werner/zipsign/actions/workflows/build-macos.yml/badge.svg)](https://github.com/falk-werner/zipsign/actions/workflows/build-macos.yml)
 
 [![Snap Store](https://raw.githubusercontent.com/snapcore/snap-store-badges/master/EN/[EN]-snap-store-white.png)](https://snapcraft.io/zipsign)
 
