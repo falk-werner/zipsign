@@ -25,12 +25,19 @@ jobs:
           update: true
           install: >-
             bash
+            git
             openssl-devel
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-cmake
             mingw-w64-x86_64-gcc
             mingw-w64-x86_64-pkg-config
             mingw-w64-x86_64-gtest
+
+      - name: Setup bats
+        run: |
+          git clone --depth 1 --branch v1.11.1 https://github.com/bats-core/bats-core.git /tmp/bats-core
+          /tmp/bats-core/install.sh /usr
+          rm -rf /tmp/bats-core
 
       - name: Checkout
         uses: actions/checkout@v7
@@ -48,3 +55,7 @@ jobs:
       - name: Unit Test
         run: |
           cmake --build build --target test
+
+      - name: Integration Test
+        run: |
+          bats ./test/

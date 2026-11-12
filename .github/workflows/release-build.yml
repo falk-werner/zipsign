@@ -56,6 +56,12 @@ jobs:
             mingw-w64-x86_64-pkg-config
             mingw-w64-x86_64-gtest
 
+      - name: Setup bats
+        run: |
+          git clone --depth 1 --branch v1.11.1 https://github.com/bats-core/bats-core.git /tmp/bats-core
+          /tmp/bats-core/install.sh /usr
+          rm -rf /tmp/bats-core
+
       - name: Checkout
         uses: actions/checkout@v5
 
@@ -72,6 +78,10 @@ jobs:
       - name: Unit Test
         run: |
           cmake --build build --target test
+
+      - name: Integration Test
+        run: |
+          bats ./test/
 
       - name: Print Dependencies
         run: |
@@ -123,7 +133,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install openssl libssl-dev libgtest-dev libgmock-dev valgrind
+          sudo apt install openssl libssl-dev libgtest-dev libgmock-dev valgrind bats
 
       - name: Configure
         run: |
@@ -141,6 +151,10 @@ jobs:
         working-directory: build
         run: |
           valgrind --error-exitcode=1 ./alltests
+
+      - name: Integration Test
+        run: |
+          bats ./test/
 
       - name: CPack
         run: |
