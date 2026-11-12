@@ -7,6 +7,9 @@ setup() {
     fi
 
     TESTDIR="$(mktemp -p /tmp -d zipsign_test_XXXXXX)"
+    openssl req -x509 -newkey rsa:4096 \
+        -keyout "${TESTDIR}/key.pem" -out "${TESTDIR}/cert.pem" \
+        -days 365 -nodes -batch
 }
 
 teardown() {
@@ -15,12 +18,12 @@ teardown() {
 
 @test "sign and verify self signed (short opts)" {
     cp test-src/resources/test.zip "${TESTDIR}/test.zip"
-    ${ZIPSIGN} sign -f "${TESTDIR}/test.zip" -c build/self-signed/cert.pem -p build/self-signed/key.pem
-    ${ZIPSIGN} verify -f "${TESTDIR}/test.zip" -c build/self-signed/cert.pem -s
+    ${ZIPSIGN} sign --file "${TESTDIR}/test.zip" --certificate "${TESTDIR}/cert.pem" --private-key "${TESTDIR}/key.pem"
+    ${ZIPSIGN} verify --file "${TESTDIR}/test.zip" --certificate "${TESTDIR}/cert.pem" --self-signed
 }
 
 @test "sign and verify self signed (long opts)" {
     cp test-src/resources/test.zip "${TESTDIR}/test.zip"
-    ${ZIPSIGN} sign --file "${TESTDIR}/test.zip" --certificate build/self-signed/cert.pem --private-key build/self-signed/key.pem
-    ${ZIPSIGN} verify --file "${TESTDIR}/test.zip" --certificate build/self-signed/cert.pem --self-signed
+    ${ZIPSIGN} sign --file "${TESTDIR}/test.zip" --certificate "${TESTDIR}/cert.pem" --private-key "${TESTDIR}/key.pem"
+    ${ZIPSIGN} verify --file "${TESTDIR}/test.zip" --certificate "${TESTDIR}/cert.pem" --self-signed
 }
