@@ -17,7 +17,6 @@ base64 = "0.22"
 [package.metadata.deb]
 maintainer = "Falk Werner <github.com/falk-werner>"
 copyright = "2019-2026 Falk Werner"
-license-file = ["LICENSE", "4"]
 extended-description = "Signs and verifies ZIP archives."
 depends = "$auto, openssl"
 section = "utils"
