@@ -9,6 +9,9 @@ updates:
     open-pull-requests-limit: 10
     commit-message:
       prefix: "chore(deps)"
+    ignore:
+      - dependency-name: "foreign-types"
+        versions: [">= 0.4.0"]
 
   # GitHub Actions workflows
   - package-ecosystem: "github-actions"
@@ -19,3 +22,4 @@ updates:
     open-pull-requests-limit: 10
     commit-message:
       prefix: "ci(deps)"
+
