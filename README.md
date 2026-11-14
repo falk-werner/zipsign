@@ -175,23 +175,15 @@ During verification, you can choose the proper signer (or both).
 
 # Build
 
-To build the project, cmake is used.
+To build the project, cargo is used.
 
-    mkdir build
-    cd build
-    cmake ..
-    make
-    sudo make install
+    cargo build --release
 
-## Build using Docker
+The binary will be located at `target/release/zipsign`.
 
-There are some dockerfiles provided in [docker](docker) subdirectory.
+To run the integration tests:
 
-    docker build --rm --build-arg "USER_ID=`id -u`" --tag zipsign-ubuntu -f docker/ubuntu.dockerfile .
-
-To run the docker container, use
-
-    docker run --rm --user="`id -u`" -it zipsign-ubuntu
+    bats test/
 
 ## Build snap
 
@@ -204,7 +196,8 @@ snapcraft
 ## Dependencies
 
 -   [OpenSSL>=3.0](https://www.openssl.org/) (libssl-dev)
--   [Google Test](https://github.com/google/googletest) *(Test only)*
+-   [Bats](https://github.com/bats-core/bats-core) *(Integration test only)*
+
 
 ## External references
 
