@@ -14,10 +14,7 @@ confinement: strict
 
 parts:
   zipsign:
-    plugin: cmake
-    cmake-parameters:
-      - -DCMAKE_INSTALL_PREFIX=/usr
-      - -DWITHOUT_TESTS=ON
+    plugin: rust
     source: .
     build-packages:
       - pkg-config
@@ -27,4 +24,5 @@ apps:
   zipsign:
     plugs:
       - home
-    command: usr/bin/zipsign
+    command: bin/zipsign
+
