@@ -12,7 +12,7 @@ license = "MPL-2.0"
 openssl = "0.10"
 openssl-sys = "0.9"
 foreign-types = "0.3"
-base64 = "0.22"
+base64 = "0.23"
 
 [package.metadata.deb]
 maintainer = "Falk Werner <github.com/falk-werner>"
