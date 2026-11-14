@@ -20,6 +20,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
         run: |
+          gh release view "$tag" --repo="$GITHUB_REPOSITORY" > /dev/null 2>&1 || \
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
               --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
@@ -47,7 +48,6 @@ jobs:
             bash
             zip
             git
-            mingw-w64-x86_64-github-cli
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-osslsigncode
             mingw-w64-x86_64-gcc
@@ -104,11 +104,12 @@ jobs:
           cd dist && zip zipsign-win32.zip -r *
 
       - name: Upload Artifact
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
         run: |
-          gh release upload "${tag}" dist/zipsign-win32.zip
+          gh release upload --clobber "${tag}" dist/zipsign-win32.zip
 
 
   ubuntu-release:
@@ -153,7 +154,7 @@ jobs:
         run: |
           mv target/debian/zipsign_*.deb zipsign-${tag#v}-amd64.deb
           sha256sum zipsign-${tag#v}-amd64.deb > zipsign-${tag#v}-amd64.deb.sha256
-          gh release upload "${tag}" \
+          gh release upload --clobber "${tag}" \
             zipsign-${tag#v}-amd64.deb \
             zipsign-${tag#v}-amd64.deb.sha256
 
