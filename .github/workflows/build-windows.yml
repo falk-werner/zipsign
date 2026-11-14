@@ -26,12 +26,10 @@ jobs:
           install: >-
             bash
             git
-            openssl-devel
             mingw-w64-x86_64-openssl
-            mingw-w64-x86_64-cmake
             mingw-w64-x86_64-gcc
             mingw-w64-x86_64-pkg-config
-            mingw-w64-x86_64-gtest
+            mingw-w64-x86_64-rust
             zip
             unzip
 
@@ -44,20 +42,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Configure
-        env:
-          CXXFLAGS: -Wno-error=cpp
+      - name: Unit Test
         run: |
-          cmake -B build
+          cargo test
 
       - name: Build
         run: |
-          cmake --build build
-
-      - name: Unit Test
-        run: |
-          cmake --build build --target test
+          cargo build --release
 
       - name: Integration Test
         run: |
           bats ./test/
+

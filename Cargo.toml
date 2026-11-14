@@ -2,10 +2,27 @@
 name = "zipsign"
 version = "1.7.0"
 edition = "2021"
+authors = ["Falk Werner <github.com/falk-werner>"]
+description = "Sign and verify ZIP archives."
+homepage = "https://github.com/falk-werner/zipsign"
+repository = "https://github.com/falk-werner/zipsign"
+license = "MPL-2.0"
 
 [dependencies]
 openssl = "0.10"
 openssl-sys = "0.9"
 foreign-types = "0.3"
 base64 = "0.22"
+
+[package.metadata.deb]
+maintainer = "Falk Werner <github.com/falk-werner>"
+copyright = "2019-2026 Falk Werner"
+license-file = ["LICENSE", "4"]
+extended-description = "Signs and verifies ZIP archives."
+depends = "$auto, openssl"
+section = "utils"
+priority = "optional"
+assets = [
+    ["target/release/zipsign", "usr/bin/zipsign", "755"],
+]
 

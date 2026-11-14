@@ -48,13 +48,11 @@ jobs:
             zip
             git
             mingw-w64-x86_64-github-cli
-            openssl-devel
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-osslsigncode
-            mingw-w64-x86_64-cmake
             mingw-w64-x86_64-gcc
             mingw-w64-x86_64-pkg-config
-            mingw-w64-x86_64-gtest
+            mingw-w64-x86_64-rust
 
       - name: Setup bats
         run: |
@@ -63,21 +61,15 @@ jobs:
           rm -rf /tmp/bats-core
 
       - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Configure
-        env:
-          CXXFLAGS: -Wno-error=cpp
-        run: |
-          cmake -B build -D CMAKE_BUILD_TYPE=release
-
-      - name: Build
-        run: |
-          cmake --build build
+        uses: actions/checkout@v7
 
       - name: Unit Test
         run: |
-          cmake --build build --target test
+          cargo test
+
+      - name: Build
+        run: |
+          cargo build --release
 
       - name: Integration Test
         run: |
@@ -85,7 +77,7 @@ jobs:
 
       - name: Print Dependencies
         run: |
-          ldd build/zipsign.exe
+          ldd target/release/zipsign.exe
 
       - name: Sign
         env:
@@ -97,19 +89,18 @@ jobs:
             -key /tmp/sign_key.pem -pass "$SIGN_PASS" \
             -n "ZipSign" -i https://github.com/falk-werner/zipsign \
             -t http://timestamp.digicert.com \
-            -in build/zipsign.exe -out build/zipsign_signed.exe
+            -in target/release/zipsign.exe -out target/release/zipsign_signed.exe
           rm /tmp/sign_key.pem
 
       - name: Prepare Dist
         run: |
           mkdir dist
-          cp build/zipsign_signed.exe dist/zipsign.exe
+          cp target/release/zipsign_signed.exe dist/zipsign.exe
           cp /mingw64/bin/libgcc_s_seh-1.dll dist
           cp /mingw64/bin/libwinpthread-1.dll dist
-          cp /mingw64/bin/libstdc++-6.dll dist
           cp /mingw64/bin/libcrypto-3-x64.dll dist          
           cp LICENSE dist
-          cp 3rd-party-licenses/* dist
+          if [ -d 3rd-party-licenses ]; then cp 3rd-party-licenses/* dist; fi
           cd dist && zip zipsign-win32.zip -r *
 
       - name: Upload Artifact
@@ -128,46 +119,41 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install openssl libssl-dev libgtest-dev libgmock-dev valgrind bats
-
-      - name: Configure
-        run: |
-          cmake -B build -D CMAKE_BUILD_TYPE=Release
-
-      - name: Build
-        run: |
-          cmake --build build
+          sudo apt install -y openssl libssl-dev bats
 
       - name: Unit Test
         run: |
-          cmake --build build --target test
+          cargo test
 
-      - name: Memcheck
-        working-directory: build
+      - name: Build
         run: |
-          valgrind --error-exitcode=1 ./alltests
+          cargo build --release
 
       - name: Integration Test
         run: |
           bats ./test/
 
-      - name: CPack
+      - name: Install cargo-deb
         run: |
-          cd build
-          cpack
+          cargo install cargo-deb
+
+      - name: Package (.deb)
+        run: |
+          cargo deb --no-build
 
       - name: Upload Artifact
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
         run: |
-          mv build/zipsign-*.deb zipsign-${tag#v}-amd64.deb
+          mv target/debian/zipsign_*.deb zipsign-${tag#v}-amd64.deb
           sha256sum zipsign-${tag#v}-amd64.deb > zipsign-${tag#v}-amd64.deb.sha256
           gh release upload "${tag}" \
             zipsign-${tag#v}-amd64.deb \
             zipsign-${tag#v}-amd64.deb.sha256
+
