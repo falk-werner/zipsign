@@ -2,86 +2,82 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub fn print_general_usage() {
     println!(
-        "zipsign v{}, Copyright (c) 2019-2026 Falk Werner\n\
-Signs and verifies ZIP archives\n\
-\n\
-Usage:\n\
-\tzipsign sign <args...> | verify <args...> | info <args...> | -h\n\
-\n\
-Verbs:\n\
-\tsign\t\t\tSigns a zip archive.\n\
-\tverify\t\t\tVerifies the signature of a zip archive.\n\
-\tinfo\t\t\tPrint info about the signature of zip archive.\n\
-\t-V, --version\t\tPrint version.\n\
-\t-h, --help\t\tPrint usage.\n\
-\n\
-Examples:\n\
-\tSign:\n\
-\t\tzipsign sign -f archive.zip -p key.pem -c cert.pem\n\
-\tVerify:\n\
-\t\tzipsign verify -f archive.zip -c cert.pem\n\
-\t\tzipsign verify -f archive.zip -c cert.pem --self-signed",
-        VERSION
+        r#"zipsign v{VERSION}, Copyright (c) 2019-2026 Falk Werner
+Signs and verifies ZIP archives
+
+Usage:
+    zipsign sign <args...> | verify <args...> | info <args...> | -h
+
+Verbs:
+    sign                    Signs a zip archive.
+    verify                  Verifies the signature of a zip archive.
+    info                    Print info about the signature of zip archive.
+    -V, --version           Print version.
+    -h, --help              Print usage.
+
+Examples:
+    Sign:
+        zipsign sign -f archive.zip -p key.pem -c cert.pem
+    Verify:
+        zipsign verify -f archive.zip -c cert.pem
+        zipsign verify -f archive.zip -c cert.pem --self-signed"#
     );
 }
 
 pub fn print_sign_usage() {
     println!(
-        "zipsign v{}, Copyright (c) 2019-2026 Falk Werner\n\
-Signs and verifies ZIP archives\n\
-\n\
-sign: Signs a zip archive.\n\
-\n\
-Usage:\n\
-\tzipsign sign -f <value> -p <value> -c <value> [-i <value>] [-e] [-v] | -h\n\
-\n\
-Arguments:\n\
-\t-f, --file\t\t\tRequired. Archive to sign.\n\
-\t-p, --private-key\t\tRequired. Private key to sign. Can be used multiple times.\n\
-\t-c, --certificate\t\tRequired. Certificate of signer. Can be used multiple times.\n\
-\t-i, --intermediate\t\tAdd intermediate certificate.  Can be used multiple times.\n\
-\t-e, --embed-certificate\t\tEmbed signers certificate in signature.\n\
-\t-v, --verbose\t\t\tEnable additional output.\n\
-\t-h, --help\t\t\tPrint usage.",
-        VERSION
+        r#"zipsign v{VERSION}, Copyright (c) 2019-2026 Falk Werner
+Signs and verifies ZIP archives
+
+sign: Signs a zip archive.
+
+Usage:
+    zipsign sign -f <value> -p <value> -c <value> [-i <value>] [-e] [-v] | -h
+
+Arguments:
+    -f, --file                      Required. Archive to sign.
+    -p, --private-key               Required. Private key to sign. Can be used multiple times.
+    -c, --certificate               Required. Certificate of signer. Can be used multiple times.
+    -i, --intermediate              Add intermediate certificate.  Can be used multiple times.
+    -e, --embed-certificate         Embed signers certificate in signature.
+    -v, --verbose                   Enable additional output.
+    -h, --help                      Print usage."#
     );
 }
 
 pub fn print_verify_usage() {
     println!(
-        "zipsign v{}, Copyright (c) 2019-2026 Falk Werner\n\
-Signs and verifies ZIP archives\n\
-\n\
-verify: Verifies the signature of a zip archive.\n\
-\n\
-Usage:\n\
-\tzipsign verify -f <value> -c <value> [-k <value>] [-v] [-s] | -h\n\
-\n\
-Arguments:\n\
-\t-f, --file\t\t\tRequired. Archive to verify.\n\
-\t-c, --certificate\t\tRequired. Certificate of signer. Can be used multiple times.\n\
-\t-k, --keyring\t\t\tPath of keyring file.\n\
-\t-v, --verbose\t\t\tEnable additionl output.\n\
-\t-s, --self-signed\t\tAllows self signed certificates, skip cert verify.\n\
-\t-h, --help\t\t\tPrint usage.",
-        VERSION
+        r#"zipsign v{VERSION}, Copyright (c) 2019-2026 Falk Werner
+Signs and verifies ZIP archives
+
+verify: Verifies the signature of a zip archive.
+
+Usage:
+    zipsign verify -f <value> -c <value> [-k <value>] [-v] [-s] | -h
+
+Arguments:
+    -f, --file                      Required. Archive to verify.
+    -c, --certificate               Required. Certificate of signer. Can be used multiple times.
+    -k, --keyring                   Path of keyring file.
+    -v, --verbose                   Enable additionl output.
+    -s, --self-signed               Allows self signed certificates, skip cert verify.
+    -h, --help                      Print usage."#
     );
 }
 
 pub fn print_info_usage() {
     println!(
-        "zipsign v{}, Copyright (c) 2019-2026 Falk Werner\n\
-Signs and verifies ZIP archives\n\
-\n\
-info: Print info about the signature of zip archive.\n\
-\n\
-Usage:\n\
-\tzipsign info -f <value> | -h\n\
-\n\
-Arguments:\n\
-\t-f, --file\t\t\tRequired. Archive to verify.\n\
-\t-h, --help\t\t\tPrint usage.",
-        VERSION
+        r#"zipsign v{VERSION}, Copyright (c) 2019-2026 Falk Werner
+Signs and verifies ZIP archives
+
+info: Print info about the signature of zip archive.
+
+Usage:
+    zipsign info -f <value> | -h
+
+Arguments:
+    -f, --file                      Required. Archive to verify.
+    -h, --help                      Print usage."#
     );
 }
 
