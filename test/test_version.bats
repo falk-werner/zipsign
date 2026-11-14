@@ -6,13 +6,13 @@ load 'test_helper.sh'
     run "$ZIPSIGN" -V
     [ "$status" -eq 0 ]
     output="${output%$'\r'}"
-    [ "$output" = "1.7.0" ]
+    [ "$output" = "2.0.0" ]
 }
 
 @test "print version (long opts)" {
     run "$ZIPSIGN" --version
     [ "$status" -eq 0 ]
     output="${output%$'\r'}"
-    [ "$output" = "1.7.0" ]
+    [ "$output" = "2.0.0" ]
 }
 
