@@ -1,0 +1,11 @@
+[package]
+name = "zipsign"
+version = "1.7.0"
+edition = "2021"
+
+[dependencies]
+openssl = "0.10"
+openssl-sys = "0.9"
+foreign-types = "0.3"
+base64 = "0.22"
+

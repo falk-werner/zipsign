@@ -3,6 +3,10 @@
 setup_zipsign() {
     if [ -n "$ZIPSIGN_BIN" ]; then
         ZIPSIGN="$ZIPSIGN_BIN"
+    elif [ -x "target/release/zipsign" ]; then
+        ZIPSIGN="target/release/zipsign"
+    elif [ -x "target/debug/zipsign" ]; then
+        ZIPSIGN="target/debug/zipsign"
     elif [ -x "build/zipsign" ]; then
         ZIPSIGN="build/zipsign"
     elif [ -x "build/zipsign.exe" ]; then
