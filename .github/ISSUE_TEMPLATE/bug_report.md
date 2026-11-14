@@ -19,7 +19,7 @@ Steps to reproduce the behavior:
 A clear and concise description of what you expected to happen.
 
 **Version:**
-e.g. 1.7.0
+e.g. 2.0.0
 
 **Additional context**
 Add any other context about the problem here.

@@ -3,10 +3,14 @@
 setup_zipsign() {
     if [ -n "$ZIPSIGN_BIN" ]; then
         ZIPSIGN="$ZIPSIGN_BIN"
-    elif [ -x "build/zipsign" ]; then
-        ZIPSIGN="build/zipsign"
-    elif [ -x "build/zipsign.exe" ]; then
-        ZIPSIGN="build/zipsign.exe"
+    elif [ -x "target/release/zipsign" ]; then
+        ZIPSIGN="target/release/zipsign"
+    elif [ -x "target/release/zipsign.exe" ]; then
+        ZIPSIGN="target/release/zipsign.exe"
+    elif [ -x "target/debug/zipsign" ]; then
+        ZIPSIGN="target/debug/zipsign"
+    elif [ -x "target/debug/zipsign.exe" ]; then
+        ZIPSIGN="target/debug/zipsign.exe"
     elif [ -x "./zipsign" ]; then
         ZIPSIGN="./zipsign"
     elif [ -x "./zipsign.exe" ]; then
@@ -15,6 +19,7 @@ setup_zipsign() {
         ZIPSIGN="zipsign"
     fi
 }
+
 
 setup() {
     setup_zipsign
