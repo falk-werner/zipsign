@@ -11,7 +11,7 @@ license = "MPL-2.0"
 [dependencies]
 openssl = "0.10"
 openssl-sys = "0.9"
-foreign-types = "0.3"
+foreign-types = "0.5"
 base64 = "0.23"
 
 [package.metadata.deb]
