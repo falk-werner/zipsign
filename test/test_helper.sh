@@ -28,10 +28,14 @@ setup() {
 create_self_signed_cert() {
     local key_file="$1"
     local cert_file="$2"
+    local cert_name
+    cert_name="$(basename "${cert_file%.*}")"
+    local cn="${3:-$cert_name}"
     openssl req -x509 -newkey rsa:2048 -nodes \
         -keyout "$key_file" \
         -out "$cert_file" \
         -days 1 \
+        -subj "/CN=$cn" \
         -batch 2>/dev/null
 }
 
