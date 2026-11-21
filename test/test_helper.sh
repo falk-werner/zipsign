@@ -31,12 +31,31 @@ create_self_signed_cert() {
     local cert_name
     cert_name="$(basename "${cert_file%.*}")"
     local cn="${3:-$cert_name}"
+    local cnf_file="${cert_file}.cnf"
+
+    cat <<EOF > "$cnf_file"
+[ req ]
+prompt = no
+distinguished_name = dn
+x509_extensions = v3_ca
+
+[ dn ]
+CN = $cn
+
+[ v3_ca ]
+basicConstraints = critical, CA:true
+keyUsage = critical, digitalSignature, keyCertSign, cRLSign
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+EOF
+
     openssl req -x509 -newkey rsa:2048 -nodes \
         -keyout "$key_file" \
         -out "$cert_file" \
         -days 1 \
-        -subj "/CN=$cn" \
+        -config "$cnf_file" \
         -batch 2>/dev/null
+    rm -f "$cnf_file"
 }
 
 create_ca_chain() {
