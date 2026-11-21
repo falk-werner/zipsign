@@ -42,17 +42,17 @@ jobs:
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: mingw64
+          msystem: ucrt64
           update: true
           install: >-
             bash
             zip
             git
-            mingw-w64-x86_64-openssl
-            mingw-w64-x86_64-osslsigncode
-            mingw-w64-x86_64-gcc
-            mingw-w64-x86_64-pkg-config
-            mingw-w64-x86_64-rust
+            mingw-w64-ucrt-x86_64-openssl
+            mingw-w64-ucrt-x86_64-osslsigncode
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-pkg-config
+            mingw-w64-ucrt-x86_64-rust
 
       - name: Setup bats
         run: |
@@ -96,9 +96,9 @@ jobs:
         run: |
           mkdir dist
           cp target/release/zipsign_signed.exe dist/zipsign.exe
-          cp /mingw64/bin/libgcc_s_seh-1.dll dist
-          cp /mingw64/bin/libwinpthread-1.dll dist
-          cp /mingw64/bin/libcrypto-3-x64.dll dist          
+          cp /ucrt64/bin/libgcc_s_seh-1.dll dist
+          cp /ucrt64/bin/libwinpthread-1.dll dist
+          cp /ucrt64/bin/libcrypto-3-x64.dll dist          
           cp LICENSE dist
           if [ -d 3rd-party-licenses ]; then cp 3rd-party-licenses/* dist; fi
           cd dist && zip zipsign-win32.zip -r *
